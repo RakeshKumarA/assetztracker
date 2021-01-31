@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import { Divider, Typography } from "@material-ui/core";
+import { Divider, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -41,7 +41,7 @@ const AdminDrawer = () => {
   ];
 
   return (
-    <>
+    <Paper className={classes.paperStyle}>
       <Grid container justify="center">
         <Typography variant="h5" className={classes.titleStyle}>
           Admin
@@ -62,7 +62,7 @@ const AdminDrawer = () => {
           </ListItem>
         ))}
       </List>
-    </>
+    </Paper>
   );
 };
 

@@ -7,6 +7,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles({
   container: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
   },
 });
 
-const AdminDrawer = () => {
+const AdminDrawer = ({ handleSelection }) => {
   const classes = useStyles();
 
   const drawerTopList = [
@@ -36,7 +37,13 @@ const AdminDrawer = () => {
       id: 1,
       name: "Add User",
       icon: <PersonAddIcon />,
-      onClickHandler: () => console.log("Clicled"),
+      onClickHandler: () => handleSelection(1),
+    },
+    {
+      id: 2,
+      name: "Search User",
+      icon: <SearchIcon />,
+      onClickHandler: () => handleSelection(2),
     },
   ];
 

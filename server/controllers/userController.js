@@ -42,8 +42,9 @@ const authUser = async (req, res) => {
 // @desc		Register a user
 // @route 	POST /api/users
 // @access 	Public
-const registerUser = async (req, res) => {
+const addUser = async (req, res) => {
   const { name, email, password, role } = req.body;
+  console.log(req.user);
 
   const user = await db.query("SELECT * FROM users where email=$1", [email]);
 
@@ -52,34 +53,36 @@ const registerUser = async (req, res) => {
   }
 
   try {
-    if (role) {
-      const results = await db.query(
-        "INSERT INTO users (name, email, password, role) values ($1, $2, $3, $4) returning *",
-        [name, email, bcrypt.hashSync(password, 10), role]
-      );
-      const token = generateToken(results.rows[0].userid);
-      res.status(201).json({
-        status: 201,
-        userid: results.rows[0].userid,
-        name: results.rows[0].name,
-        email: results.rows[0].email,
-        role: results.rows[0].role,
-        token: token,
-      });
-    } else {
-      const results = await db.query(
-        "INSERT INTO users (name, email, password) values ($1, $2, $3) returning *",
-        [name, email, bcrypt.hashSync(password, 10)]
-      );
-      const token = generateToken(results.rows[0].userid);
-      res.status(201).json({
-        status: 201,
-        userid: results.rows[0].userid,
-        name: results.rows[0].name,
-        email: results.rows[0].email,
-        role: results.rows[0].role,
-        token: token,
-      });
+    if (req.user.role === "admin") {
+      if (role) {
+        const results = await db.query(
+          "INSERT INTO users (name, email, password, role, createby) values ($1, $2, $3, $4, $5) returning *",
+          [name, email, bcrypt.hashSync(password, 10), role, req.user.name]
+        );
+        const token = generateToken(results.rows[0].userid);
+        res.status(201).json({
+          status: 201,
+          userid: results.rows[0].userid,
+          name: results.rows[0].name,
+          email: results.rows[0].email,
+          role: results.rows[0].role,
+          token: token,
+        });
+      } else {
+        const results = await db.query(
+          "INSERT INTO users (name, email, password, createby) values ($1, $2, $3, $4) returning *",
+          [name, email, bcrypt.hashSync(password, 10), req.user.name]
+        );
+        const token = generateToken(results.rows[0].userid);
+        res.status(201).json({
+          status: 201,
+          userid: results.rows[0].userid,
+          name: results.rows[0].name,
+          email: results.rows[0].email,
+          role: results.rows[0].role,
+          token: token,
+        });
+      }
     }
   } catch (error) {
     res.json({ status: 500, message: error.message });
@@ -88,5 +91,5 @@ const registerUser = async (req, res) => {
 
 module.exports = {
   authUser: authUser,
-  registerUser: registerUser,
+  addUser: addUser,
 };

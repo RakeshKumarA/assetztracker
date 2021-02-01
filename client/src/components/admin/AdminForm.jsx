@@ -4,7 +4,6 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   Typography,
 } from "@material-ui/core";
@@ -16,6 +15,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import AdminTextField from "../customcomponents/AdminTextField";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../reducers/addUserSlice";
 
 const useStyles = makeStyles({
   container: {
@@ -25,10 +26,7 @@ const useStyles = makeStyles({
     height: "80%",
     width: "90%",
   },
-  paperStyle: {
-    width: "100%",
-    color: "#fff",
-  },
+
   title: {
     padding: "1rem 0",
   },
@@ -37,9 +35,6 @@ const useStyles = makeStyles({
   },
   select: {
     color: "#fff",
-  },
-  formcontainer: {
-    paddingTop: "2rem",
   },
 });
 
@@ -55,104 +50,97 @@ const schema = yup.object().shape({
 
 const AdminForm = () => {
   const classes = useStyles();
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, errors, reset } = useForm({
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
+  const dispatch = useDispatch();
 
   const onClickHandler = (data) => {
-    console.log(data);
+    const { email, name, password, role } = data;
+    dispatch(addUser(email, name, password, role));
+    reset({ email: "", name: "", password: "", role: "view" });
   };
   return (
-    <Paper className={classes.paperStyle}>
-      <Typography
-        variant="h4"
-        color="initial"
-        align="center"
-        className={classes.title}
-      >
-        Add New User
-      </Typography>
-
-      <Grid
-        item
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-        className={classes.formcontainer}
-      >
-        <Grid item container sm={4} spacing={2}>
-          <Grid item container direction="column">
-            <AdminTextField
-              name="name"
-              label="First Name"
-              inputRef={register}
-              error={!!errors.name}
-              helperText={errors?.name?.message}
-            />
-          </Grid>
-          <Grid item container direction="column">
-            <AdminTextField
-              name="email"
-              label="Email"
-              inputRef={register}
-              error={!!errors.email}
-              helperText={errors?.email?.message}
-            />
-          </Grid>
-          <Grid item container direction="column">
-            <AdminTextField
-              name="password"
-              label="Default Password"
-              inputRef={register}
-              error={!!errors.password}
-              helperText={errors?.password?.message}
-              type="password"
-            />
-          </Grid>
-          <Grid item container direction="column">
-            <FormControl variant="outlined">
-              <InputLabel
-                id="demo-simple-select-label"
-                color="secondary"
-                className={classes.inputlablestyle}
-                shrink={true}
-              >
-                Role
-              </InputLabel>
-              <Select
-                defaultValue="view"
-                className={classes.inputlablestyle}
-                MenuProps={{ classes: { paper: classes.select } }}
-                inputProps={{
-                  inputRef: (ref) => {
-                    if (!ref) return;
-                    register({
-                      name: "role",
-                      value: ref.value,
-                    });
-                  },
-                }}
-              >
-                <MenuItem value={"view"}>view</MenuItem>
-                <MenuItem value={"write"}>write</MenuItem>
-                <MenuItem value={"admin"}>admin</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item container direction="column">
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleSubmit((data) => onClickHandler(data))}
-            >
-              Add User
-            </Button>
-          </Grid>
-        </Grid>
+    <Grid item container sm={4} spacing={2}>
+      <Grid item container direction="column">
+        <Typography
+          variant="h4"
+          color="initial"
+          align="center"
+          className={classes.title}
+        >
+          Add New User
+        </Typography>
       </Grid>
-    </Paper>
+      <Grid item container direction="column">
+        <AdminTextField
+          name="name"
+          label="First Name"
+          inputRef={register}
+          error={!!errors.name}
+          helperText={errors?.name?.message}
+        />
+      </Grid>
+      <Grid item container direction="column">
+        <AdminTextField
+          name="email"
+          label="Email"
+          inputRef={register}
+          error={!!errors.email}
+          helperText={errors?.email?.message}
+        />
+      </Grid>
+      <Grid item container direction="column">
+        <AdminTextField
+          name="password"
+          label="Default Password"
+          inputRef={register}
+          error={!!errors.password}
+          helperText={errors?.password?.message}
+          type="password"
+        />
+      </Grid>
+      <Grid item container direction="column">
+        <FormControl variant="outlined">
+          <InputLabel
+            id="demo-simple-select-label"
+            color="secondary"
+            className={classes.inputlablestyle}
+            shrink={true}
+          >
+            Role
+          </InputLabel>
+          <Select
+            defaultValue="view"
+            className={classes.inputlablestyle}
+            MenuProps={{ classes: { paper: classes.select } }}
+            inputProps={{
+              inputRef: (ref) => {
+                if (!ref) return;
+                register({
+                  name: "role",
+                  value: ref.value,
+                });
+              },
+            }}
+          >
+            <MenuItem value={"view"}>view</MenuItem>
+            <MenuItem value={"write"}>write</MenuItem>
+            <MenuItem value={"admin"}>admin</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item container direction="column">
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleSubmit((data) => onClickHandler(data))}
+        >
+          Add User
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

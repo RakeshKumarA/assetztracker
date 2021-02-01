@@ -40,7 +40,6 @@ export const {
   user_login_request,
   user_login_sucess,
   user_login_failure,
-  user_login_failure_cleanup,
   user_logout,
 } = userSlice.actions;
 

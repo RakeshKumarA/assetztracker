@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import { set_snackbar } from "../../reducers/snackSlice";
 import { user_logout } from "../../reducers/userSlice";
+import { theme_update } from "../../reducers/themeSlice";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -22,6 +23,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
 import { makeStyles } from "@material-ui/core/styles";
 
 import assetzLogo from "../../assets/assetzlogo.png";
@@ -41,16 +43,17 @@ const useStyles = makeStyles({
   },
   drawerPaper: {
     width: "16.66vw",
-    color: "#fff",
+    // color: "#fff",
   },
   iconstyle: {
-    color: "#fff",
+    // color: "#fff",
   },
 });
 
 const DrawerComponent = () => {
   const classes = useStyles();
   const { userInfo } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
   const history = useHistory();
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.user);
@@ -122,6 +125,11 @@ const DrawerComponent = () => {
     },
   ];
 
+  const changeThemeHandler = () => {
+    const themechanged = theme === "light" ? "dark" : "light";
+    dispatch(theme_update(themechanged));
+  };
+
   return (
     <>
       {loading ? (
@@ -170,6 +178,17 @@ const DrawerComponent = () => {
               </ListItem>
             ))}
           </List>
+          <Divider />
+
+          <List>
+            <ListItem button onClick={changeThemeHandler}>
+              <ListItemIcon className={classes.iconstyle}>
+                <Brightness4Icon />
+              </ListItemIcon>
+              <ListItemText primary="Light/Dark" />
+            </ListItem>
+          </List>
+
           <Divider />
           {userInfo.role === "admin" && (
             <List>

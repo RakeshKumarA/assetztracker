@@ -1,14 +1,13 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+const themelight = createMuiTheme({
   palette: {
-    primary: {
-      main: "#343a40",
-      contrastText: "#fff",
-    },
+    // primary: {
+    //   main: "#343a40",
+    //   contrastText: "#fff",
+    // },
     background: {
-      paper: "#343a40",
-      contrastText: "#fff",
+      default: "#e5e5e5",
     },
   },
   typography: {
@@ -26,6 +25,16 @@ const theme = createMuiTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
+  // overrides: {
+  //   MuiTableCell: {
+  //     head: {
+  //       color: "#fff",
+  //     },
+  //     body: {
+  //       color: "#fff",
+  //     },
+  //   },
+  // },
 });
 
-export default theme;
+export default themelight;

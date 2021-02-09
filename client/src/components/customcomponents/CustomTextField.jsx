@@ -1,7 +1,12 @@
-import { TextField } from "@material-ui/core";
 import React from "react";
 
-const AdminTextField = ({
+//Formik Imports
+import { Field } from "formik";
+
+//Formik Material ui
+import { TextField } from "formik-material-ui";
+
+const CustomTextField = ({
   variant,
   color,
   InputLabelProps,
@@ -11,17 +16,18 @@ const AdminTextField = ({
   ...props
 }) => {
   return (
-    <TextField
+    <Field
+      component={TextField}
       variant="outlined"
       color="secondary"
       InputLabelProps={{
         style: {
-          color: "#fff",
+          // color: "#7b7b7b",
         },
       }}
       InputProps={{
         style: {
-          color: "#fff",
+          // color: "#fff",
         },
       }}
       fullWidth={true}
@@ -29,8 +35,8 @@ const AdminTextField = ({
       {...props}
     >
       {props.children}
-    </TextField>
+    </Field>
   );
 };
 
-export default AdminTextField;
+export default CustomTextField;

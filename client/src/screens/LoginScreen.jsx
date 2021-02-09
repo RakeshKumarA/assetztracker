@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 //MUI Libs
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { CircularProgress } from "@material-ui/core";
@@ -15,10 +14,14 @@ import { login } from "../reducers/userSlice";
 import HomePage from "../assets/HomePage.svg";
 import assetz from "../assets/assetzFinal.png";
 
-//Form Validation Libs
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+//Formik Imports
+import { Formik, Form, Field } from "formik";
+
+//Formik Material ui
+import { TextField } from "formik-material-ui";
+
+//Import Validation Schema
+import { loginValidationSchema } from "../schema/validationSchema";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
   },
   homepage: {
-    width: "60vw",
+    width: "65vw",
   },
   logo: {
     width: "20vw",
@@ -39,27 +42,27 @@ const useStyles = makeStyles((theme) => ({
   homepagecontainer: {
     minHeight: "90vh",
   },
+  submitbuttonStyle: {
+    paddingTop: "2vh",
+  },
 }));
-
-//Form Validation Schema
-const schema = yup.object().shape({
-  email: yup.string().email("Not a Valid Email").required("Email required"),
-  password: yup.string().required("Password required"),
-});
 
 const LoginScreen = () => {
   const classes = useStyles();
 
+  //Redux
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.user);
-  const { loading, userInfo } = userLogin;
+  const { loading, userInfo } = useSelector((state) => state.user);
+
+  //React Router
   const location = useLocation();
   const history = useHistory();
 
-  const { register, handleSubmit, errors } = useForm({
-    mode: "onBlur",
-    resolver: yupResolver(schema),
-  });
+  //Constants
+  const initialValues = {
+    email: "",
+    password: "",
+  };
 
   const redirect = location.search
     ? location.search.split("=")[1]
@@ -70,11 +73,6 @@ const LoginScreen = () => {
       history.push(redirect);
     }
   }, [history, userInfo, redirect]);
-
-  const onClickHandler = (data) => {
-    const { email, password } = data;
-    dispatch(login(email, password));
-  };
 
   return (
     <Grid container className={classes.root}>
@@ -106,57 +104,66 @@ const LoginScreen = () => {
             justify="center"
             spacing={2}
           >
-            <Grid item>
-              <Typography
-                variant="h4"
-                color="initial"
-                className={classes.title}
-              >
-                SIGN IN
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="subtitle1" color="initial">
-                Email
-              </Typography>
-              <TextField
-                name="email"
-                label="Enter Email"
-                variant="filled"
-                fullWidth={true}
-                type="email"
-                size={"small"}
-                inputRef={register}
-                error={!!errors.email}
-                helperText={errors?.email?.message}
-              />
-            </Grid>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={loginValidationSchema}
+              onSubmit={(values) => {
+                const { email, password } = values;
+                dispatch(login(email, password));
+              }}
+            >
+              {({ submitForm }) => (
+                <Form>
+                  <Grid item>
+                    <Typography
+                      variant="h4"
+                      color="initial"
+                      className={classes.title}
+                    >
+                      SIGN IN
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1" color="initial">
+                      Email
+                    </Typography>
+                    <Field
+                      component={TextField}
+                      name="email"
+                      type="email"
+                      label="Enter Email"
+                      fullWidth={true}
+                      size={"small"}
+                      variant="filled"
+                    />
+                  </Grid>
 
-            <Grid item>
-              <Typography variant="subtitle1" color="initial">
-                Password
-              </Typography>
-              <TextField
-                name="password"
-                label="Enter Password"
-                variant="filled"
-                fullWidth={true}
-                size={"small"}
-                inputRef={register}
-                error={!!errors.password}
-                helperText={errors?.password?.message}
-                type="password"
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit((data) => onClickHandler(data))}
-              >
-                SIGN IN
-              </Button>
-            </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1" color="initial">
+                      Password
+                    </Typography>
+                    <Field
+                      component={TextField}
+                      name="password"
+                      type="password"
+                      label="Enter Password"
+                      fullWidth={true}
+                      size={"small"}
+                      variant="filled"
+                    />
+                  </Grid>
+                  <Grid item className={classes.submitbuttonStyle}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={submitForm}
+                    >
+                      SIGN IN
+                    </Button>
+                  </Grid>
+                </Form>
+              )}
+            </Formik>
           </Grid>
         </Grid>
       )}

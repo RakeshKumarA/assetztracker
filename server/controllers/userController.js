@@ -44,7 +44,6 @@ const authUser = async (req, res) => {
 // @access 	Public
 const addUser = async (req, res) => {
   const { name, email, password, role } = req.body;
-  console.log(req.user);
 
   const user = await db.query("SELECT * FROM users where email=$1", [email]);
 

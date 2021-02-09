@@ -6,8 +6,13 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import SearchIcon from "@material-ui/icons/Search";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import CodeIcon from "@material-ui/icons/Code";
+import DnsIcon from "@material-ui/icons/Dns";
+import DescriptionIcon from "@material-ui/icons/Description";
+import TrendingDownIcon from "@material-ui/icons/TrendingDown";
+import { option_update } from "../../reducers/assetSelSlice";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles({
   container: {
@@ -29,21 +34,40 @@ const useStyles = makeStyles({
   },
 });
 
-const AdminDrawer = ({ handleSelection }) => {
+const AddAssetDrawer = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const drawerTopList = [
     {
       id: 1,
-      name: "Add User",
-      icon: <PersonAddIcon />,
-      onClickHandler: () => handleSelection(1),
+      name: "Onboard",
+      icon: <AddCircleIcon />,
+      onClickHandler: () => dispatch(option_update(1)),
     },
     {
       id: 2,
-      name: "Search User",
-      icon: <SearchIcon />,
-      onClickHandler: () => handleSelection(2),
+      name: "Software",
+      icon: <CodeIcon />,
+      onClickHandler: () => dispatch(option_update(2)),
+    },
+    {
+      id: 3,
+      name: "Hardware",
+      icon: <DnsIcon />,
+      onClickHandler: () => dispatch(option_update(3)),
+    },
+    {
+      id: 4,
+      name: "Depreciation",
+      icon: <TrendingDownIcon />,
+      onClickHandler: () => dispatch(option_update(4)),
+    },
+    {
+      id: 5,
+      name: "Documents",
+      icon: <DescriptionIcon />,
+      onClickHandler: () => dispatch(option_update(5)),
     },
   ];
 
@@ -51,7 +75,7 @@ const AdminDrawer = ({ handleSelection }) => {
     <Paper className={classes.paperStyle}>
       <Grid container justify="center">
         <Typography variant="h5" className={classes.titleStyle}>
-          Admin
+          Add Asset
         </Typography>
       </Grid>
       <Divider />
@@ -73,4 +97,4 @@ const AdminDrawer = ({ handleSelection }) => {
   );
 };
 
-export default AdminDrawer;
+export default AddAssetDrawer;

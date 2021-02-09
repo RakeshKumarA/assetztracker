@@ -8,9 +8,10 @@ import Dashboard from "./screens/Dashboard";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 import CustomSnackBar from "./components/snackbar/CustomSnackBar";
-import DrawerComponent from "./components/drawer/DrawerComponent";
+import DrawerComponent from "./components/maindrawer/DrawerComponent";
 import AdminRoute from "./components/routes/AdminRoute";
 import AdminScreen from "./screens/AdminScreen";
+import AddAssetScreen from "./screens/AddAssetScreen";
 
 const useStyles = makeStyles({
   container: {
@@ -33,6 +34,7 @@ const App = () => {
           <Switch>
             <PublicRoute path="/" exact component={LoginScreen} />
             <PrivateRoute path="/dashboard" exact component={Dashboard} />
+            <PrivateRoute path="/addasset" exact component={AddAssetScreen} />
             <AdminRoute path="/admin" exact component={AdminScreen} />
             <Route component={PageNotFound} />
           </Switch>

@@ -1,21 +1,27 @@
+import React from "react";
+import { useDispatch } from "react-redux";
+
+//MUI Libs
 import {
   Button,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
   Typography,
 } from "@material-ui/core";
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-//Form Validation Libs
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import AdminTextField from "../customcomponents/AdminTextField";
-import { useDispatch } from "react-redux";
+//Formik Imports
+import { Formik, Form, Field } from "formik";
+
+//Formik Material ui
+import { Select } from "formik-material-ui";
+
+//Import Validation Schema
+import { adminFormValidationSchema } from "../../schema/validationSchema";
+
+//Modular Imports
+import CustomTextField from "../customcomponents/CustomTextField";
 import { addUser } from "../../reducers/addUserSlice";
 
 const useStyles = makeStyles({
@@ -31,116 +37,95 @@ const useStyles = makeStyles({
     padding: "1rem 0",
   },
   inputlablestyle: {
-    color: "#fff",
+    // color: "#7b7b7b",
   },
   select: {
-    color: "#fff",
+    // color: "#fff",
   },
-});
-
-//Form Validation Schema
-const schema = yup.object().shape({
-  email: yup.string().email("Not a Valid Email").required("Email required"),
-  password: yup.string().required("Password required"),
-  name: yup
-    .string()
-    .required("First Name Required")
-    .max(12, "Maximum 12 Characters"),
+  formStyle: {
+    display: "flex",
+    justifyContent: "center",
+  },
 });
 
 const AdminForm = () => {
   const classes = useStyles();
-  const { register, handleSubmit, errors, reset } = useForm({
-    mode: "onBlur",
-    resolver: yupResolver(schema),
-  });
+
+  //Redux
   const dispatch = useDispatch();
 
-  const onClickHandler = (data) => {
-    const { email, name, password, role } = data;
-    dispatch(addUser(email, name, password, role));
-    reset({ email: "", name: "", password: "", role: "view" });
+  //Constants
+  const initialValues = {
+    email: "",
+    name: "",
+    password: "",
+    role: "view",
   };
+
   return (
-    <Grid item container sm={4} spacing={2}>
-      <Grid item container direction="column">
-        <Typography
-          variant="h4"
-          color="initial"
-          align="center"
-          className={classes.title}
-        >
-          Add New User
-        </Typography>
-      </Grid>
-      <Grid item container direction="column">
-        <AdminTextField
-          name="name"
-          label="First Name"
-          inputRef={register}
-          error={!!errors.name}
-          helperText={errors?.name?.message}
-        />
-      </Grid>
-      <Grid item container direction="column">
-        <AdminTextField
-          name="email"
-          label="Email"
-          inputRef={register}
-          error={!!errors.email}
-          helperText={errors?.email?.message}
-        />
-      </Grid>
-      <Grid item container direction="column">
-        <AdminTextField
-          name="password"
-          label="Default Password"
-          inputRef={register}
-          error={!!errors.password}
-          helperText={errors?.password?.message}
-          type="password"
-        />
-      </Grid>
-      <Grid item container direction="column">
-        <FormControl variant="outlined">
-          <InputLabel
-            id="demo-simple-select-label"
-            color="secondary"
-            className={classes.inputlablestyle}
-            shrink={true}
-          >
-            Role
-          </InputLabel>
-          <Select
-            defaultValue="view"
-            className={classes.inputlablestyle}
-            MenuProps={{ classes: { paper: classes.select } }}
-            inputProps={{
-              inputRef: (ref) => {
-                if (!ref) return;
-                register({
-                  name: "role",
-                  value: ref.value,
-                });
-              },
-            }}
-          >
-            <MenuItem value={"view"}>view</MenuItem>
-            <MenuItem value={"write"}>write</MenuItem>
-            <MenuItem value={"admin"}>admin</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item container direction="column">
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleSubmit((data) => onClickHandler(data))}
-        >
-          Add User
-        </Button>
-      </Grid>
-    </Grid>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={adminFormValidationSchema}
+      onSubmit={(values, { resetForm }) => {
+        const { email, name, password, role } = values;
+        dispatch(addUser(email, name, password, role));
+        resetForm();
+      }}
+    >
+      {({ submitForm }) => (
+        <Form className={classes.formStyle}>
+          <Grid item container sm={4} spacing={2}>
+            <Grid item container direction="column">
+              <Typography
+                variant="h4"
+                color="initial"
+                align="center"
+                className={classes.title}
+              >
+                Add New User
+              </Typography>
+            </Grid>
+            <Grid item container direction="column">
+              <CustomTextField name="name" label="First Name" />
+            </Grid>
+            <Grid item container direction="column">
+              <CustomTextField name="email" label="Email" type="email" />
+            </Grid>
+            <Grid item container direction="column">
+              <CustomTextField
+                name="password"
+                label="Default Password"
+                type="password"
+              />
+            </Grid>
+            <Grid item container direction="column">
+              <FormControl>
+                <Field
+                  component={Select}
+                  className={classes.select}
+                  MenuProps={{ classes: { paper: classes.select } }}
+                  name="role"
+                  variant="outlined"
+                >
+                  <MenuItem value={"view"}>View</MenuItem>
+                  <MenuItem value={"write"}>Write</MenuItem>
+                  <MenuItem value={"admin"}>Admin</MenuItem>
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item container direction="column">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={submitForm}
+              >
+                Add User
+              </Button>
+            </Grid>
+          </Grid>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

@@ -19,13 +19,9 @@ const useStyles = makeStyles({
   },
   paperStyle: {
     width: "100%",
-    // color: "#fff",
   },
   titleStyle: {
     padding: "1rem 0",
-  },
-  iconstyle: {
-    // color: "#fff",
   },
 });
 
@@ -62,9 +58,7 @@ const AdminDrawer = ({ handleSelection }) => {
             key={draweritem.id}
             onClick={draweritem.onClickHandler}
           >
-            <ListItemIcon className={classes.iconstyle}>
-              {draweritem.icon}
-            </ListItemIcon>
+            <ListItemIcon>{draweritem.icon}</ListItemIcon>
             <ListItemText primary={draweritem.name} />
           </ListItem>
         ))}

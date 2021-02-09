@@ -6,6 +6,9 @@ const themedark = createMuiTheme({
       default: "#bbbbbb",
       paper: "#8d8d8d",
     },
+    secondary: {
+      main: "#343a40",
+    },
     text: {
       primary: "#ffffff",
     },

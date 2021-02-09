@@ -1,17 +1,15 @@
-import React from "react";
+import * as React from "react";
 import { v4 as uuidv4 } from "uuid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { format } from "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
 
-import { useForm } from "react-hook-form";
+// Material Core
 import {
+  Button,
   Grid,
   IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -19,33 +17,40 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { useDispatch, useSelector } from "react-redux";
-import { hardware_delete, hardware_update } from "../../reducers/hardwareSlice";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { makeStyles } from "@material-ui/core/styles";
+
+//FormiK
+import { TextField } from "formik-material-ui";
+import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
+
+//Formik
+import { Formik, Form, Field } from "formik";
+
+// Dialog
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+//Import Validation Schema
+import { hardwareValidationSchema } from "../../schema/validationSchema";
+
+//Modular Imports
+import { hardware_update, hardware_delete } from "../../reducers/hardwareSlice";
 import { option_update } from "../../reducers/assetSelSlice";
 
 const useStyles = makeStyles({
   table: {
     minWidth: 600,
   },
-  tablecolor: {
-    // color: "#fff",
-  },
-  iconstyle: {
-    // color: "#fff",
-  },
-  paper: {
-    // backgroundColor: "#fff",
-  },
 });
 
 const HardwareForm = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const { errors, register, handleSubmit } = useForm();
-  const currentdate = new Date().toISOString().slice(0, 10);
   const { hardware } = useSelector((state) => state.hardware);
   const dispatch = useDispatch();
 
@@ -57,10 +62,8 @@ const HardwareForm = () => {
     setOpen(false);
   };
 
-  const handleclick = (data) => {
-    const datawithkey = { ...data, id: uuidv4() };
-    dispatch(hardware_update(datawithkey));
-    handleClose();
+  const handleDelete = (id) => {
+    dispatch(hardware_delete(id));
   };
 
   const clickContinueHandler = () => {
@@ -69,10 +72,6 @@ const HardwareForm = () => {
 
   const clickBackHandler = () => {
     dispatch(option_update(2));
-  };
-
-  const handleDelete = (id) => {
-    dispatch(hardware_delete(id));
   };
 
   return (
@@ -108,11 +107,13 @@ const HardwareForm = () => {
                       {row.hardwareName}
                     </TableCell>
                     <TableCell align="right">{row.hardwareVersion}</TableCell>
-                    <TableCell align="right">{row.expDate}</TableCell>
+                    <TableCell align="right">
+                      {/* {format(row.expDate, "yyyy-mm-dd")} */}
+                      {row.expDate}
+                    </TableCell>
                     <TableCell align="center" padding="none">
                       <IconButton
                         size="small"
-                        className={classes.iconstyle}
                         onClick={() => handleDelete(row.id)}
                       >
                         <DeleteIcon fontSize="small" />
@@ -149,53 +150,68 @@ const HardwareForm = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
-        PaperProps={{
-          classes: {
-            root: classes.paper,
-          },
-        }}
       >
         <DialogTitle id="form-dialog-title">Add Hardware</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            name="hardwareName"
-            inputRef={register({
-              required: "Hardware Name is Required",
-            })}
-            id="name"
-            label="Hardware Name"
-            fullWidth
-            required
-            error={!!errors.hardwareName}
-            helperText={errors?.hardwareName?.message}
-          />
-          <TextField
-            name="hardwareVersion"
-            inputRef={register}
-            id="name"
-            label="Hardware Version"
-            fullWidth
-          />
-          <TextField
-            name="expDate"
-            inputRef={register}
-            id="name"
-            label="Expiry Date"
-            type="date"
-            defaultValue={currentdate}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleSubmit((data) => handleclick(data))}
-            variant="contained"
-            color="secondary"
+          <Formik
+            initialValues={{
+              hardwareName: "",
+              hardwareVersion: "",
+              expDate: null,
+            }}
+            validationSchema={hardwareValidationSchema}
+            onSubmit={(values) => {
+              values.expDate =
+                values.expDate &&
+                format(values.expDate, "yyyy-MM-dd hh:mm:ss a");
+              const datawithkey = { ...values, id: uuidv4() };
+              dispatch(hardware_update(datawithkey));
+              handleClose();
+            }}
           >
-            Add
-          </Button>
-        </DialogActions>
+            {({ submitForm }) => (
+              <Form>
+                <Grid container direction="column">
+                  <Field
+                    component={TextField}
+                    name="hardwareName"
+                    type="text"
+                    label="Hardware Name"
+                    variant="outlined"
+                  />
+                  <br />
+                  <Field
+                    component={TextField}
+                    name="hardwareVersion"
+                    type="text"
+                    label="Hardware Version"
+                    variant="outlined"
+                  />
+                  <br />
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Field
+                      component={KeyboardDateTimePicker}
+                      name="expDate"
+                      label="Expiry Date"
+                      autoOk
+                      inputVariant="outlined"
+                    />
+                  </MuiPickersUtilsProvider>
+                  <br />
+                  <DialogActions>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={submitForm}
+                    >
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </DialogContent>
       </Dialog>
     </>
   );

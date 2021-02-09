@@ -18,3 +18,13 @@ export const onboardValidationSchema = yup.object().shape({
   assetName: yup.string().required("Asset Name Required"),
   warranty: yup.number().typeError("Must be a number in months"),
 });
+
+export const softwareValidationSchema = yup.object().shape({
+  softwareName: yup.string().required("Required"),
+});
+
+export const hardwareValidationSchema = yup.object().shape({
+  hardwareName: yup.string().required("Required"),
+});
+
+export const depreciationValidationSchema = yup.object().shape({});

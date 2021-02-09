@@ -43,10 +43,6 @@ const useStyles = makeStyles({
   },
   drawerPaper: {
     width: "16.66vw",
-    // color: "#fff",
-  },
-  iconstyle: {
-    // color: "#fff",
   },
 });
 
@@ -156,9 +152,7 @@ const DrawerComponent = () => {
                 key={draweritem.id}
                 onClick={draweritem.onClickHandler}
               >
-                <ListItemIcon className={classes.iconstyle}>
-                  {draweritem.icon}
-                </ListItemIcon>
+                <ListItemIcon>{draweritem.icon}</ListItemIcon>
                 <ListItemText primary={draweritem.name} />
               </ListItem>
             ))}
@@ -171,9 +165,7 @@ const DrawerComponent = () => {
                 key={draweritem.id}
                 onClick={draweritem.onClickHandler}
               >
-                <ListItemIcon className={classes.iconstyle}>
-                  {draweritem.icon}
-                </ListItemIcon>
+                <ListItemIcon>{draweritem.icon}</ListItemIcon>
                 <ListItemText primary={draweritem.name} />
               </ListItem>
             ))}
@@ -182,7 +174,7 @@ const DrawerComponent = () => {
 
           <List>
             <ListItem button onClick={changeThemeHandler}>
-              <ListItemIcon className={classes.iconstyle}>
+              <ListItemIcon>
                 <Brightness4Icon />
               </ListItemIcon>
               <ListItemText primary="Light/Dark" />
@@ -198,9 +190,7 @@ const DrawerComponent = () => {
                   key={draweritem.id}
                   onClick={draweritem.onClickHandler}
                 >
-                  <ListItemIcon className={classes.iconstyle}>
-                    {draweritem.icon}
-                  </ListItemIcon>
+                  <ListItemIcon>{draweritem.icon}</ListItemIcon>
                   <ListItemText primary={draweritem.name} />
                 </ListItem>
               ))}

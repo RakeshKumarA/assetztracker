@@ -20,16 +20,6 @@ const CustomTextField = ({
       component={TextField}
       variant="outlined"
       color="secondary"
-      InputLabelProps={{
-        style: {
-          // color: "#7b7b7b",
-        },
-      }}
-      InputProps={{
-        style: {
-          // color: "#fff",
-        },
-      }}
       fullWidth={true}
       size={"small"}
       {...props}

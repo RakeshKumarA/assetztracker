@@ -8,14 +8,12 @@ import {
   Grid,
   MenuItem,
   Typography,
+  TextField as TextFieldMaterial,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 //Formik Imports
 import { Formik, Form, Field } from "formik";
-
-//Formik Material ui
-import { Select } from "formik-material-ui";
 
 //Import Validation Schema
 import { adminFormValidationSchema } from "../../schema/validationSchema";
@@ -35,12 +33,6 @@ const useStyles = makeStyles({
 
   title: {
     padding: "1rem 0",
-  },
-  inputlablestyle: {
-    // color: "#7b7b7b",
-  },
-  select: {
-    // color: "#fff",
   },
   formStyle: {
     display: "flex",
@@ -99,13 +91,14 @@ const AdminForm = () => {
               />
             </Grid>
             <Grid item container direction="column">
-              <FormControl>
+              <FormControl fullWidth>
                 <Field
-                  component={Select}
-                  className={classes.select}
-                  MenuProps={{ classes: { paper: classes.select } }}
+                  fullWidth
                   name="role"
+                  label="Role"
                   variant="outlined"
+                  as={TextFieldMaterial}
+                  select
                 >
                   <MenuItem value={"view"}>View</MenuItem>
                   <MenuItem value={"write"}>Write</MenuItem>

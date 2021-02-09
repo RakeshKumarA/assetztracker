@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { depreciation: {} };
+const initialState = {
+  depreciation: {
+    shelflife: "",
+    residualvalue: "",
+    depmethod: "",
+  },
+};
 
 export const depreciationSlice = createSlice({
   name: "depreciation",

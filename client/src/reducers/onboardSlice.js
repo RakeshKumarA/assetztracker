@@ -1,26 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const currentDate = new Date();
-const nextmonth = new Date(currentDate.setMonth(currentDate.getMonth() + 1))
-  .toISOString()
-  .slice(0, 10);
-
 const initialState = {
   onboard: {
     assetId: "",
     assetName: "",
-    assetStatus: "",
-    assetType: "",
+    assetStatus: "Onboarding",
+    assetType: "rented",
     cost: "",
     invoiceNumber: "",
-    lastauditDate: new Date().toISOString(),
-    onboardDate: new Date().toISOString(),
+    lastauditDate: null,
+    onboardDate: null,
     productSerial: "",
-    purchaseDate: new Date().toISOString(),
+    purchaseDate: null,
     purchaseOrder: "",
     vendor: "",
     warranty: 1,
-    warrantyExp: nextmonth,
+    warrantyExp: null,
   },
 };
 

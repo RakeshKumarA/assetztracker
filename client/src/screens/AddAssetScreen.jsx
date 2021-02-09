@@ -20,7 +20,6 @@ const useStyles = makeStyles({
   },
   paperStyle: {
     width: "100%",
-    // color: "#fff",
   },
   formcontainer: {
     padding: "2rem",

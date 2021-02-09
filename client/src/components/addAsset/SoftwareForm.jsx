@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import * as React from "react";
 import { v4 as uuidv4 } from "uuid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles } from "@material-ui/core/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { format } from "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
 
-import { Controller, useForm } from "react-hook-form";
+// Material Core
 import {
+  Button,
   Grid,
   IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -19,60 +17,40 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { useDispatch, useSelector } from "react-redux";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { makeStyles } from "@material-ui/core/styles";
+
+//FormiK
+import { TextField } from "formik-material-ui";
+import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
+
+//Formik
+import { Formik, Form, Field } from "formik";
+
+// Dialog
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+//Import Validation Schema
+import { softwareValidationSchema } from "../../schema/validationSchema";
+
+//Modular Imports
 import { software_update, software_delete } from "../../reducers/softwareSlice";
 import { option_update } from "../../reducers/assetSelSlice";
-
-//Date
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 
 const useStyles = makeStyles({
   table: {
     minWidth: 600,
   },
-  tablecolor: {
-    // color: "#fff",
-  },
-  iconstyle: {
-    // color: "#fff",
-  },
-  paper: {
-    // backgroundColor: "#fff",
-  },
-  datepicker: {
-    display: "block",
-    boxSizing: "border-box",
-    width: "100%",
-    borderRadius: "0.25rem",
-    border: "1px solid white",
-    padding: "10px 15px",
-    marginBottom: "10px",
-    fontSize: "14px",
-  },
 });
 
 const SoftwareForm = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const {
-    errors,
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    watch,
-  } = useForm();
-  const currentdate = new Date().toISOString().slice(0, 10);
+  const [open, setOpen] = React.useState(false);
   const { software } = useSelector((state) => state.software);
   const dispatch = useDispatch();
 
@@ -84,11 +62,8 @@ const SoftwareForm = () => {
     setOpen(false);
   };
 
-  const handleclick = (data) => {
-    console.log(data);
-    // const datawithkey = { ...data, id: uuidv4() };
-    // dispatch(software_update(datawithkey));
-    handleClose();
+  const handleDelete = (id) => {
+    dispatch(software_delete(id));
   };
 
   const clickContinueHandler = () => {
@@ -97,17 +72,6 @@ const SoftwareForm = () => {
 
   const clickBackHandler = () => {
     dispatch(option_update(1));
-  };
-
-  const handleDelete = (id) => {
-    dispatch(software_delete(id));
-  };
-
-  //Date
-  const [selectedDate, setSelectedDate] = React.useState(null);
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
   };
 
   return (
@@ -143,11 +107,13 @@ const SoftwareForm = () => {
                       {row.softwareName}
                     </TableCell>
                     <TableCell align="right">{row.softwareVersion}</TableCell>
-                    <TableCell align="right">{row.expDate}</TableCell>
+                    <TableCell align="right">
+                      {/* {format(row.expDate, "yyyy-mm-dd")} */}
+                      {row.expDate}
+                    </TableCell>
                     <TableCell align="center" padding="none">
                       <IconButton
                         size="small"
-                        className={classes.iconstyle}
                         onClick={() => handleDelete(row.id)}
                       >
                         <DeleteIcon fontSize="small" />
@@ -184,55 +150,68 @@ const SoftwareForm = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
-        PaperProps={{
-          classes: {
-            root: classes.paper,
-          },
-        }}
       >
         <DialogTitle id="form-dialog-title">Add Software</DialogTitle>
-
-        <TextField
-          autoFocus
-          name="softwareName"
-          inputRef={register({
-            required: "Software Name is Required",
-          })}
-          id="name"
-          label="Software Name"
-          fullWidth
-          required
-          error={!!errors.softwareName}
-          helperText={errors?.softwareName?.message}
-        />
-
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Controller
-            as={ReactDatePicker}
-            control={control}
-            valueName="expDate" // DateSelect value's name is selected
-            onChange={([expDate]) => expDate}
-            name="expDate"
-            className={classes.datepicker}
-            placeholderText="Select date"
-          />
-        </MuiPickersUtilsProvider>
-        <TextField
-          name="softwareVersion"
-          inputRef={register}
-          id="name"
-          label="Software Version"
-          fullWidth
-        />
-        <DialogActions>
-          <Button
-            onClick={handleSubmit((data) => handleclick(data))}
-            variant="contained"
-            color="secondary"
+        <DialogContent>
+          <Formik
+            initialValues={{
+              softwareName: "",
+              softwareVersion: "",
+              expDate: null,
+            }}
+            validationSchema={softwareValidationSchema}
+            onSubmit={(values) => {
+              values.expDate =
+                values.expDate &&
+                format(values.expDate, "yyyy-MM-dd hh:mm:ss a");
+              const datawithkey = { ...values, id: uuidv4() };
+              dispatch(software_update(datawithkey));
+              handleClose();
+            }}
           >
-            Add
-          </Button>
-        </DialogActions>
+            {({ submitForm }) => (
+              <Form>
+                <Grid container direction="column">
+                  <Field
+                    component={TextField}
+                    name="softwareName"
+                    type="text"
+                    label="Software Name"
+                    variant="outlined"
+                  />
+                  <br />
+                  <Field
+                    component={TextField}
+                    name="softwareVersion"
+                    type="text"
+                    label="Software Version"
+                    variant="outlined"
+                  />
+                  <br />
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Field
+                      component={KeyboardDateTimePicker}
+                      name="expDate"
+                      label="Expiry Date"
+                      autoOk
+                      inputVariant="outlined"
+                    />
+                  </MuiPickersUtilsProvider>
+                  <br />
+                  <DialogActions>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={submitForm}
+                    >
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </DialogContent>
       </Dialog>
     </>
   );

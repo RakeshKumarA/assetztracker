@@ -6,8 +6,8 @@ import {
   Button,
   FormControl,
   Grid,
-  InputLabel,
   MenuItem,
+  TextField as TextFieldMaterial,
   Typography,
 } from "@material-ui/core";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -21,7 +21,6 @@ import { onboardValidationSchema } from "../../schema/validationSchema";
 import { Formik, Form, Field } from "formik";
 
 //Formik Material ui
-import { Select } from "formik-material-ui";
 import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
 
 // Imports
@@ -33,19 +32,10 @@ const useStyles = makeStyles({
   container: {
     paddingTop: "2rem",
   },
-  inputlablestyle: {
-    // color: "#7b7b7b",
-  },
-  select: {
-    // color: "#fff",
-  },
   formStyle: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-  },
-  paper: {
-    // backgroundColor: "#fff",
   },
 });
 
@@ -63,11 +53,18 @@ const OnBoardForm = () => {
         initialValues={onboard}
         validationSchema={onboardValidationSchema}
         onSubmit={(values) => {
-          console.log(values.lastauditDate.toISOString());
-          values.lastauditDate = values.lastauditDate.toISOString();
-          values.onboardDate = values.onboardDate.toISOString();
-          values.purchaseDate = values.purchaseDate.toISOString();
-          values.warrantyExp = values.warrantyExp.toISOString();
+          if (values.lastauditDate) {
+            values.lastauditDate = values.lastauditDate.toISOString();
+          }
+          if (values.onboardDate) {
+            values.onboardDate = values.onboardDate.toISOString();
+          }
+          if (values.purchaseDate) {
+            values.purchaseDate = values.purchaseDate.toISOString();
+          }
+          if (values.warrantyExp) {
+            values.warrantyExp = values.warrantyExp.toISOString();
+          }
           dispatch(onboard_update(values));
           dispatch(option_update(2));
         }}
@@ -99,7 +96,7 @@ const OnBoardForm = () => {
                 <Grid item container>
                   <CustomTextField name="vendor" label="Vendor" />
                 </Grid>
-                <Grid item container>
+                <Grid item container direction="column">
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Field
                       component={KeyboardDateTimePicker}
@@ -110,7 +107,7 @@ const OnBoardForm = () => {
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item container>
+                <Grid item container direction="column">
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Field
                       component={KeyboardDateTimePicker}
@@ -122,23 +119,15 @@ const OnBoardForm = () => {
                   </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item container direction="column">
-                  <FormControl variant="outlined">
-                    <InputLabel
-                      color="secondary"
-                      className={classes.inputlablestyle}
-                    >
-                      Asset Type
-                    </InputLabel>
+                  <FormControl fullWidth>
                     <Field
-                      component={Select}
-                      className={classes.select}
-                      MenuProps={{ classes: { paper: classes.select } }}
+                      fullWidth
                       name="assetType"
+                      label="Asset Type"
                       variant="outlined"
+                      as={TextFieldMaterial}
+                      select
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
                       <MenuItem value={"rented"}>Rented</MenuItem>
                       <MenuItem value={"leased"}>Leased</MenuItem>
                       <MenuItem value={"own"}>Own</MenuItem>
@@ -176,7 +165,7 @@ const OnBoardForm = () => {
                   />
                 </Grid>
 
-                <Grid item container>
+                <Grid item container direction="column">
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Field
                       component={KeyboardDateTimePicker}
@@ -187,7 +176,7 @@ const OnBoardForm = () => {
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item container>
+                <Grid item container direction="column">
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Field
                       component={KeyboardDateTimePicker}
@@ -199,7 +188,11 @@ const OnBoardForm = () => {
                   </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item container>
-                  <CustomTextField name="assetStatus" label="Asset Status" />
+                  <CustomTextField
+                    name="assetStatus"
+                    label="Asset Status"
+                    disabled
+                  />
                 </Grid>
               </Grid>
             </Grid>

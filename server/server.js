@@ -1,7 +1,8 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const userRoutes = require("./routes/userRoutes");
-const logger = require("./utils/logger");
+const express = require('express');
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/userRoutes');
+const assetRoutes = require('./routes/assetRoutes');
+const logger = require('./utils/logger');
 
 dotenv.config();
 
@@ -20,7 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", userRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/assets', assetRoutes);
 
 const PORT = process.env.PORT || 5000;
 

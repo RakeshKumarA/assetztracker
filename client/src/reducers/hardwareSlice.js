@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = { hardware: [] };
 
 export const hardwareSlice = createSlice({
-  name: "hardware",
+  name: 'hardware',
   initialState,
   reducers: {
     hardware_update: (state, action) => {
@@ -20,9 +20,14 @@ export const hardwareSlice = createSlice({
         ),
       };
     },
+    hardware_reset: (state) => initialState,
   },
 });
 
-export const { hardware_update, hardware_delete } = hardwareSlice.actions;
+export const {
+  hardware_update,
+  hardware_delete,
+  hardware_reset,
+} = hardwareSlice.actions;
 
 export default hardwareSlice.reducer;

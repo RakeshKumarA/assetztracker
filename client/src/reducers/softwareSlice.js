@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = { software: [] };
 
 export const softwareSlice = createSlice({
-  name: "software",
+  name: 'software',
   initialState,
   reducers: {
     software_update: (state, action) => {
@@ -20,9 +20,14 @@ export const softwareSlice = createSlice({
         ),
       };
     },
+    software_reset: (state) => initialState,
   },
 });
 
-export const { software_update, software_delete } = softwareSlice.actions;
+export const {
+  software_update,
+  software_delete,
+  software_reset,
+} = softwareSlice.actions;
 
 export default softwareSlice.reducer;

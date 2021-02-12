@@ -1,23 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   depreciation: {
-    shelflife: "",
-    residualvalue: "",
-    depmethod: "",
+    shelflife: {
+      lable: 'Shelf Life',
+      value: '',
+    },
+    residualvalue: {
+      lable: 'Residual Value',
+      value: '',
+    },
+    depmethod: {
+      lable: 'Asset Status',
+      value: '',
+    },
   },
 };
 
 export const depreciationSlice = createSlice({
-  name: "depreciation",
+  name: 'depreciation',
   initialState,
   reducers: {
     depreciation_update: (state, action) => {
       state.depreciation = action.payload;
     },
+    depreciation_reset: (state) => initialState,
   },
 });
 
-export const { depreciation_update } = depreciationSlice.actions;
+export const {
+  depreciation_update,
+  depreciation_reset,
+} = depreciationSlice.actions;
 
 export default depreciationSlice.reducer;

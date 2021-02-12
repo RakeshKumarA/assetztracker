@@ -1,5 +1,5 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 //Material UI
 import {
@@ -9,40 +9,60 @@ import {
   MenuItem,
   TextField as TextFieldMaterial,
   Typography,
-} from "@material-ui/core";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import { makeStyles } from "@material-ui/core/styles";
+} from '@material-ui/core';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import { makeStyles } from '@material-ui/core/styles';
 
 //Import Validation Schema
-import { onboardValidationSchema } from "../../schema/validationSchema";
+import { onboardValidationSchema } from '../../schema/validationSchema';
 
 //Formik Imports
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field } from 'formik';
 
 //Formik Material ui
-import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
+import { KeyboardDateTimePicker } from 'formik-material-ui-pickers';
 
 // Imports
-import CustomTextField from "../customcomponents/CustomTextField";
-import { onboard_update } from "../../reducers/onboardSlice";
-import { option_update } from "../../reducers/assetSelSlice";
+import CustomTextField from '../customcomponents/CustomTextField';
+import { onboard_update } from '../../reducers/onboardSlice';
+import { option_update_continue } from '../../reducers/assetSelSlice';
 
 const useStyles = makeStyles({
   container: {
-    paddingTop: "2rem",
+    paddingTop: '2rem',
   },
   formStyle: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
 });
 
 const OnBoardForm = () => {
   const classes = useStyles();
   const { onboard } = useSelector((state) => state.onboard);
+  const { enable } = useSelector((state) => state.assetSel);
   const dispatch = useDispatch();
+
+  const initialValues = {
+    assetId: onboard.assetId.value,
+    assetName: onboard.assetName.value,
+    assetStatus: onboard.assetStatus.value,
+    assetType: onboard.assetType.value,
+    cost: onboard.cost.value,
+    invoiceNumber: onboard.invoiceNumber.value,
+    lastauditDate: onboard.lastauditDate.value,
+    onboardDate: onboard.onboardDate.value,
+    productSerial: onboard.productSerial.value,
+    purchaseDate: onboard.purchaseDate.value,
+    purchaseOrder: onboard.purchaseOrder.value,
+    vendor: onboard.vendor.value,
+    warranty: onboard.warranty.value,
+    warrantyExp: onboard.warrantyExp.value,
+  };
+
+  const enableoncontinue = { ...enable, software: false };
 
   return (
     <Grid container direction="column">
@@ -50,26 +70,86 @@ const OnBoardForm = () => {
         Onboard
       </Typography>
       <Formik
-        initialValues={onboard}
+        initialValues={initialValues}
         validationSchema={onboardValidationSchema}
         onSubmit={(values) => {
-          if (values.lastauditDate) {
-            values.lastauditDate = values.lastauditDate.toISOString();
-          }
-          if (values.onboardDate) {
-            values.onboardDate = values.onboardDate.toISOString();
-          }
-          if (values.purchaseDate) {
-            values.purchaseDate = values.purchaseDate.toISOString();
-          }
-          if (values.warrantyExp) {
-            values.warrantyExp = values.warrantyExp.toISOString();
-          }
-          dispatch(onboard_update(values));
-          dispatch(option_update(2));
+          console.log(values);
+          const valuetobeuploaded = {
+            assetId: {
+              lable: 'Asset Id',
+              value: values.assetId,
+            },
+            assetName: {
+              lable: 'Asset Name',
+              value: values.assetName,
+            },
+            assetStatus: {
+              lable: 'Asset Status',
+              value: values.assetStatus,
+            },
+            assetType: {
+              lable: 'Asset Type',
+              value: values.assetType,
+            },
+            cost: {
+              lable: 'Cost',
+              value: values.cost,
+            },
+            invoiceNumber: {
+              lable: 'Invoice Number',
+              value: values.invoiceNumber,
+            },
+            lastauditDate: {
+              lable: 'Last Audit Date',
+              value: values.lastauditDate
+                ? values.lastauditDate.toString()
+                : values.lastauditDate,
+            },
+            onboardDate: {
+              lable: 'Onboard Date',
+              value: values.onboardDate
+                ? values.onboardDate.toString()
+                : values.onboardDate,
+            },
+            productSerial: {
+              lable: 'Product Serial',
+              value: values.productSerial,
+            },
+            purchaseDate: {
+              lable: 'Purchase Date',
+              value: values.purchaseDate
+                ? values.purchaseDate.toString()
+                : values.purchaseDate,
+            },
+            purchaseOrder: {
+              lable: 'Purchase Order',
+              value: values.purchaseOrder,
+            },
+            vendor: {
+              lable: 'Vendor',
+              value: values.vendor,
+            },
+            warranty: {
+              lable: 'Warranty',
+              value: values.warranty,
+            },
+            warrantyExp: {
+              lable: 'Warranty Exp Date',
+              value: values.warrantyExp
+                ? values.warrantyExp.toString()
+                : values.warrantyExp,
+            },
+          };
+          dispatch(onboard_update(valuetobeuploaded));
+          dispatch(
+            option_update_continue({
+              option: 2,
+              enable: enableoncontinue,
+            })
+          );
         }}
       >
-        {({ submitForm }) => (
+        {({ submitForm, setFieldValue }) => (
           <Form className={classes.formStyle}>
             <Grid
               container
@@ -104,6 +184,7 @@ const OnBoardForm = () => {
                       label="Onboard Date"
                       autoOk
                       inputVariant="outlined"
+                      format="yyyy-mm-dd HH:MM:SS p"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -115,6 +196,7 @@ const OnBoardForm = () => {
                       label="Purchase Date"
                       autoOk
                       inputVariant="outlined"
+                      format="yyyy-mm-dd HH:MM:SS p"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -128,9 +210,9 @@ const OnBoardForm = () => {
                       as={TextFieldMaterial}
                       select
                     >
-                      <MenuItem value={"rented"}>Rented</MenuItem>
-                      <MenuItem value={"leased"}>Leased</MenuItem>
-                      <MenuItem value={"own"}>Own</MenuItem>
+                      <MenuItem value={'rented'}>Rented</MenuItem>
+                      <MenuItem value={'leased'}>Leased</MenuItem>
+                      <MenuItem value={'own'}>Own</MenuItem>
                     </Field>
                   </FormControl>
                 </Grid>
@@ -173,6 +255,7 @@ const OnBoardForm = () => {
                       label="Warranty Expiry Date"
                       autoOk
                       inputVariant="outlined"
+                      format="yyyy-mm-dd HH:MM:SS p"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -184,6 +267,7 @@ const OnBoardForm = () => {
                       label="Last Audit Date"
                       autoOk
                       inputVariant="outlined"
+                      format="yyyy-mm-dd HH:MM:SS p"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>

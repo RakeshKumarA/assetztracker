@@ -1,28 +1,28 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import AddAssetDrawer from "../components/addAsset/AddAssetDrawer";
-import { Paper } from "@material-ui/core";
-import OnBoardForm from "../components/addAsset/OnBoardForm";
-import SoftwareForm from "../components/addAsset/SoftwareForm";
-import HardwareForm from "../components/addAsset/HardwareForm";
-import DepreciationForm from "../components/addAsset/DepreciationForm";
-import Documents from "../components/addAsset/Documents";
-import { useSelector } from "react-redux";
+import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import AddAssetDrawer from '../components/addAsset/AddAssetDrawer';
+import { Paper } from '@material-ui/core';
+import OnBoardForm from '../components/addAsset/OnBoardForm';
+import SoftwareForm from '../components/addAsset/SoftwareForm';
+import HardwareForm from '../components/addAsset/HardwareForm';
+import DepreciationForm from '../components/addAsset/DepreciationForm';
+import Documents from '../components/addAsset/Documents';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
   container: {
-    minHeight: "100vh",
+    minHeight: '100vh',
   },
   cardContainer: {
-    height: "80%",
-    width: "90%",
+    height: '80%',
+    width: '90%',
   },
   paperStyle: {
-    width: "100%",
+    width: '100%',
   },
   formcontainer: {
-    padding: "2rem",
+    padding: '2rem',
   },
 });
 

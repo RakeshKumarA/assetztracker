@@ -1,8 +1,8 @@
-import * as React from "react";
-import { v4 as uuidv4 } from "uuid";
-import { useDispatch, useSelector } from "react-redux";
-import { format } from "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
+import * as React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { format } from 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
 
 // Material Core
 import {
@@ -17,30 +17,33 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { makeStyles } from "@material-ui/core/styles";
+} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { makeStyles } from '@material-ui/core/styles';
 
 //FormiK
-import { TextField } from "formik-material-ui";
-import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
+import { TextField } from 'formik-material-ui';
+import { KeyboardDateTimePicker } from 'formik-material-ui-pickers';
 
 //Formik
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field } from 'formik';
 
 // Dialog
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 //Import Validation Schema
-import { softwareValidationSchema } from "../../schema/validationSchema";
+import { softwareValidationSchema } from '../../schema/validationSchema';
 
 //Modular Imports
-import { software_update, software_delete } from "../../reducers/softwareSlice";
-import { option_update } from "../../reducers/assetSelSlice";
+import { software_update, software_delete } from '../../reducers/softwareSlice';
+import {
+  option_update_continue,
+  option_update_onclick,
+} from '../../reducers/assetSelSlice';
 
 const useStyles = makeStyles({
   table: {
@@ -52,7 +55,9 @@ const SoftwareForm = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const { software } = useSelector((state) => state.software);
+  const { enable } = useSelector((state) => state.assetSel);
   const dispatch = useDispatch();
+  const enableoncontinue = { ...enable, hardware: false };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -67,11 +72,16 @@ const SoftwareForm = () => {
   };
 
   const clickContinueHandler = () => {
-    dispatch(option_update(3));
+    dispatch(
+      option_update_continue({
+        option: 3,
+        enable: enableoncontinue,
+      })
+    );
   };
 
   const clickBackHandler = () => {
-    dispatch(option_update(1));
+    dispatch(option_update_onclick({ option: 1 }));
   };
 
   return (
@@ -155,15 +165,15 @@ const SoftwareForm = () => {
         <DialogContent>
           <Formik
             initialValues={{
-              softwareName: "",
-              softwareVersion: "",
+              softwareName: '',
+              softwareVersion: '',
               expDate: null,
             }}
             validationSchema={softwareValidationSchema}
             onSubmit={(values) => {
               values.expDate =
                 values.expDate &&
-                format(values.expDate, "yyyy-MM-dd hh:mm:ss a");
+                format(values.expDate, 'yyyy-MM-dd hh:mm:ss a');
               const datawithkey = { ...values, id: uuidv4() };
               dispatch(software_update(datawithkey));
               handleClose();

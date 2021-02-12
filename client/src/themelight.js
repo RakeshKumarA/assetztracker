@@ -1,28 +1,28 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 
 const themelight = createMuiTheme({
   palette: {
     primary: {
-      main: "#109CF1",
+      main: '#343a40',
     },
     background: {
-      default: "#e5e5e5",
+      default: '#e5e5e5',
     },
   },
   typography: {
     fontFamily: [
-      "Nunito Sans",
-      "-apple-system",
-      "BlinkMacSystemFont",
+      'Nunito Sans',
+      '-apple-system',
+      'BlinkMacSystemFont',
       '"Segoe UI"',
-      "Roboto",
+      'Roboto',
       '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
+      'Arial',
+      'sans-serif',
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(","),
+    ].join(','),
   },
   // overrides: {
   //   MuiTableCell: {

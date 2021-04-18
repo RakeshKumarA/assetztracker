@@ -87,8 +87,24 @@ const addUser = async (req, res) => {
     res.json({ status: 500, message: error.message });
   }
 };
+const viewUser = async (req, res) => {
+  const view = await db.query("SELECT userid,name,email,role FROM users");
+  res.status(201).json({ data: view.rows}) 
+ };
+ const removeUser = async (req,res) => {
+  try{
+      const results=await db.query("DELETE from users where userid=$1 ",[req.body.userid]);
+      res.status(200).json({ status: 'success',data :results.rows});
+  }
+  catch (error) {
+      res.status(500).json({status:"failed"});
+  }
+}
 
 module.exports = {
   authUser: authUser,
   addUser: addUser,
+  viewUser: viewUser,
+  removeUser :removeUser,
+
 };

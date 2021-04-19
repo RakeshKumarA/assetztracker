@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AdminDrawer from "../components/admin/AdminDrawer";
 import AdminForm from "../components/admin/AdminForm";
 import { Paper } from "@material-ui/core";
+import SearchUser from "../components/admin/SearchUser";
 
 const useStyles = makeStyles({
   container: {
@@ -50,7 +51,7 @@ const AdminScreen = () => {
               alignItems="center"
               className={classes.formcontainer}
             >
-              {menuselection === 1 && <AdminForm />}
+                 {(menuselection===1&&<AdminForm />) || (menuselection === 2 && <SearchUser/>)}
             </Grid>
           </Paper>
         </Grid>

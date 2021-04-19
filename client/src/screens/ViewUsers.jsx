@@ -46,6 +46,7 @@ container: {
 
  const ViewUsers = () => {
   const classes = useStyles();
+  const { userInfo } = useSelector((state) => state.user);
   
   const dispatch = useDispatch();
   dispatch(viewUsers());
@@ -104,12 +105,12 @@ return (
                      {row.role}
                    </TableCell>
                     <TableCell align="center" padding="none"> 
-                    {(row.role !=="admin")&&<IconButton
+                    {(row.role !=="admin")&& (userInfo.role ==="admin")&&<IconButton
                        size="small"
                         onClick={() => handleDelete(row.userid)}
-                        disabled={(row.role==="view")}
+                      
                      >
-                       <DeleteIcon fontSize="small" />
+                       <DeleteIcon  fontSize="small" />
                      </IconButton>
  }
                    </TableCell>

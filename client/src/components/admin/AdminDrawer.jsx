@@ -37,7 +37,7 @@ const AdminDrawer = ({ handleSelection }) => {
     },
     {
       id: 2,
-      name: "Search User",
+      name: "View Users",
       icon: <SearchIcon />,
       onClickHandler: () => handleSelection(2),
     },

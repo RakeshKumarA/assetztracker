@@ -9,14 +9,14 @@ import Table from '@material-ui/core/Table';
   IconButton,
 } from '@material-ui/core';
 import { Grid,  TableHead,Typography } from '@material-ui/core';
-import { removeUser, searched_user } from "../../reducers/viewUserSlice";
-import { set_snackbar } from '../../reducers/snackSlice';
+
+
  import TableRow from '@material-ui/core/TableRow';
 //MUI Libs
 import {
   Button,
  
-  TextField as TextFieldMaterial,
+  
   
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -29,7 +29,7 @@ import axios from "axios";
 import {  useSelector, useDispatch } from 'react-redux';
 //Modular Imports
 import CustomTextField from "../customcomponents/CustomTextField";
-import { viewUsers,searcheduser } from "../../reducers/viewUserSlice";
+import { viewUsers,searchUsers } from "../../reducers/viewUserSlice";
 
 
 
@@ -38,17 +38,21 @@ const useStyles = makeStyles({
     minHeight: "100vh",
   },
   cardContainer: {
-    height: "80%",
+    height: "100vh",
     width: "90%",
   },
 
-  title: {
-    padding: "1rem 0",
+  paperStyle: {
+    paddingTop:"4vh",
+    width: "100%",
   },
-  formStyle: {
-    display: "flex",
-    justifyContent: "center",
+  title:{
+      paddingBottom:"1.5rem",
   },
+  
+ formcontainer:{
+     paddingBottom:'1.5rem',
+ }
 });
 
 const SearchUser = () => {
@@ -57,28 +61,15 @@ const SearchUser = () => {
   
   dispatch(viewUsers());
   const { view } =useSelector((state) => state.viewusers);
-  const { searcheduser } =useSelector((state) => state.viewusers);
+  // const { searcheduser } =useSelector((state) => state.viewusers);
+  const { userInfo } = useSelector((state) => state.user);
   
-  
-const Search = (name) => {
-  
-   console.log(name);
-    const value2 = view.filter(
+  const Search = (name) => {
+    const data = view.filter(
      (value) => value.name === name
    )
-  {if(value2!=""){
-    dispatch(searched_user(value2));
-  }
-else if(value2 == ""){
-  
-    dispatch(
-        set_snackbar({
-          snackbarOpen: true,
-          snackbarType: 'error',
-          snackbarMessage: 'User not Found',
-        })
-      );
-}}
+   console.log(data);
+ dispatch(searchUsers(data));
  }
  const handleDelete = (id) => {
     axios.post("/api/users/remove",{
@@ -92,8 +83,32 @@ else if(value2 == ""){
   };
 
   return (
-   <Grid container>
-     <Grid item container justify="center">
+    
+
+    <Grid
+    container
+    className={classes.container}
+    justify="center"
+    alignItems="center"
+  >
+    <Grid >
+    <Typography  variant="h4"
+    color="initial"
+    textAlign="center"
+     className={classes.title}>View  Users
+      </Typography> 
+    </Grid>
+   
+    
+<Grid
+     container
+     className={classes.container}
+     justify="center"
+     alignItems="center"
+   >
+     <Grid item container className={classes.cardContainer} spacing={2}>
+     <Paper className={classes.paperStyle}>
+        <Grid item container justify="center">
     <Formik
     initialValues={initialValues}
     onSubmit={(values, { resetForm }) => {
@@ -104,18 +119,22 @@ else if(value2 == ""){
     }}>
         {({ submitForm }) => (
         <Form className={classes.formStyle}>
-    <Grid item container spacing={2}>
+    <Grid item container >
+    
     <Grid item container direction="row" style={{minWidth:"30vw"}}>
+    
             <Grid item   >
-              <CustomTextField style={{minWidth:"30vw",paddingRight:"2rem"}} name="name" label="Search" />
+              <CustomTextField style={{minWidth:"30vw",paddingRight:"2rem"}} name="name" label="Search By Name" />
             </Grid>
             <Grid item >
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={submitForm}
+                onChange={(e) => {
+                  submitForm(e.target.value);
+                }}
               >
-                Search
+                Search 
               </Button>
             </Grid>
             </Grid>
@@ -127,62 +146,61 @@ else if(value2 == ""){
 </Formik>
 </Grid>
 
-    
-            <Grid
-              item
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              style={{marginTop:"2vh"}}
-            >
-               {(searcheduser!="")&&<TableContainer >
-            <Table className={classes.table} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align='center' >Name</TableCell>
-                  <TableCell  align='center' >Email</TableCell>
-                  <TableCell  align='center' >Role</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {searcheduser.map((row) => (
-                  <TableRow key={row.userid}>
-                    <TableCell component="th" scope="row" align='center'>
-                      {row.name}
-                    </TableCell>
-                    <TableCell  align='center' >{row.email}</TableCell>
-                    <TableCell  align='center' >
-                      {/* {format(row.expDate, "yyyy-mm-dd")} */}
-                      {row.role}
-                    </TableCell>
+       <Grid item container sm={10} style={{margin:"1rem 4rem"}} justify ="center" >         
+         <Paper className={classes.paperStyle}>
+           <Grid
+             item
+             container
+             direction="column"
+             justify="center"
+             alignItems="center"
+             
+           >
+              <TableContainer >
+           <Table className={classes.table} aria-label="simple table">
+             <TableHead>
+               <TableRow>
+                 <TableCell align='center' >Name</TableCell>
+                 <TableCell  align='center' >Email</TableCell>
+                 <TableCell  align='center' >Role</TableCell>
+                 <TableCell></TableCell>
+               </TableRow>
+             </TableHead>
+             <TableBody>
+               {view.map((row) => (
+                 <TableRow key={row.userid}>
+                   <TableCell component="th" scope="row" align='center'>
+                     {row.name}
+                   </TableCell>
+                   <TableCell  align='center' >{row.email}</TableCell>
+                   <TableCell  align='center' >
+                     {/* {format(row.expDate, "yyyy-mm-dd")} */}
+                     {row.role}
+                   </TableCell>
                     <TableCell align="center" padding="none"> 
-                     {(row.role !=="admin")&&<IconButton
-                        size="small"
+                    {(row.role !=="admin") && (userInfo.role ==="admin")&&<IconButton
+                       size="small"
                         onClick={() => handleDelete(row.userid)}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-  }
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>}
-            </Grid>
+                      
+                     >
+                       <DeleteIcon  fontSize="small" />
+                     </IconButton>
+ }
+                   </TableCell>
+                 </TableRow>
+               ))}
+             </TableBody>
+           </Table>
+         </TableContainer>
+           </Grid>
+         </Paper>
+       </Grid>
+       </Paper>
+     </Grid>
+   </Grid>
           
         </Grid>
-
-
-
-
-
- 
-  
-  
-          
+     
 )}
             
         

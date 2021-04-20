@@ -25,7 +25,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import { makeStyles } from '@material-ui/core/styles';
-import PeopleIcon from '@material-ui/icons/People';
+
 
 import assetzLogo from '../../assets/assetzlogo.png';
 import { useHistory } from 'react-router-dom';
@@ -90,20 +90,20 @@ const DrawerComponent = () => {
       icon: <SettingsIcon />,
       onClickHandler: () => history.push('/setting'),
     },
+    // {
+    //   id: 2,
+    //   name: 'View Users',
+    //   icon: <PeopleIcon />,
+    //   onClickHandler: () => history.push('/viewuser'),
+    // },
     {
       id: 2,
-      name: 'View Users',
-      icon: <PeopleIcon />,
-      onClickHandler: () => history.push('/viewuser'),
-    },
-    {
-      id: 3,
       name: 'Notifications',
       icon: <NotificationsActiveIcon />,
       onClickHandler: () => history.push('/notifs'),
     },
     {
-      id: 4,
+      id: 3,
       name: 'Log Out',
       icon: <ExitToAppIcon />,
       onClickHandler: () => {

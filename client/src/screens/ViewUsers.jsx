@@ -105,7 +105,7 @@ return (
                      {row.role}
                    </TableCell>
                     <TableCell align="center" padding="none"> 
-                    {(row.role !=="admin")&& (userInfo.role ==="admin")&&<IconButton
+                    {(row.role !=="admin") && (userInfo.role ==="admin")&&<IconButton
                        size="small"
                         onClick={() => handleDelete(row.userid)}
                       

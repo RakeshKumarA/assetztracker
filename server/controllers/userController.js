@@ -93,18 +93,31 @@ const viewUser = async (req, res) => {
  };
  const removeUser = async (req,res) => {
   try{
-      const results=await db.query("DELETE from users where userid=$1 ",[req.body.userid]);
-      res.status(200).json({ status: 'success',data :results.rows});
+      const results=await db.query("DELETE from users where userid=$1 returning *",[req.body.userid]);
+      const view = await db.query("SELECT userid,name,email,role FROM users");
+      res.status(200).json({ status: 'success',data :view.rows});
   }
   catch (error) {
       res.status(500).json({status:"failed"});
   }
 }
+const searchUser = async (req, res) => {
+  try{
+    console.log(req.body.name);
+  const searcheduser = await db.query("SELECT name,email,role,userid FROM users where name=$1",[req.body.name]);
+  res.status(201).json({ data: searcheduser.rows})
+  }
+  catch(error){
+    res.status(401).json({status:"failed"});
+  }
+ };
+ 
 
 module.exports = {
   authUser: authUser,
   addUser: addUser,
   viewUser: viewUser,
   removeUser :removeUser,
+  searchUser :searchUser,
 
 };

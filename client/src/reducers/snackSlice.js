@@ -6,15 +6,17 @@ export const snackSlice = createSlice({
     snackbarOpen: false,
     snackbarType: "success",
     snackbarMessage: "",
+    snackbarSeverity: "success",
   },
   reducers: {
     set_snackbar: (state, action) => {
-      const { snackbarOpen, snackbarMessage, snackbarType } = action.payload;
+      const { snackbarOpen, snackbarMessage, snackbarType,snackbarSeverity } = action.payload;
       return {
         ...state,
         snackbarOpen,
         snackbarType,
         snackbarMessage,
+        snackbarSeverity,
       };
     },
   },

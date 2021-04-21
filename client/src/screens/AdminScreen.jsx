@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import AdminDrawer from "../components/admin/AdminDrawer";
@@ -39,7 +40,7 @@ const AdminScreen = () => {
     >
       <Grid item container className={classes.cardContainer} spacing={2}>
         <Grid item container sm={2}>
-          <AdminDrawer handleSelection={handleSelection} />
+          <AdminDrawer handleSelection={handleSelection}  />
         </Grid>
         <Grid item container sm={10}>
           <Paper className={classes.paperStyle}>

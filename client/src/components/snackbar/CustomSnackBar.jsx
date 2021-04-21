@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 const CustomSnackBar = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { snackbarOpen, snackbarType, snackbarMessage } = useSelector(
+  const { snackbarOpen, snackbarType, snackbarMessage, snackbarSeverity } = useSelector(
     (state) => state.snack
   );
 
@@ -30,6 +30,7 @@ const CustomSnackBar = () => {
         snackbarOpen: false,
         snackbarType,
         snackbarMessage,
+        snackbarSeverity
       })
     );
   };
@@ -43,6 +44,7 @@ const CustomSnackBar = () => {
         <Alert
           elevation={6}
           variant="filled"
+          severity={snackbarSeverity}
           onClose={handleClose}
           color={snackbarType}
         >

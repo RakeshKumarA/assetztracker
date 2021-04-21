@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Table from '@material-ui/core/Table';
  import TableBody from '@material-ui/core/TableBody';
  import TableCell from '@material-ui/core/TableCell';
@@ -9,7 +9,7 @@ import Table from '@material-ui/core/Table';
   IconButton,
 } from '@material-ui/core';
 import { Grid,  TableHead,Typography } from '@material-ui/core';
-
+import {set_snackbar} from "../../reducers/snackSlice";
 
  import TableRow from '@material-ui/core/TableRow';
 //MUI Libs
@@ -25,11 +25,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Formik, Form } from "formik";
 
 //Import Validation Schema
-import axios from "axios";
 import {  useSelector, useDispatch } from 'react-redux';
 //Modular Imports
 import CustomTextField from "../customcomponents/CustomTextField";
-import { viewUsers,searchUsers } from "../../reducers/viewUserSlice";
+import { viewUsers,searchUsers,deleteUsers } from "../../reducers/viewUserSlice";
 
 
 
@@ -59,32 +58,42 @@ const SearchUser = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   
-  dispatch(viewUsers());
+  
   const { view } =useSelector((state) => state.viewusers);
-  // const { searcheduser } =useSelector((state) => state.viewusers);
   const { userInfo } = useSelector((state) => state.user);
   
+  useEffect(() => {
+    dispatch(viewUsers());  
+ },[])
+   
+const resetUserHandler =() => {
+  dispatch(viewUsers());
+}
+
+
+
   const Search = (name) => {
-    const data = view.filter(
-     (value) => value.name === name
-   )
-   console.log(data);
- dispatch(searchUsers(data));
- }
- const handleDelete = (id) => {
-    axios.post("/api/users/remove",{
-      userid:id
+    if(name != ""){
+  dispatch(searchUsers(name));
+  }
+else {
+  dispatch(
+    set_snackbar({
+      snackbarOpen: true,
+      snackbarType: "warning",
+      snackbarMessage: "Please Enter Name",
+      snackbarSeverity:"warning",
     })
+  );
+}}
+ const handleDelete = (id) => {
+   console.log(id);
+   dispatch(deleteUsers(id))
    }
-
-
   const initialValues = {
     name:'',
   };
-
   return (
-    
-
     <Grid
     container
     className={classes.container}
@@ -97,9 +106,7 @@ const SearchUser = () => {
     textAlign="center"
      className={classes.title}>View  Users
       </Typography> 
-    </Grid>
-   
-    
+    </Grid>  
 <Grid
      container
      className={classes.container}
@@ -110,11 +117,11 @@ const SearchUser = () => {
      <Paper className={classes.paperStyle}>
         <Grid item container justify="center">
     <Formik
-    initialValues={initialValues}
-    onSubmit={(values, { resetForm }) => {
+      initialValues={initialValues}
+      onSubmit={(values, { resetForm }) => {
       const { name } = values;
-   
-   Search(name);
+      Search(name);
+     
       resetForm();
     }}>
         {({ submitForm }) => (
@@ -130,19 +137,24 @@ const SearchUser = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onChange={(e) => {
-                  submitForm(e.target.value);
-                }}
+               onClick={submitForm}
               >
                 Search 
               </Button>
             </Grid>
+            <Grid item style={{marginLeft:"2vw"}} >
+              <Button
+                variant="contained"
+                color="primary"
+               onClick={resetUserHandler}
+              >
+                Reset 
+              </Button>
+            </Grid>
             </Grid>
           </Grid>
-        </Form>
-       
+        </Form>     
 )}
-
 </Formik>
 </Grid>
 

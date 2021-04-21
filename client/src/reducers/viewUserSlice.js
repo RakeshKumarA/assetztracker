@@ -1,26 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { set_snackbar } from './snackSlice';
+import { set_snackbar } from "./snackSlice";
+
 
 export const viewUserSlice = createSlice({
   name: 'viewusers',
   initialState: {
    view:[],
-   searcheduser:[],
   },
   reducers: {
     view_users: (state, action) => {
       state.view = action.payload;
-  },
-  searched_user: (state, action) => {
-    state.searcheduser = action.payload;
   },
 },
 });
 
 export const {
     view_users,
-    searched_user,
 } = viewUserSlice.actions;
 
 export const viewUsers = () => async ( dispatch) => {
@@ -29,24 +25,29 @@ export const viewUsers = () => async ( dispatch) => {
       dispatch(view_users(data.data)) 
 };
 export const searchUsers = (value) => async (dispatch) => {
-  console.log(value);
-    if(value!==""){
-      dispatch(searched_user(value));
-    }
-      else if (value===""){
-       console.log("came here");
-      dispatch(
-        set_snackbar({
-          snackbarOpen: true,
-          snackbarType: "error",
-          snackbarMessage: "User Not Found",
-        })
-      );
-      }
+  const { data } = await axios.post("/api/users/search",{
+    name:value
+  })
+  if(data.data != "")
+  {
+      dispatch(view_users(data.data));
 }
-
-
-
-
-
+else if (data.data == ""){
+  dispatch(
+    set_snackbar({
+      snackbarOpen: true,
+      snackbarType: "error",
+      snackbarMessage: "User Not Found",
+      snackbarSeverity:"error",
+    })
+  );
+}
+}
+export const deleteUsers = (id) => async (dispatch) => {
+  const { data } = await axios.post("/api/users/remove",{
+    userid:id
+  })
+  console.log(data.data);
+  dispatch(view_users(data.data))
+}
 export default viewUserSlice.reducer;

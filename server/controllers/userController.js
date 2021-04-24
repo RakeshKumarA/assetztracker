@@ -9,7 +9,7 @@ const generateToken = require("../utils/generateToken");
 const authUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await db.query(`SELECT * FROM users where email='${email}'`);
+    const user = await db.query(`SELECT * FROM users WHERE email='${email}'`);
 
     if (user.rowCount !== 0) {
       const pwdInDb = await db.query(
@@ -41,11 +41,11 @@ const authUser = async (req, res) => {
 
 // @desc		Register a user
 // @route 	POST /api/users
-// @access 	Public
+// @access 	Private
 const addUser = async (req, res) => {
   const { name, email, password, role } = req.body;
 
-  const user = await db.query("SELECT * FROM users where email=$1", [email]);
+  const user = await db.query("SELECT * FROM users WHERE email=$1", [email]);
 
   if (user.rowCount !== 0) {
     return res.json({ status: 401, message: "User Already Exists" });
@@ -55,7 +55,7 @@ const addUser = async (req, res) => {
     if (req.user.role === "admin") {
       if (role) {
         const results = await db.query(
-          "INSERT INTO users (name, email, password, role, createby) values ($1, $2, $3, $4, $5) returning *",
+          "INSERT INTO users (name, email, password, role, createby) VALUES ($1, $2, $3, $4, $5) RETURNING *",
           [name, email, bcrypt.hashSync(password, 10), role, req.user.name]
         );
         const token = generateToken(results.rows[0].userid);
@@ -69,7 +69,7 @@ const addUser = async (req, res) => {
         });
       } else {
         const results = await db.query(
-          "INSERT INTO users (name, email, password, createby) values ($1, $2, $3, $4) returning *",
+          "INSERT INTO users (name, email, password, createby) VALUES ($1, $2, $3, $4) RETURNING *",
           [name, email, bcrypt.hashSync(password, 10), req.user.name]
         );
         const token = generateToken(results.rows[0].userid);
@@ -88,7 +88,59 @@ const addUser = async (req, res) => {
   }
 };
 
+// @desc		View List of users
+// @route 	GET /api/users/view
+// @access 	Private
+const viewUsers = async (req, res) => {
+  try {
+    const view = await db.query("SELECT userid, name, email, role FROM users");
+    res.json({ status: 200, data: view.rows });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
+// @desc		Search users by Name
+// @route 	POST /api/users/search
+// @access 	Private
+const searchUser = async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const searcheduser = await db.query(
+      "SELECT userid, name, email, role FROM users WHERE name=$1",
+      [name]
+    );
+
+    res.json({ status: 200, data: searcheduser.rows });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
+// @desc		Remove user
+// @route 	POST /api/users/remove
+// @access 	Private
+
+const removeUser = async (req, res) => {
+  const { userid } = req.body;
+
+  try {
+    const results = await db.query(
+      "DELETE FROM users WHERE userid=$1 RETURNING *",
+      [userid]
+    );
+    const view = await db.query("SELECT userid, name, email, role FROM users");
+    res.json({ status: 200, data: view.rows });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
   authUser: authUser,
   addUser: addUser,
+  viewUsers: viewUsers,
+  searchUser: searchUser,
+  removeUser: removeUser,
 };

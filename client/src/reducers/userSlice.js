@@ -66,6 +66,7 @@ export const login = (email, password) => async (dispatch) => {
           snackbarOpen: true,
           snackbarType: "success",
           snackbarMessage: "Sucessfully logged in",
+          snackbarSeverity: "success",
         })
       );
     } else {
@@ -75,6 +76,7 @@ export const login = (email, password) => async (dispatch) => {
           snackbarOpen: true,
           snackbarType: "error",
           snackbarMessage: data.message,
+          snackbarSeverity: "error",
         })
       );
     }
@@ -85,6 +87,7 @@ export const login = (email, password) => async (dispatch) => {
         snackbarOpen: true,
         snackbarType: "error",
         snackbarMessage: error.message,
+        snackbarSeverity: "error",
       })
     );
   }

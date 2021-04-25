@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   Divider,
@@ -11,38 +11,38 @@ import {
   ListItemText,
   Typography,
   CircularProgress,
-} from '@material-ui/core';
-import { set_snackbar } from '../../reducers/snackSlice';
-import { user_logout } from '../../reducers/userSlice';
-import { theme_update } from '../../reducers/themeSlice';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import AssessmentIcon from '@material-ui/icons/Assessment';
-import SettingsIcon from '@material-ui/icons/Settings';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import { makeStyles } from '@material-ui/core/styles';
+} from "@material-ui/core";
+import { set_snackbar } from "../../reducers/snackSlice";
+import { user_logout } from "../../reducers/userSlice";
+import { theme_update } from "../../reducers/themeSlice";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import SettingsIcon from "@material-ui/icons/Settings";
+import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import { makeStyles } from "@material-ui/core/styles";
 
-import assetzLogo from '../../assets/assetzlogo.png';
-import { useHistory } from 'react-router-dom';
+import assetzLogo from "../../assets/assetzlogo.png";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   drawer: {
-    width: '16.66vw',
+    width: "16.66vw",
   },
   logo: {
-    width: '5rem',
-    background: '#C2CFE0',
-    borderRadius: '1rem',
+    width: "5rem",
+    background: "#C2CFE0",
+    borderRadius: "1rem",
   },
   logocontainer: {
-    padding: '2rem 0 1rem 0',
+    padding: "2rem 0 1rem 0",
   },
   drawerPaper: {
-    width: '16.66vw',
+    width: "16.66vw",
   },
 });
 
@@ -57,56 +57,57 @@ const DrawerComponent = () => {
   const drawerTopList = [
     {
       id: 1,
-      name: 'Dashboard',
+      name: "Dashboard",
       icon: <DashboardIcon />,
-      onClickHandler: () => history.push('/dashboard'),
+      onClickHandler: () => history.push("/dashboard"),
     },
     {
       id: 2,
-      name: 'Add Assets',
+      name: "Add Assets",
       icon: <AddBoxIcon />,
-      onClickHandler: () => history.push('/addasset'),
+      onClickHandler: () => history.push("/addasset"),
     },
     {
       id: 3,
-      name: 'View Assets',
+      name: "View Assets",
       icon: <VisibilityIcon />,
-      onClickHandler: () => history.push('/viewasset'),
+      onClickHandler: () => history.push("/viewasset"),
     },
 
     {
       id: 4,
-      name: 'Report',
+      name: "Report",
       icon: <AssessmentIcon />,
-      onClickHandler: () => history.push('/report'),
+      onClickHandler: () => history.push("/report"),
     },
   ];
 
   const drawerBottomList = [
     {
       id: 1,
-      name: 'Settings',
+      name: "Settings",
       icon: <SettingsIcon />,
-      onClickHandler: () => history.push('/setting'),
+      onClickHandler: () => history.push("/setting"),
     },
     {
       id: 2,
-      name: 'Notifications',
+      name: "Notifications",
       icon: <NotificationsActiveIcon />,
-      onClickHandler: () => history.push('/notifs'),
+      onClickHandler: () => history.push("/notifs"),
     },
     {
       id: 3,
-      name: 'Log Out',
+      name: "Log Out",
       icon: <ExitToAppIcon />,
       onClickHandler: () => {
         dispatch(user_logout());
-        history.push('/');
+        history.push("/");
         dispatch(
           set_snackbar({
             snackbarOpen: true,
-            snackbarType: 'success',
-            snackbarMessage: 'Sucessfully logged out',
+            snackbarType: "success",
+            snackbarMessage: "Sucessfully logged out",
+            snackbarSeverity: "success",
           })
         );
       },
@@ -116,14 +117,14 @@ const DrawerComponent = () => {
   const drawerAdminList = [
     {
       id: 1,
-      name: 'Admin',
+      name: "Admin",
       icon: <AssignmentIndIcon />,
-      onClickHandler: () => history.push('/admin'),
+      onClickHandler: () => history.push("/admin"),
     },
   ];
 
   const changeThemeHandler = () => {
-    const themechanged = theme === 'light' ? 'dark' : 'light';
+    const themechanged = theme === "light" ? "dark" : "light";
     dispatch(theme_update(themechanged));
   };
 
@@ -183,7 +184,7 @@ const DrawerComponent = () => {
           </List>
 
           <Divider />
-          {userInfo.role === 'admin' && (
+          {userInfo.role === "admin" && (
             <List>
               {drawerAdminList.map((draweritem) => (
                 <ListItem

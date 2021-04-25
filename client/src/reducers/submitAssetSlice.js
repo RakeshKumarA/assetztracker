@@ -1,21 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { option_update_reset } from './assetSelSlice';
-import { depreciation_reset } from './depreciationSlice';
-import { hardware_reset } from './hardwareSlice';
-import { onboard_reset } from './onboardSlice';
+import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { option_update_reset } from "./assetSelSlice";
+import { depreciation_reset } from "./depreciationSlice";
+import { hardware_reset } from "./hardwareSlice";
+import { onboard_reset } from "./onboardSlice";
 
-import { set_snackbar } from './snackSlice';
-import { software_reset } from './softwareSlice';
+import { set_snackbar } from "./snackSlice";
+import { software_reset } from "./softwareSlice";
 
 const initialState = {
   loading: false,
   submitAsset: {},
-  error: '',
+  error: "",
 };
 
 export const submitAssetSlice = createSlice({
-  name: 'submitAsset',
+  name: "submitAsset",
   initialState,
   reducers: {
     submit_asset_request: (state) => {
@@ -50,12 +50,12 @@ export const addAsset = (onboard, software, hardware, depreciation) => async (
     } = getState();
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.post(
-      '/api/assets',
+      "/api/assets",
       { onboard, software, hardware, depreciation },
       config
     );
@@ -66,8 +66,9 @@ export const addAsset = (onboard, software, hardware, depreciation) => async (
       dispatch(
         set_snackbar({
           snackbarOpen: true,
-          snackbarType: 'success',
-          snackbarMessage: 'Asset Successfully Added',
+          snackbarType: "success",
+          snackbarMessage: "Asset Successfully Added",
+          snackbarSeverity: "success",
         })
       );
       dispatch(onboard_reset());
@@ -80,8 +81,9 @@ export const addAsset = (onboard, software, hardware, depreciation) => async (
       dispatch(
         set_snackbar({
           snackbarOpen: true,
-          snackbarType: 'error',
+          snackbarType: "error",
           snackbarMessage: data.message,
+          snackbarSeverity: "error",
         })
       );
     }
@@ -90,8 +92,9 @@ export const addAsset = (onboard, software, hardware, depreciation) => async (
     dispatch(
       set_snackbar({
         snackbarOpen: true,
-        snackbarType: 'error',
+        snackbarType: "error",
         snackbarMessage: error.message,
+        snackbarSeverity: "error",
       })
     );
   }

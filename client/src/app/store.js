@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../reducers/userSlice";
 import snackReducer from "../reducers/snackSlice";
 import addUserReducer from "../reducers/addUserSlice";
+import viewUserReducer from "../reducers/viewUserSlice";
 import onboardReducer from "../reducers/onboardSlice";
 import assetSelReducer from "../reducers/assetSelSlice";
 import softwareReducer from "../reducers/softwareSlice";
@@ -14,6 +15,7 @@ export default configureStore({
     user: userReducer,
     snack: snackReducer,
     addUser: addUserReducer,
+    viewUser: viewUserReducer,
     onboard: onboardReducer,
     assetSel: assetSelReducer,
     software: softwareReducer,

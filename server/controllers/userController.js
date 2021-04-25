@@ -94,7 +94,7 @@ const addUser = async (req, res) => {
 const viewUsers = async (req, res) => {
   try {
     const view = await db.query("SELECT userid, name, email, role FROM users");
-    res.json({ status: 200, data: view.rows });
+    res.json({ status: 200, users: view.rows });
   } catch (error) {
     res.json({ status: 500, message: error.message });
   }
@@ -112,7 +112,11 @@ const searchUser = async (req, res) => {
       [name]
     );
 
-    res.json({ status: 200, data: searcheduser.rows });
+    res.json({
+      status: 200,
+      noOfUsers: searcheduser.rowCount,
+      user: searcheduser.rows,
+    });
   } catch (error) {
     res.json({ status: 500, message: error.message });
   }
@@ -131,7 +135,7 @@ const removeUser = async (req, res) => {
       [userid]
     );
     const view = await db.query("SELECT userid, name, email, role FROM users");
-    res.json({ status: 200, data: view.rows });
+    res.json({ status: 200, users: view.rows });
   } catch (error) {
     res.json({ status: 500, message: error.message });
   }

@@ -63,6 +63,7 @@ export const addUser = (email, name, password, role) => async (
           snackbarOpen: true,
           snackbarType: "success",
           snackbarMessage: "User Successfully Added",
+          snackbarSeverity: "success",
         })
       );
     } else {
@@ -72,6 +73,7 @@ export const addUser = (email, name, password, role) => async (
           snackbarOpen: true,
           snackbarType: "error",
           snackbarMessage: data.message,
+          snackbarSeverity: "error",
         })
       );
     }
@@ -82,6 +84,7 @@ export const addUser = (email, name, password, role) => async (
         snackbarOpen: true,
         snackbarType: "error",
         snackbarMessage: error.message,
+        snackbarSeverity: "error",
       })
     );
   }

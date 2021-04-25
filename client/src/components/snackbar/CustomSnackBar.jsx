@@ -17,9 +17,12 @@ const useStyles = makeStyles((theme) => ({
 const CustomSnackBar = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { snackbarOpen, snackbarType, snackbarMessage } = useSelector(
-    (state) => state.snack
-  );
+  const {
+    snackbarOpen,
+    snackbarType,
+    snackbarMessage,
+    snackbarSeverity,
+  } = useSelector((state) => state.snack);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -30,6 +33,7 @@ const CustomSnackBar = () => {
         snackbarOpen: false,
         snackbarType,
         snackbarMessage,
+        snackbarSeverity,
       })
     );
   };
@@ -45,6 +49,7 @@ const CustomSnackBar = () => {
           variant="filled"
           onClose={handleClose}
           color={snackbarType}
+          severity={snackbarSeverity}
         >
           {snackbarMessage}
         </Alert>

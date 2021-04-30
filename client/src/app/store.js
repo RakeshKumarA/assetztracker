@@ -8,6 +8,8 @@ import assetSelReducer from "../reducers/assetSelSlice";
 import softwareReducer from "../reducers/softwareSlice";
 import hardwareReducer from "../reducers/hardwareSlice";
 import depreciationReducer from "../reducers/depreciationSlice";
+import viewAssetReducer from "../reducers/viewAssetSlice";
+
 import themeReducer from "../reducers/themeSlice";
 
 export default configureStore({
@@ -21,6 +23,7 @@ export default configureStore({
     software: softwareReducer,
     hardware: hardwareReducer,
     depreciation: depreciationReducer,
+    viewAssets: viewAssetReducer,
     theme: themeReducer,
   },
 });

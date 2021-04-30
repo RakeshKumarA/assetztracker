@@ -61,6 +61,7 @@ const DepreciationForm = () => {
   const { onboard } = useSelector((state) => state.onboard);
   const { software } = useSelector((state) => state.software);
   const { hardware } = useSelector((state) => state.hardware);
+  const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -126,7 +127,7 @@ const DepreciationForm = () => {
   };
 
   const handleSubmitAsset = () => {
-    dispatch(addAsset(onboard, software, hardware, depreciation));
+    dispatch(addAsset(userInfo.userid, onboard, software, hardware, depreciation));
     handleClose();
     history.push('/dashboard');
   };

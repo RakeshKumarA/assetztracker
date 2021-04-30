@@ -39,7 +39,7 @@ export const {
   submit_asset_failure,
 } = submitAssetSlice.actions;
 
-export const addAsset = (onboard, software, hardware, depreciation) => async (
+export const addAsset = (userid, onboard, software, hardware, depreciation) => async (
   dispatch,
   getState
 ) => {
@@ -56,7 +56,7 @@ export const addAsset = (onboard, software, hardware, depreciation) => async (
     };
     const { data } = await axios.post(
       "/api/assets",
-      { onboard, software, hardware, depreciation },
+      { userid, onboard, software, hardware, depreciation },
       config
     );
     if (data.status === 201) {

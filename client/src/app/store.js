@@ -9,6 +9,7 @@ import softwareReducer from "../reducers/softwareSlice";
 import hardwareReducer from "../reducers/hardwareSlice";
 import depreciationReducer from "../reducers/depreciationSlice";
 import themeReducer from "../reducers/themeSlice";
+import assetsReducer from '../reducers/viewAssetSlice'
 
 export default configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export default configureStore({
     software: softwareReducer,
     hardware: hardwareReducer,
     depreciation: depreciationReducer,
+    viewAsset:assetsReducer,
     theme: themeReducer,
   },
 });

@@ -12,6 +12,7 @@ import DrawerComponent from "./components/maindrawer/DrawerComponent";
 import AdminRoute from "./components/routes/AdminRoute";
 import AdminScreen from "./screens/AdminScreen";
 import AddAssetScreen from "./screens/AddAssetScreen";
+import ViewAssetScreen from "./screens/ViewAssetScreen";
 
 const useStyles = makeStyles({
   container: {
@@ -35,6 +36,7 @@ const App = () => {
             <PublicRoute path="/" exact component={LoginScreen} />
             <PrivateRoute path="/dashboard" exact component={Dashboard} />
             <PrivateRoute path="/addasset" exact component={AddAssetScreen} />
+            <PrivateRoute path="/viewasset" exact component={ViewAssetScreen} />
             <AdminRoute path="/admin" exact component={AdminScreen} />
             <Route component={PageNotFound} />
           </Switch>

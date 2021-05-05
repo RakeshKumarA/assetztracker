@@ -61,6 +61,8 @@ const DepreciationForm = () => {
   const { onboard } = useSelector((state) => state.onboard);
   const { software } = useSelector((state) => state.software);
   const { hardware } = useSelector((state) => state.hardware);
+
+
   const dispatch = useDispatch();
   const history = useHistory();
 

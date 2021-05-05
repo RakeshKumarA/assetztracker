@@ -56,7 +56,7 @@ export const addAsset = (onboard, software, hardware, depreciation) => async (
     };
     const { data } = await axios.post(
       "/api/assets",
-      { onboard, software, hardware, depreciation },
+      { onboard, software, hardware, depreciation},
       config
     );
     if (data.status === 201) {

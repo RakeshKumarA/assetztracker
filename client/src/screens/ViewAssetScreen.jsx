@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
+import CustomTable from "../components/customcomponents/CustomTable";
 import Paper from "@material-ui/core/Paper";
-import {
-  Grid,
-  TableHead,
-  Typography,
-  TextField,
-  Button,
-} from "@material-ui/core";
-import TableRow from "@material-ui/core/TableRow";
+import { Grid, Typography, TextField, Button } from "@material-ui/core";
 //MUI Libs
 import { makeStyles } from "@material-ui/core/styles";
 import { searchAsset, viewAssets } from ".././reducers/viewAssetSlice";
@@ -39,7 +29,16 @@ const ViewAssetScreen = () => {
 
   // View Assets
   const { assets } = useSelector((state) => state.viewAsset);
-
+  const tableRows = assets.map((value) => ({
+    id: value.id,
+    assetId: value.onboard.assetId.value,
+    assetName: value.onboard.assetName.value,
+    cost: value.onboard.cost.value,
+    vendor: value.onboard.vendor.value,
+    warrantyExp: value.onboard.warrantyExp.value,
+    assetStatus: value.onboard.assetStatus.value,
+    name: value.name,
+  }));
   // Search Asset
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -72,12 +71,6 @@ const ViewAssetScreen = () => {
     dispatch(viewAssets());
   };
 
-  function convert(str) {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [day, mnth, date.getFullYear()].join("-");
-  }
   return (
     <Paper className={classes.paperStyle}>
       <Grid container alignItems="center" direction="column">
@@ -117,48 +110,7 @@ const ViewAssetScreen = () => {
             </Button>
           </Grid>
         </Grid>
-        <Paper style={{ width: "75vw", marginTop: "2vh" }}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">ASSET ID</TableCell>
-                  <TableCell align="center">ASSET NAME</TableCell>
-                  <TableCell align="center">COST</TableCell>
-                  <TableCell align="center">VENDOR</TableCell>
-                  <TableCell align="center">WARRANTY EXPIRY DATE</TableCell>
-                  <TableCell align="center">ASSET STATUS</TableCell>
-                  <TableCell align="center">ASSET ADDED BY</TableCell>
-                </TableRow>
-              </TableHead>
-              {assets.map((row) => (
-                <TableBody key={row.id}>
-                  <TableRow>
-                    <TableCell align="center">
-                      {row.onboard.assetId.value}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.onboard.assetName.value}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.onboard.cost.value}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.onboard.vendor.value}
-                    </TableCell>
-                    <TableCell align="center">
-                      {convert(row.onboard.warrantyExp.value)}
-                    </TableCell>
-                    <TableCell align="center">
-                      {row.onboard.assetStatus.value}
-                    </TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
-                  </TableRow>
-                </TableBody>
-              ))}
-            </Table>
-          </TableContainer>
-        </Paper>
+        <CustomTable rows={tableRows} />
       </Grid>
     </Paper>
   );

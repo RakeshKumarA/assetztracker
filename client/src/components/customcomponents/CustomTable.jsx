@@ -16,7 +16,9 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import DeleteIcon from "@material-ui/icons/Delete";
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { useDispatch } from "react-redux";
+import { downloadAssets } from "../../reducers/downloadAssetSlice";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -162,8 +164,13 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const dispatch = useDispatch();
+  const { Selected } = props;
+  const numSelected = Selected.length
 
+  const handleDownloadClick = (Selected) => {
+    dispatch(downloadAssets(Selected));
+  }
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -190,9 +197,9 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
+        <Tooltip title="Download">
+          <IconButton aria-label="delete" onClick={() => handleDownloadClick(Selected)}>
+            <GetAppIcon />
           </IconButton>
         </Tooltip>
       ) : null}
@@ -201,7 +208,7 @@ const EnhancedTableToolbar = (props) => {
 };
 
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+  Selected: PropTypes.array.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -243,7 +250,6 @@ const CustomTable = ({ rows }) => {
   };
 
   const handleSelectAllClick = (event) => {
-    console.log(rows);
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
@@ -272,7 +278,6 @@ const CustomTable = ({ rows }) => {
     setSelected(newSelected);
   };
 
-  console.log(selected);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -289,7 +294,7 @@ const CustomTable = ({ rows }) => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar Selected={selected} />
         <TableContainer>
           <Table
             className={classes.table}

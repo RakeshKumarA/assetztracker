@@ -1,4 +1,5 @@
 const db = require("../db");
+const excel = require("exceljs");
 
 // @desc		Add Asset
 // @route 	POST /api/assets/
@@ -30,6 +31,10 @@ const addAsset = async (req, res) => {
     res.json({ status: 401, message: error.message });
   }
 };
+
+// @desc		View Asset
+// @route 	GET /api/assets/viewassets
+// @access 	Public
 const viewAssets = async (req, res) => {
   try {
     const results = await db.query(
@@ -44,6 +49,9 @@ const viewAssets = async (req, res) => {
   }
 };
 
+// @desc		Search Asset
+// @route 	POST /api/assets/searchAsset
+// @access 	Public
 const searchAsset = async (req, res) => {
   const { assetId } = req.body;
 
@@ -63,8 +71,47 @@ const searchAsset = async (req, res) => {
   }
 };
 
+// @desc		Download Assets
+// @route 	POST /api/assets/downlAsset
+// @access 	Public
+
+const downlAsset = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    const downloadedAsset = await db.query(
+      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.id = ANY($1::int[])",
+      [id]
+    );
+    const finalDownloadedAsset = downloadedAsset.rows.map((asset) => ({
+      assetId: asset.onboard.assetId.value,
+      assetName: asset.onboard.assetName.value,
+      assetStatus: asset.onboard.assetStatus.value,
+      assetType: asset.onboard.assetType.value,
+      cost: asset.onboard.cost.value,
+      invoiceNumber: asset.onboard.invoiceNumber.value,
+      onboardDate: asset.onboard.onboardDate.value,
+      productSerial: asset.onboard.productSerial.value,
+      purchaseDate: asset.onboard.purchaseDate.value,
+      purchaseOrder: asset.onboard.purchaseOrder.value,
+      vendor: asset.onboard.vendor.value,
+      warranty: asset.onboard.warranty.value,
+      warrantyExp: asset.onboard.warrantyExp.value,
+      name: asset.name,
+    }));
+
+    res.json({
+      status: 200,
+      assets: finalDownloadedAsset,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
   addAsset: addAsset,
   viewAssets: viewAssets,
   searchAsset: searchAsset,
+  downlAsset: downlAsset,
 };

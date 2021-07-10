@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 //Material UI
 import {
@@ -9,33 +9,33 @@ import {
   MenuItem,
   TextField as TextFieldMaterial,
   Typography,
-} from '@material-ui/core';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import { makeStyles } from '@material-ui/core/styles';
+} from "@material-ui/core";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import { makeStyles } from "@material-ui/core/styles";
 
 //Import Validation Schema
-import { onboardValidationSchema } from '../../schema/validationSchema';
+import { onboardValidationSchema } from "../../schema/validationSchema";
 
 //Formik Imports
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field } from "formik";
 
 //Formik Material ui
-import { KeyboardDateTimePicker } from 'formik-material-ui-pickers';
+import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
 
 // Imports
-import CustomTextField from '../customcomponents/CustomTextField';
-import { onboard_update } from '../../reducers/onboardSlice';
-import { option_update_continue } from '../../reducers/assetSelSlice';
+import CustomTextField from "../customcomponents/CustomTextField";
+import { onboard_update } from "../../reducers/onboardSlice";
+import { option_update_continue } from "../../reducers/assetSelSlice";
 
 const useStyles = makeStyles({
   container: {
-    paddingTop: '2rem',
+    paddingTop: "2rem",
   },
   formStyle: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
   },
 });
 
@@ -73,68 +73,67 @@ const OnBoardForm = () => {
         initialValues={initialValues}
         validationSchema={onboardValidationSchema}
         onSubmit={(values) => {
-          console.log(values);
           const valuetobeuploaded = {
             assetId: {
-              lable: 'Asset Id',
+              lable: "Asset Id",
               value: values.assetId,
             },
             assetName: {
-              lable: 'Asset Name',
+              lable: "Asset Name",
               value: values.assetName,
             },
             assetStatus: {
-              lable: 'Asset Status',
+              lable: "Asset Status",
               value: values.assetStatus,
             },
             assetType: {
-              lable: 'Asset Type',
+              lable: "Asset Type",
               value: values.assetType,
             },
             cost: {
-              lable: 'Cost',
+              lable: "Cost",
               value: values.cost,
             },
             invoiceNumber: {
-              lable: 'Invoice Number',
+              lable: "Invoice Number",
               value: values.invoiceNumber,
             },
             lastauditDate: {
-              lable: 'Last Audit Date',
+              lable: "Last Audit Date",
               value: values.lastauditDate
                 ? values.lastauditDate.toString()
                 : values.lastauditDate,
             },
             onboardDate: {
-              lable: 'Onboard Date',
+              lable: "Onboard Date",
               value: values.onboardDate
                 ? values.onboardDate.toString()
                 : values.onboardDate,
             },
             productSerial: {
-              lable: 'Product Serial',
+              lable: "Product Serial",
               value: values.productSerial,
             },
             purchaseDate: {
-              lable: 'Purchase Date',
+              lable: "Purchase Date",
               value: values.purchaseDate
                 ? values.purchaseDate.toString()
                 : values.purchaseDate,
             },
             purchaseOrder: {
-              lable: 'Purchase Order',
+              lable: "Purchase Order",
               value: values.purchaseOrder,
             },
             vendor: {
-              lable: 'Vendor',
+              lable: "Vendor",
               value: values.vendor,
             },
             warranty: {
-              lable: 'Warranty',
+              lable: "Warranty",
               value: values.warranty,
             },
             warrantyExp: {
-              lable: 'Warranty Exp Date',
+              lable: "Warranty Exp Date",
               value: values.warrantyExp
                 ? values.warrantyExp.toString()
                 : values.warrantyExp,
@@ -210,9 +209,9 @@ const OnBoardForm = () => {
                       as={TextFieldMaterial}
                       select
                     >
-                      <MenuItem value={'rented'}>Rented</MenuItem>
-                      <MenuItem value={'leased'}>Leased</MenuItem>
-                      <MenuItem value={'own'}>Own</MenuItem>
+                      <MenuItem value={"rented"}>Rented</MenuItem>
+                      <MenuItem value={"leased"}>Leased</MenuItem>
+                      <MenuItem value={"own"}>Own</MenuItem>
                     </Field>
                   </FormControl>
                 </Grid>

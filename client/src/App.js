@@ -13,6 +13,7 @@ import AdminRoute from "./components/routes/AdminRoute";
 import AdminScreen from "./screens/AdminScreen";
 import AddAssetScreen from "./screens/AddAssetScreen";
 import ViewAssetScreen from "./screens/ViewAssetScreen";
+import BulkUploadScreen from "./screens/BulkUploadScreen";
 
 const useStyles = makeStyles({
   container: {
@@ -38,6 +39,7 @@ const App = () => {
             <PrivateRoute path="/addasset" exact component={AddAssetScreen} />
             <PrivateRoute path="/viewasset" exact component={ViewAssetScreen} />
             <AdminRoute path="/admin" exact component={AdminScreen} />
+            <AdminRoute path="/bulk" exact component={BulkUploadScreen} />
             <Route component={PageNotFound} />
           </Switch>
         </div>

@@ -1,5 +1,6 @@
 const db = require("../db");
 const excel = require("exceljs");
+var format = require("pg-format");
 
 // @desc		Add Asset
 // @route 	POST /api/assets/
@@ -7,10 +8,9 @@ const excel = require("exceljs");
 const addAsset = async (req, res) => {
   const { onboard, software, hardware, depreciation } = req.body;
   const { userid } = req.user;
-  console.log(userid);
   try {
     const results = await db.query(
-      "INSERT INTO asset (userid,onboard, software, hardware, depreciation) values ($1, $2, $3, $4, $5) returning *",
+      "INSERT INTO asset (userid, onboard, software, hardware, depreciation) values ($1, $2, $3, $4, $5) returning *",
       [
         userid,
         onboard,
@@ -26,6 +26,33 @@ const addAsset = async (req, res) => {
       software: results.rows[0].software,
       hardware: results.rows[0].hardware,
       depreciation: results.rows[0].depreciation,
+    });
+  } catch (error) {
+    res.json({ status: 401, message: error.message });
+  }
+};
+
+// @desc		Add Bulk Asset
+// @route 	POST /api/bulkassets/
+// @access 	Public
+const addBulkAsset = async (req, res) => {
+  const { assets } = req.body;
+
+  try {
+    const results = await db.query(
+      format(
+        "INSERT INTO asset (onboard, software, hardware, depreciation, userid) VALUES %L returning *",
+        assets
+      ),
+      [],
+      (err, result) => {
+        console.log(err);
+        console.log(result);
+      }
+    );
+
+    res.status(201).json({
+      status: 201,
     });
   } catch (error) {
     res.json({ status: 401, message: error.message });
@@ -111,6 +138,7 @@ const downlAsset = async (req, res) => {
 
 module.exports = {
   addAsset: addAsset,
+  addBulkAsset: addBulkAsset,
   viewAssets: viewAssets,
   searchAsset: searchAsset,
   downlAsset: downlAsset,

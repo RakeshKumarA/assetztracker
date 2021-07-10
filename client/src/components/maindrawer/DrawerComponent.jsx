@@ -18,7 +18,7 @@ import { theme_update } from "../../reducers/themeSlice";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import AssessmentIcon from "@material-ui/icons/Assessment";
+import PublishIcon from "@material-ui/icons/Publish";
 import SettingsIcon from "@material-ui/icons/Settings";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
@@ -76,9 +76,9 @@ const DrawerComponent = () => {
 
     {
       id: 4,
-      name: "Report",
-      icon: <AssessmentIcon />,
-      onClickHandler: () => history.push("/report"),
+      name: "Bulk Upload",
+      icon: <PublishIcon />,
+      onClickHandler: () => history.push("/bulk"),
     },
   ];
 

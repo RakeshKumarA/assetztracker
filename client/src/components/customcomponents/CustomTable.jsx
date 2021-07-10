@@ -16,9 +16,10 @@ import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from "@material-ui/icons/GetApp";
 import { useDispatch } from "react-redux";
 import { downloadAssets } from "../../reducers/downloadAssetSlice";
+import Button from "@material-ui/core/Button";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -166,11 +167,11 @@ const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const { Selected } = props;
-  const numSelected = Selected.length
+  const numSelected = Selected.length;
 
   const handleDownloadClick = (Selected) => {
     dispatch(downloadAssets(Selected));
-  }
+  };
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -196,9 +197,19 @@ const EnhancedTableToolbar = (props) => {
           Asset List
         </Typography>
       )}
+      {numSelected === 1 ? (
+        <Tooltip title="Assign">
+          <Button variant="contained" color="secondary">
+            Assign
+          </Button>
+        </Tooltip>
+      ) : null}
       {numSelected > 0 ? (
         <Tooltip title="Download">
-          <IconButton aria-label="delete" onClick={() => handleDownloadClick(Selected)}>
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleDownloadClick(Selected)}
+          >
             <GetAppIcon />
           </IconButton>
         </Tooltip>

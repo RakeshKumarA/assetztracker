@@ -9,7 +9,10 @@ import softwareReducer from "../reducers/softwareSlice";
 import hardwareReducer from "../reducers/hardwareSlice";
 import depreciationReducer from "../reducers/depreciationSlice";
 import themeReducer from "../reducers/themeSlice";
-import assetsReducer from '../reducers/viewAssetSlice'
+import assetsReducer from "../reducers/viewAssetSlice";
+import downloadReducer from "../reducers/downloadAssetSlice";
+import submitReducer from "../reducers/submitAssetSlice";
+import submitBulkReducer from "../reducers/submitBulkAssetSlice";
 
 export default configureStore({
   reducer: {
@@ -22,7 +25,10 @@ export default configureStore({
     software: softwareReducer,
     hardware: hardwareReducer,
     depreciation: depreciationReducer,
-    viewAsset:assetsReducer,
+    viewAsset: assetsReducer,
     theme: themeReducer,
+    download: downloadReducer,
+    submit: submitReducer,
+    submitBulk: submitBulkReducer,
   },
 });

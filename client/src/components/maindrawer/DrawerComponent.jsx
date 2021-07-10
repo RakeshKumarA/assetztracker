@@ -50,7 +50,9 @@ const DrawerComponent = () => {
   const classes = useStyles();
   const { userInfo } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const history = useHistory();
+  const history = useHistory({
+    forceRefresh: true,
+  });
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.user);
 

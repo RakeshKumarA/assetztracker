@@ -13,6 +13,7 @@ import assetsReducer from "../reducers/viewAssetSlice";
 import downloadReducer from "../reducers/downloadAssetSlice";
 import submitReducer from "../reducers/submitAssetSlice";
 import submitBulkReducer from "../reducers/submitBulkAssetSlice";
+import dashboardReducer from "../reducers/dashboardSlice";
 
 export default configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export default configureStore({
     download: downloadReducer,
     submit: submitReducer,
     submitBulk: submitBulkReducer,
+    dashboard: dashboardReducer,
   },
 });

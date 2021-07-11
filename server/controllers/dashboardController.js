@@ -71,6 +71,50 @@ const dashboardLanding = async (req, res) => {
   }
 };
 
+// @desc	Get Asset Count and Assigned Assets
+// @route 	POST /api/dashboard/abs
+// @access 	Public
+
+const assetByStatus = async (req, res) => {
+  const { assetByStatus } = req.body;
+
+  try {
+    const assetByStatusList = await db.query(
+      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetStatus' ->> 'value' =$1",
+      [assetByStatus]
+    );
+    res.json({
+      status: 200,
+      assets: assetByStatusList.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
+// @desc	Get Asset Count and Assigned Assets
+// @route 	POST /api/dashboard/abc
+// @access 	Public
+
+const assetByCategory = async (req, res) => {
+  const { assetByCategory } = req.body;
+
+  try {
+    const assetByCategoryList = await db.query(
+      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetType' ->> 'value' =$1",
+      [assetByCategory]
+    );
+    res.json({
+      status: 200,
+      assets: assetByCategoryList.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
   dashboardLanding: dashboardLanding,
+  assetByStatus: assetByStatus,
+  assetByCategory: assetByCategory,
 };

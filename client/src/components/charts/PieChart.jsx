@@ -1,7 +1,10 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
+import { useDispatch } from "react-redux";
+import { dashboardTable } from "../../reducers/dashboardSlice";
 
 const PieChart = ({ rawData, type, labels }) => {
+  const dispatch = useDispatch();
   const data = {
     labels,
     datasets: [
@@ -18,9 +21,29 @@ const PieChart = ({ rawData, type, labels }) => {
     <Doughnut
       data={data}
       getElementAtEvent={(elems, event) => {
-        elems[0] && elems[0].index !== undefined && console.log(elems[0].index);
+        const index =
+          elems[0] && elems[0].index !== undefined && elems[0].index;
+
+        if (type === "assetByStatus") {
+          const criteria =
+            index === 0 ? "Onboarding" : index === 1 ? "Assigned" : "Instock";
+          const assetFilterCriteria = {
+            type,
+            criteria,
+          };
+          dispatch(dashboardTable(assetFilterCriteria));
+        } else if (type === "assetByCategory") {
+          const criteria =
+            index === 0 ? "rented" : index === 1 ? "owned" : "leased";
+          const assetFilterCriteria = {
+            type,
+            criteria,
+          };
+          dispatch(dashboardTable(assetFilterCriteria));
+        }
       }}
       options={{
+        // onClick: graphClickEvent,
         maintainAspectRatio: false,
         cutoutPercentage: 85,
         legend: {

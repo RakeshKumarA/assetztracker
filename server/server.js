@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const assetRoutes = require("./routes/assetRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const logger = require("./utils/logger");
 
 dotenv.config();
@@ -9,7 +10,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Logging all HTTP Requests
 app.use((req, res, next) => {
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/assets", assetRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 5000;
 

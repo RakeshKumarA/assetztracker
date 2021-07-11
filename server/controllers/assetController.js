@@ -45,14 +45,14 @@ const addBulkAsset = async (req, res) => {
         assets
       ),
       [],
-      (err, result) => {
-        console.log(err);
-        console.log(result);
+      (err) => {
+        res.json({ status: 500, message: err.message });
       }
     );
 
     res.status(201).json({
       status: 201,
+      assets: results.rows,
     });
   } catch (error) {
     res.json({ status: 401, message: error.message });

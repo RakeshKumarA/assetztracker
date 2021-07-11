@@ -117,7 +117,7 @@ const Dashboard = () => {
             direction="column"
             className={classes.tablePadding}
           >
-            <CustomTable rows={tableRows} />
+            <CustomTable rows={tableRows} screen="dashboard" />
           </Grid>
         </Paper>
       </Grid>

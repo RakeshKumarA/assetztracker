@@ -9,6 +9,7 @@ const initialState = {
     assetsCountByStatus: [],
     assetsCountByCategory: [],
   },
+  assetsFilterList: [],
   error: "",
 };
 
@@ -20,10 +21,14 @@ export const dashboardSlice = createSlice({
       state.loading = true;
       state.dashboard = {};
     },
-    dashboard_sucess: (state, action) => {
+    dashboard_chart_sucess: (state, action) => {
       state.loading = false;
       state.stats.assetsCountByStatus = action.payload.assetsCountByStatus;
       state.stats.assetsCountByCategory = action.payload.assetsCountByCategory;
+    },
+    dashboard_table_sucess: (state, action) => {
+      state.loading = false;
+      state.assetsFilterList = action.payload;
     },
     dashboard_failure: (state, action) => {
       state.loading = false;
@@ -32,8 +37,12 @@ export const dashboardSlice = createSlice({
   },
 });
 
-export const { dashboard_request, dashboard_sucess, dashboard_failure } =
-  dashboardSlice.actions;
+export const {
+  dashboard_request,
+  dashboard_chart_sucess,
+  dashboard_table_sucess,
+  dashboard_failure,
+} = dashboardSlice.actions;
 
 export const dashboardChart = () => async (dispatch, getState) => {
   try {
@@ -51,7 +60,7 @@ export const dashboardChart = () => async (dispatch, getState) => {
     if (data.status === 200) {
       delete data.status;
 
-      dispatch(dashboard_sucess(data.stats));
+      dispatch(dashboard_chart_sucess(data.stats));
     } else {
       dispatch(dashboard_failure(data.message));
       dispatch(
@@ -75,5 +84,75 @@ export const dashboardChart = () => async (dispatch, getState) => {
     );
   }
 };
+
+export const dashboardTable =
+  (assetFilterCriteria) => async (dispatch, getState) => {
+    try {
+      dispatch(dashboard_request());
+      const {
+        user: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      if (assetFilterCriteria.type === "assetByStatus") {
+        const { data } = await axios.post(
+          "/api/dashboard/abs",
+          { assetByStatus: assetFilterCriteria.criteria },
+          config
+        );
+        if (data.status === 200) {
+          delete data.status;
+
+          dispatch(dashboard_table_sucess(data.assets));
+        } else {
+          dispatch(dashboard_failure(data.message));
+          dispatch(
+            set_snackbar({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: data.message,
+              snackbarSeverity: "error",
+            })
+          );
+        }
+      } else if (assetFilterCriteria.type === "assetByCategory") {
+        const { data } = await axios.post(
+          "/api/dashboard/abc",
+          { assetByCategory: assetFilterCriteria.criteria },
+          config
+        );
+        if (data.status === 200) {
+          delete data.status;
+
+          dispatch(dashboard_table_sucess(data.assets));
+        } else {
+          dispatch(dashboard_failure(data.message));
+          dispatch(
+            set_snackbar({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: data.message,
+              snackbarSeverity: "error",
+            })
+          );
+        }
+      }
+    } catch (error) {
+      dispatch(dashboard_failure(error.message));
+      dispatch(
+        set_snackbar({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: error.message,
+          snackbarSeverity: "error",
+        })
+      );
+    }
+  };
 
 export default dashboardSlice.reducer;

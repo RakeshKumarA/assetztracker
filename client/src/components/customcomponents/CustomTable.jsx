@@ -166,7 +166,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const { Selected } = props;
+  const { Selected, Screen } = props;
   const numSelected = Selected.length;
 
   const handleDownloadClick = (Selected) => {
@@ -197,7 +197,7 @@ const EnhancedTableToolbar = (props) => {
           Asset List
         </Typography>
       )}
-      {numSelected === 1 ? (
+      {numSelected === 1 && Screen === "viewScreen" ? (
         <Tooltip title="Assign">
           <Button variant="contained" color="secondary">
             Assign
@@ -246,7 +246,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomTable = ({ rows }) => {
+const CustomTable = ({ rows, screen }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("assetId");
@@ -305,7 +305,7 @@ const CustomTable = ({ rows }) => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar Selected={selected} />
+        <EnhancedTableToolbar Selected={selected} Screen={screen} />
         <TableContainer>
           <Table
             className={classes.table}

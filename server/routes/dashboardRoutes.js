@@ -4,5 +4,7 @@ const controller = require("../controllers/dashboardController");
 const protect = require("../middleware/authMiddleware");
 
 router.route("/").get(protect, controller.dashboardLanding);
+router.route("/abs").post(protect, controller.assetByStatus);
+router.route("/abc").post(protect, controller.assetByCategory);
 
 module.exports = router;

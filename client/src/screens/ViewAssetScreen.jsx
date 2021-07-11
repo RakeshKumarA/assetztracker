@@ -110,7 +110,7 @@ const ViewAssetScreen = () => {
             </Button>
           </Grid>
         </Grid>
-        <CustomTable rows={tableRows} />
+        <CustomTable rows={tableRows} screen="viewScreen" />
       </Grid>
     </Paper>
   );

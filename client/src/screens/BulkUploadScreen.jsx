@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { addbulkAsset } from "../reducers/submitBulkAssetSlice";
+import CustomTable from "../components/customcomponents/CustomTable";
 
 const useStyles = makeStyles({
   paperStyle: {
@@ -32,7 +33,17 @@ const BulkUploadScreen = () => {
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const { userid } = useSelector((state) => state.user.userInfo);
-
+  const { submitBulkAsset } = useSelector((state) => state.submitBulk);
+  const tableRows = submitBulkAsset.map((value) => ({
+    id: value.id,
+    assetId: value.onboard.assetId.value,
+    assetName: value.onboard.assetName.value,
+    cost: value.onboard.cost.value,
+    vendor: value.onboard.vendor.value,
+    warrantyExp: value.onboard.warrantyExp.value,
+    assetStatus: value.onboard.assetStatus.value,
+    name: value.name,
+  }));
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -114,6 +125,16 @@ const BulkUploadScreen = () => {
               </Button>
             </Link>
           </Grid>
+        </Grid>
+      </Grid>
+      <Grid item container>
+        <Grid
+          container
+          alignItems="center"
+          direction="column"
+          className={classes.tablePadding}
+        >
+          <CustomTable rows={tableRows} screen="dashboard" />
         </Grid>
       </Grid>
     </Paper>

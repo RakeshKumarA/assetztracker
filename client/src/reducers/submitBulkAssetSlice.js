@@ -53,7 +53,7 @@ export const addbulkAsset = (assets) => async (dispatch, getState) => {
     if (data.status === 201) {
       delete data.status;
 
-      dispatch(submit_bulk_asset_success(data));
+      dispatch(submit_bulk_asset_success(data.assets));
       dispatch(
         set_snackbar({
           snackbarOpen: true,

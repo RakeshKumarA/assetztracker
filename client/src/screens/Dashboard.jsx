@@ -23,15 +23,15 @@ const useStyles = makeStyles({
     padding: "1rem",
   },
   chartTitleStyle: {
-    paddingBottom: "1rem",
+    padding: "1rem 0",
   },
   paperStyle: {
     width: "97%",
     minHeight: "95vh",
     margin: "4vh auto",
   },
-  title: {
-    padding: "1.5rem 0",
+  tablePadding: {
+    paddingTop: "1rem",
   },
 });
 
@@ -63,15 +63,6 @@ const Dashboard = () => {
 
   return (
     <Grid container direction="column">
-      <Grid item>
-        <Typography
-          variant="h3"
-          color="initial"
-          className={classes.latestactstyle}
-        >
-          Latest Activity
-        </Typography>
-      </Grid>
       <Grid item container justify="center">
         <Grid item md={4} sm={8} container justify="center">
           <Typography
@@ -106,7 +97,11 @@ const Dashboard = () => {
           </Card>
         </Grid>
         <Grid item md={4} sm={8} container justify="center">
-          <Typography variant="h5" color="initial">
+          <Typography
+            variant="h5"
+            color="initial"
+            className={classes.chartTitleStyle}
+          >
             Asset Count by Period
           </Typography>
           <Card className={classes.cardStyle}>
@@ -116,16 +111,12 @@ const Dashboard = () => {
       </Grid>
       <Grid item>
         <Paper className={classes.paperStyle}>
-          <Grid container alignItems="center" direction="column">
-            <Grid item>
-              <Typography
-                variant="h4"
-                color="initial"
-                className={classes.title}
-              >
-                View Filtered List
-              </Typography>
-            </Grid>
+          <Grid
+            container
+            alignItems="center"
+            direction="column"
+            className={classes.tablePadding}
+          >
             <CustomTable rows={tableRows} />
           </Grid>
         </Paper>

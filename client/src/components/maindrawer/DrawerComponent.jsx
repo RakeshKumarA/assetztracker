@@ -19,7 +19,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import PublishIcon from "@material-ui/icons/Publish";
-import SettingsIcon from "@material-ui/icons/Settings";
+import ContactsIcon from "@material-ui/icons/Contacts";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -87,9 +87,9 @@ const DrawerComponent = () => {
   const drawerBottomList = [
     {
       id: 1,
-      name: "Settings",
-      icon: <SettingsIcon />,
-      onClickHandler: () => history.push("/setting"),
+      name: "Employee",
+      icon: <ContactsIcon />,
+      onClickHandler: () => history.push("/employee"),
     },
     {
       id: 2,

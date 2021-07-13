@@ -117,3 +117,14 @@ CREATE TABLE asset(
 FOREIGN KEY(userid) 
       REFERENCES users(userid)
 );
+
+--Employee Table Creation
+
+CREATE TABLE employee (
+id BIGSERIAL NOT NULL,
+empid VARCHAR(20) NOT NULL,
+empName VARCHAR(50) NOT NULL,
+countryCode VARCHAR(50) NOT NULL,
+createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+PRIMARY KEY(id)
+);

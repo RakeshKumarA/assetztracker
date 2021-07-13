@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const assetRoutes = require("./routes/assetRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const employeeRoutes = require("./routes/employeeRoutes");
 const logger = require("./utils/logger");
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use("/api/users", userRoutes);
 app.use("/api/assets", assetRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/employee", employeeRoutes);
 
 const PORT = process.env.PORT || 5000;
 

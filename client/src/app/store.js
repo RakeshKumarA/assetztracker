@@ -14,6 +14,7 @@ import downloadReducer from "../reducers/downloadAssetSlice";
 import submitReducer from "../reducers/submitAssetSlice";
 import submitBulkReducer from "../reducers/submitBulkAssetSlice";
 import dashboardReducer from "../reducers/dashboardSlice";
+import employeeReducer from "../reducers/employeeSlice";
 
 export default configureStore({
   reducer: {
@@ -32,5 +33,6 @@ export default configureStore({
     submit: submitReducer,
     submitBulk: submitBulkReducer,
     dashboard: dashboardReducer,
+    employee: employeeReducer,
   },
 });

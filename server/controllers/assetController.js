@@ -1,5 +1,4 @@
 const db = require("../db");
-const excel = require("exceljs");
 var format = require("pg-format");
 
 // @desc		Add Asset

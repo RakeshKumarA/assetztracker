@@ -128,3 +128,52 @@ countryCode VARCHAR(50) NOT NULL,
 createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 PRIMARY KEY(id)
 );
+
+--Asset Tranaction table --
+CREATE TABLE assettransaction (
+transactionid BIGSERIAL NOT NULL,
+transactiontype VARCHAR(20) NOT NULL,
+assetid int NOT NULL,
+empid VARCHAR(20) NULL,
+userid int NOT NULL,
+transactionreason VARCHAR(200) NULL,
+transactionMethod VARCHAR(200) NULL,
+comments VARCHAR(200) NULL,
+transactiondate TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+PRIMARY KEY(transactionid)
+);
+
+--Trigger to asset transaction when asset is onboarded--
+
+CREATE OR REPLACE FUNCTION asset_onboard_trigger_func()
+RETURNS trigger AS $body$
+BEGIN
+   if (TG_OP = 'INSERT') then
+       INSERT INTO assettransaction (
+			transactiontype,
+           assetid,
+           empid,
+           userid,
+           transactionreason,
+		   transactionMethod,
+		   comments
+       )
+       VALUES(
+           'Onboard',
+           NEW.id,
+		   '',
+           NEW.userid,
+           'Onboarding',
+		   '',
+		   ''
+       );
+       RETURN NEW;
+   end if;
+
+END;
+$body$
+LANGUAGE plpgsql
+
+CREATE TRIGGER asset_onboard_trigger
+AFTER INSERT ON asset
+FOR EACH ROW EXECUTE FUNCTION asset_onboard_trigger_func();

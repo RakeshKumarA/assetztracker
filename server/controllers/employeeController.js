@@ -63,7 +63,7 @@ const searchEmployee = async (req, res) => {
 
 // @desc		Download Employees
 // @route 	POST /api/employee/downemp
-// @access 	Public
+// @access 	Private
 
 const downlEmp = async (req, res) => {
   const { id } = req.body;
@@ -83,9 +83,32 @@ const downlEmp = async (req, res) => {
   }
 };
 
+// @desc		Assign Employee to asset
+// @route 	POST /api/employee/assignEmp
+// @access 	Private
+
+const assignEmp = async (req, res) => {
+  const { id, assetid } = req.body.assignEmployee;
+  const { userid } = req.user;
+  try {
+    const assignEmployee = await db.query(
+      "INSERT INTO assettransaction (transactiontype, assetid, empid, userid, transactionreason, transactionMethod, comments) values ($1, $2, $3, $4, $5, $6, $7) returning *",
+      ["Assign", assetid, id, userid, "", "", ""]
+    );
+
+    res.json({
+      status: 201,
+      assettoemployeeassigned: assignEmployee.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
   addEmployee: addEmployee,
   viewEmployee: viewEmployee,
   searchEmployee: searchEmployee,
   downlEmp: downlEmp,
+  assignEmp: assignEmp,
 };

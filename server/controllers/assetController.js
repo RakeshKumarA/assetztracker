@@ -135,6 +135,28 @@ const downlAsset = async (req, res) => {
   }
 };
 
+// @desc		Assign Employee to asset
+// @route 	POST /api/employee/assignEmp
+// @access 	Private
+
+const assignAsset = async (req, res) => {
+  const { id, assetid } = req.body.assignAsset;
+  const { userid } = req.user;
+  try {
+    const assignEmployee = await db.query(
+      "UPDATE asset SET onboard = jsonb_set(body, '{assetStatus.value}', to_json($1::text)::jsonb) and userid=$2 where id=$3",
+      ["Assigned", userid, assetid]
+    );
+
+    res.json({
+      status: 201,
+      assettoemployeeassigned: assignEmployee.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
   addAsset: addAsset,
   addBulkAsset: addBulkAsset,

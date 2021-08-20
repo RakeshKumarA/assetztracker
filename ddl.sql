@@ -28,6 +28,8 @@ INSERT INTO users (name,email, password,role) values ('Rakesh', 'rakesh@example.
 
 ---USERAUDIT TABLE CREATION---
 
+CREATE TYPE dmltype AS ENUM ('INSERT', 'UPDATE', 'DELETE');
+
 CREATE TABLE useraudit (
 dmltype dmltype NOT NULL,
 recordid INT NOT NULL,
@@ -38,8 +40,6 @@ createdat TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 ---TRIGGER AND FUNCTION CREATION---
-
-CREATE TYPE dmltype AS ENUM ('INSERT', 'UPDATE', 'DELETE');
 
 CREATE OR REPLACE FUNCTION user_audit_trigger_func()
 RETURNS trigger AS $body$

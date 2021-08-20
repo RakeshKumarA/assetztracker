@@ -91,6 +91,7 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    checkboxres,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -101,8 +102,10 @@ function EnhancedTableHead(props) {
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            indeterminate={
+              !checkboxres && numSelected > 0 && numSelected < rowCount
+            }
+            checked={!checkboxres && rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "select all assets" }}
           />
@@ -163,22 +166,31 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({
+  Selected,
+  Screen,
+  assetSelected,
+  checkboxres,
+}) => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
-  const { Selected, Screen } = props;
   const numSelected = Selected.length;
 
   const handleDownloadClick = (Selected) => {
     dispatch(downloadAssets(Selected));
   };
+
+  const assignClick = (e) => {
+    assetSelected(Selected);
+    e.preventDefault();
+  };
   return (
     <Toolbar
       className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
+        [classes.highlight]: !checkboxres && numSelected > 0,
       })}
     >
-      {numSelected > 0 ? (
+      {!checkboxres && numSelected > 0 ? (
         <Typography
           className={classes.title}
           color="inherit"
@@ -197,14 +209,14 @@ const EnhancedTableToolbar = (props) => {
           Asset List
         </Typography>
       )}
-      {numSelected === 1 && Screen === "viewScreen" ? (
+      {!checkboxres && numSelected === 1 && Screen === "viewScreen" ? (
         <Tooltip title="Assign">
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="secondary" onClick={assignClick}>
             Assign
           </Button>
         </Tooltip>
       ) : null}
-      {numSelected > 0 ? (
+      {!checkboxres && numSelected > 0 ? (
         <Tooltip title="Download">
           <IconButton
             aria-label="delete"
@@ -246,7 +258,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomTable = ({ rows, screen }) => {
+const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("assetId");
@@ -305,7 +317,12 @@ const CustomTable = ({ rows, screen }) => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar Selected={selected} Screen={screen} />
+        <EnhancedTableToolbar
+          Selected={selected}
+          Screen={screen}
+          assetSelected={assetSelected}
+          checkboxres={checkboxres}
+        />
         <TableContainer>
           <Table
             className={classes.table}
@@ -320,6 +337,7 @@ const CustomTable = ({ rows, screen }) => {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              checkboxres={checkboxres}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
@@ -340,7 +358,7 @@ const CustomTable = ({ rows, screen }) => {
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
-                          checked={isItemSelected}
+                          checked={checkboxres ? false : isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell>

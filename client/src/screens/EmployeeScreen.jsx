@@ -35,7 +35,7 @@ const EmployeeScreen = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
-  const { employeeadded } = useSelector((state) => state.employee);
+  const { employeeViewed } = useSelector((state) => state.employee);
   const readExcel = (file) => {
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -133,7 +133,7 @@ const EmployeeScreen = () => {
           direction="column"
           className={classes.tablePadding}
         >
-          <CustomEmployeeTable rows={employeeadded} screen="employee" />
+          <CustomEmployeeTable rows={employeeViewed} screen="employee" />
         </Grid>
       </Grid>
     </Paper>

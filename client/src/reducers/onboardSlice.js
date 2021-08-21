@@ -1,68 +1,68 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   onboard: {
     assetId: {
-      lable: 'Asset Id',
-      value: '',
-    },
-    assetName: {
-      lable: 'Asset Name',
-      value: '',
+      lable: "Asset Id",
+      value: "",
     },
     assetStatus: {
-      lable: 'Asset Status',
-      value: 'Onboarding',
+      lable: "Asset Status",
+      value: "Onboarding",
     },
     assetType: {
-      lable: 'Asset Type',
-      value: 'rented',
+      lable: "Asset Type",
+      value: "Computer",
+    },
+    assetClassification: {
+      lable: "Asset Classification",
+      value: "",
     },
     cost: {
-      lable: 'Cost',
-      value: '',
+      lable: "Cost",
+      value: "",
     },
     invoiceNumber: {
-      lable: 'Invoice Number',
-      value: '',
+      lable: "Invoice Number",
+      value: "",
     },
-    lastauditDate: {
-      lable: 'Last Audit Date',
+    putToUseDate: {
+      lable: "Put To Use Date",
       value: null,
     },
-    onboardDate: {
-      lable: 'Onboard Date',
+    invoiceDate: {
+      lable: "Invoice Date",
       value: null,
     },
-    productSerial: {
-      lable: 'Product Serial',
-      value: '',
+    model: {
+      lable: "Model",
+      value: "",
     },
-    purchaseDate: {
-      lable: 'Purchase Date',
+    purchaseOrderDate: {
+      lable: "Purchase Order Date",
       value: null,
     },
     purchaseOrder: {
-      lable: 'Purchase Order',
-      value: '',
+      lable: "Purchase Order",
+      value: "",
     },
     vendor: {
-      lable: 'Vendor',
-      value: '',
+      lable: "Vendor",
+      value: "",
     },
-    warranty: {
-      lable: 'Warranty',
-      value: '',
+    location: {
+      lable: "Location",
+      value: "",
     },
-    warrantyExp: {
-      lable: 'Warranty Exp Date',
+    purchaseDate: {
+      lable: "Purchase Date",
       value: null,
     },
   },
 };
 
 export const onboardSlice = createSlice({
-  name: 'onboard',
+  name: "onboard",
   initialState,
   reducers: {
     onboard_update: (state, action) => {

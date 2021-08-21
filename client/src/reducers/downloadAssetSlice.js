@@ -49,18 +49,17 @@ export const downloadAssets = (id) => async (dispatch, getState) => {
       dispatch(download_assets_success());
       const columns = [
         { header: "Asset ID", key: "assetId" },
-        { header: "Asset Name", key: "assetName" },
         { header: "Asset Status", key: "assetStatus" },
         { header: "Asset Type", key: "assetType" },
         { header: "Cost", key: "cost" },
         { header: "Invoice Number", key: "invoiceNumber" },
-        { header: "Onboard Date", key: "onboardDate" },
-        { header: "Product Serial", key: "productSerial" },
-        { header: "Purchase Date", key: "purchaseDate" },
-        { header: "Purchase Ordre", key: "purchaseOrder" },
+        { header: "Invoice Date", key: "invoiceDate" },
+        { header: "Model", key: "model" },
+        { header: "Purchase Order Date", key: "purchaseOrderDate" },
+        { header: "Purchase Order", key: "purchaseOrder" },
         { header: "Vendor", key: "vendor" },
-        { header: "Warranty", key: "warranty" },
-        { header: "Warranty Exp Date", key: "warrantyExp" },
+        { header: "Location", key: "location" },
+        { header: "Purchase Date", key: "purchaseDate" },
         { header: "Asset Added By", key: "name" },
       ];
 

@@ -37,10 +37,9 @@ const BulkUploadScreen = () => {
   const tableRows = submitBulkAsset.map((value) => ({
     id: value.id,
     assetId: value.onboard.assetId.value,
-    assetName: value.onboard.assetName.value,
     cost: value.onboard.cost.value,
     vendor: value.onboard.vendor.value,
-    warrantyExp: value.onboard.warrantyExp.value,
+    purchaseDate: value.onboard.purchaseDate.value,
     assetStatus: value.onboard.assetStatus.value,
     name: value.name,
   }));

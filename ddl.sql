@@ -114,7 +114,7 @@ CREATE TABLE asset(
 	software jsonb,
 	hardware jsonb,
 	depreciation json,
-FOREIGN KEY(userid) 
+    FOREIGN KEY(userid) 
       REFERENCES users(userid)
 );
 
@@ -177,3 +177,12 @@ LANGUAGE plpgsql
 CREATE TRIGGER asset_onboard_trigger
 AFTER INSERT ON asset
 FOR EACH ROW EXECUTE FUNCTION asset_onboard_trigger_func();
+
+---ASSET TYPE TABLE CREATION---
+
+CREATE TABLE assettype (
+assettypeid BIGSERIAL NOT NULL,
+assettypelev1 VARCHAR(50) NOT NULL,
+createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+PRIMARY KEY(assettypeid)
+);

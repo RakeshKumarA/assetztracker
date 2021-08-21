@@ -15,9 +15,8 @@ export const adminFormValidationSchema = yup.object().shape({
 });
 
 export const onboardValidationSchema = yup.object().shape({
-  assetName: yup.string().required("Asset Name Required"),
   assetId: yup.string().required("Asset id Required"),
-  warranty: yup.number().typeError("Must be a number in months"),
+  location: yup.string().required("Location is Required"),
 });
 
 export const softwareValidationSchema = yup.object().shape({

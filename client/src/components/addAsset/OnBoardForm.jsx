@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 //Material UI
@@ -27,6 +27,7 @@ import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
 import CustomTextField from "../customcomponents/CustomTextField";
 import { onboard_update } from "../../reducers/onboardSlice";
 import { option_update_continue } from "../../reducers/assetSelSlice";
+import { getAssetType } from "../../reducers/assetTypeSlice";
 
 const useStyles = makeStyles({
   container: {
@@ -41,28 +42,46 @@ const useStyles = makeStyles({
 
 const OnBoardForm = () => {
   const classes = useStyles();
+  const [assetlvl1, setAssetlvl1] = useState("Computer");
   const { onboard } = useSelector((state) => state.onboard);
   const { enable } = useSelector((state) => state.assetSel);
+  const { assetType } = useSelector((state) => state.assetType);
   const dispatch = useDispatch();
 
   const initialValues = {
     assetId: onboard.assetId.value,
-    assetName: onboard.assetName.value,
     assetStatus: onboard.assetStatus.value,
     assetType: onboard.assetType.value,
+    assetClassification: onboard.assetClassification.value,
     cost: onboard.cost.value,
     invoiceNumber: onboard.invoiceNumber.value,
-    lastauditDate: onboard.lastauditDate.value,
-    onboardDate: onboard.onboardDate.value,
-    productSerial: onboard.productSerial.value,
-    purchaseDate: onboard.purchaseDate.value,
+    putToUseDate: onboard.putToUseDate.value,
+    invoiceDate: onboard.invoiceDate.value,
+    model: onboard.model.value,
+    purchaseOrderDate: onboard.purchaseOrderDate.value,
     purchaseOrder: onboard.purchaseOrder.value,
     vendor: onboard.vendor.value,
-    warranty: onboard.warranty.value,
-    warrantyExp: onboard.warrantyExp.value,
+    location: onboard.location.value,
+    purchaseDate: onboard.purchaseDate.value,
   };
 
+  useEffect(() => {
+    dispatch(getAssetType());
+  }, [dispatch]);
+
   const enableoncontinue = { ...enable, software: false };
+
+  const assettlevel1 = assetType
+    .map((item) => item.assettypelev1)
+    .filter((value, index, self) => self.indexOf(value) === index);
+
+  const clickassetTypeHandler = (assetLevel1) => {
+    setAssetlvl1(assetLevel1);
+  };
+
+  const assettlevel2 = assetType.filter(
+    (assetType) => assetType.assettypelev1 === assetlvl1
+  );
 
   return (
     <Grid container direction="column">
@@ -78,10 +97,6 @@ const OnBoardForm = () => {
               lable: "Asset Id",
               value: values.assetId,
             },
-            assetName: {
-              lable: "Asset Name",
-              value: values.assetName,
-            },
             assetStatus: {
               lable: "Asset Status",
               value: values.assetStatus,
@@ -89,6 +104,10 @@ const OnBoardForm = () => {
             assetType: {
               lable: "Asset Type",
               value: values.assetType,
+            },
+            assetClassification: {
+              lable: "Asset Classification",
+              value: values.assetClassification,
             },
             cost: {
               lable: "Cost",
@@ -98,27 +117,27 @@ const OnBoardForm = () => {
               lable: "Invoice Number",
               value: values.invoiceNumber,
             },
-            lastauditDate: {
-              lable: "Last Audit Date",
-              value: values.lastauditDate
-                ? values.lastauditDate.toString()
-                : values.lastauditDate,
+            putToUseDate: {
+              lable: "Put To Use Date",
+              value: values.putToUseDate
+                ? values.putToUseDate.toString()
+                : values.putToUseDate,
             },
-            onboardDate: {
-              lable: "Onboard Date",
-              value: values.onboardDate
-                ? values.onboardDate.toString()
-                : values.onboardDate,
+            invoiceDate: {
+              lable: "Invoice Date",
+              value: values.invoiceDate
+                ? values.invoiceDate.toString()
+                : values.invoiceDate,
             },
-            productSerial: {
-              lable: "Product Serial",
-              value: values.productSerial,
+            model: {
+              lable: "Model",
+              value: values.model,
             },
-            purchaseDate: {
-              lable: "Purchase Date",
-              value: values.purchaseDate
-                ? values.purchaseDate.toString()
-                : values.purchaseDate,
+            purchaseOrderDate: {
+              lable: "Purchase Order Date",
+              value: values.purchaseOrderDate
+                ? values.purchaseOrderDate.toString()
+                : values.purchaseOrderDate,
             },
             purchaseOrder: {
               lable: "Purchase Order",
@@ -128,15 +147,15 @@ const OnBoardForm = () => {
               lable: "Vendor",
               value: values.vendor,
             },
-            warranty: {
-              lable: "Warranty",
-              value: values.warranty,
+            location: {
+              lable: "Location",
+              value: values.location,
             },
-            warrantyExp: {
-              lable: "Warranty Exp Date",
-              value: values.warrantyExp
-                ? values.warrantyExp.toString()
-                : values.warrantyExp,
+            purchaseDate: {
+              lable: "Purchase Date",
+              value: values.purchaseDate
+                ? values.purchaseDate.toString()
+                : values.purchaseDate,
             },
           };
           dispatch(onboard_update(valuetobeuploaded));
@@ -163,14 +182,42 @@ const OnBoardForm = () => {
                 alignItems="flex-start"
                 spacing={2}
               >
-                <Grid item container>
-                  <CustomTextField name="assetName" label="Asset Name" />
+                <Grid item container direction="column">
+                  <FormControl fullWidth>
+                    <Field
+                      fullWidth
+                      name="assetType"
+                      label="Asset Type"
+                      variant="outlined"
+                      as={TextFieldMaterial}
+                      select
+                    >
+                      {assettlevel1.map((assetLevel1, index) => (
+                        <MenuItem
+                          value={assetLevel1}
+                          key={index}
+                          onClick={() => clickassetTypeHandler(assetLevel1)}
+                        >
+                          {assetLevel1}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </FormControl>
                 </Grid>
                 <Grid item container>
-                  <CustomTextField name="cost" label="Cost" />
+                  <CustomTextField name="model" label="Model" />
                 </Grid>
-                <Grid item container>
-                  <CustomTextField name="warranty" label="Warranty" />
+                <Grid item container direction="column">
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Field
+                      component={KeyboardDateTimePicker}
+                      name="purchaseOrderDate"
+                      label="Purchase Order Date"
+                      autoOk
+                      inputVariant="outlined"
+                      format="yyyy-mm-dd HH:MM:SS p"
+                    />
+                  </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item container>
                   <CustomTextField name="vendor" label="Vendor" />
@@ -179,13 +226,55 @@ const OnBoardForm = () => {
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <Field
                       component={KeyboardDateTimePicker}
-                      name="onboardDate"
-                      label="Onboard Date"
+                      name="invoiceDate"
+                      label="Invoice Date"
                       autoOk
                       inputVariant="outlined"
                       format="yyyy-mm-dd HH:MM:SS p"
                     />
                   </MuiPickersUtilsProvider>
+                </Grid>
+                <Grid item container>
+                  <CustomTextField name="cost" label="Cost" />
+                </Grid>
+                <Grid item container>
+                  <CustomTextField name="location" label="Location" />
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                sm={4}
+                container
+                direction="column"
+                alignItems="flex-start"
+                spacing={2}
+              >
+                <Grid item container direction="column">
+                  <FormControl fullWidth>
+                    <Field
+                      fullWidth
+                      name="assetClassification"
+                      label="Asset Classification"
+                      variant="outlined"
+                      as={TextFieldMaterial}
+                      select
+                    >
+                      {assettlevel2.map((assetLevel2) => (
+                        <MenuItem
+                          value={assetLevel2.assettypelev2}
+                          key={assetLevel2.assettypeid}
+                        >
+                          {assetLevel2.assettypelev2}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </FormControl>
+                </Grid>
+                <Grid item container>
+                  <CustomTextField
+                    name="purchaseOrder"
+                    label="Purchase Order"
+                  />
                 </Grid>
                 <Grid item container direction="column">
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -199,77 +288,28 @@ const OnBoardForm = () => {
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item container direction="column">
-                  <FormControl fullWidth>
-                    <Field
-                      fullWidth
-                      name="assetType"
-                      label="Asset Type"
-                      variant="outlined"
-                      as={TextFieldMaterial}
-                      select
-                    >
-                      <MenuItem value={"rented"}>Rented</MenuItem>
-                      <MenuItem value={"leased"}>Leased</MenuItem>
-                      <MenuItem value={"own"}>Own</MenuItem>
-                    </Field>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                sm={4}
-                container
-                direction="column"
-                alignItems="flex-start"
-                spacing={2}
-              >
                 <Grid item container>
                   <CustomTextField
                     name="invoiceNumber"
                     label="Invoice Number"
                   />
                 </Grid>
-                <Grid item container>
-                  <CustomTextField
-                    name="purchaseOrder"
-                    label="Purchase Order"
-                  />
+                <Grid item container direction="column">
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <Field
+                      component={KeyboardDateTimePicker}
+                      name="putToUseDate"
+                      label="Put To Use Date"
+                      autoOk
+                      inputVariant="outlined"
+                      format="yyyy-mm-dd HH:MM:SS p"
+                    />
+                  </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item container>
                   <CustomTextField name="assetId" label="Asset Id" />
                 </Grid>
-                <Grid item container>
-                  <CustomTextField
-                    name="productSerial"
-                    label="Product Serial"
-                  />
-                </Grid>
 
-                <Grid item container direction="column">
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Field
-                      component={KeyboardDateTimePicker}
-                      name="warrantyExp"
-                      label="Warranty Expiry Date"
-                      autoOk
-                      inputVariant="outlined"
-                      format="yyyy-mm-dd HH:MM:SS p"
-                    />
-                  </MuiPickersUtilsProvider>
-                </Grid>
-                <Grid item container direction="column">
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Field
-                      component={KeyboardDateTimePicker}
-                      name="lastauditDate"
-                      label="Last Audit Date"
-                      autoOk
-                      inputVariant="outlined"
-                      format="yyyy-mm-dd HH:MM:SS p"
-                    />
-                  </MuiPickersUtilsProvider>
-                </Grid>
                 <Grid item container>
                   <CustomTextField
                     name="assetStatus"

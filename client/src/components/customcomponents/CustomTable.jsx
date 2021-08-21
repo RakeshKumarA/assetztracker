@@ -54,19 +54,13 @@ const headCells = [
     disablePadding: true,
     label: "ASSET ID",
   },
-  {
-    id: "assetName",
-    numeric: false,
-    disablePadding: false,
-    label: "ASSET NAME",
-  },
   { id: "cost", numeric: true, disablePadding: false, label: "COST" },
   { id: "vendor", numeric: false, disablePadding: false, label: "VENDOR" },
   {
-    id: "warExpDate",
+    id: "purchaseDate",
     numeric: true,
     disablePadding: false,
-    label: "WARRANTY EXPIRY DATE",
+    label: "PURCHASE DATE",
   },
   {
     id: "assetStatus",
@@ -371,11 +365,10 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                       >
                         {row.assetId}
                       </TableCell>
-                      <TableCell align="center">{row.assetName}</TableCell>
                       <TableCell align="center">{row.cost}</TableCell>
                       <TableCell align="center">{row.vendor}</TableCell>
                       <TableCell align="center">
-                        {convert(row.warrantyExp)}
+                        {convert(row.purchaseDate)}
                       </TableCell>
                       <TableCell align="center">{row.assetStatus}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>

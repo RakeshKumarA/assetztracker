@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { useDispatch, useSelector } from 'react-redux';
-import { format } from 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
+import * as React from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useDispatch, useSelector } from "react-redux";
+import { format } from "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
 
 // Material Core
 import {
@@ -17,33 +17,33 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
+} from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { makeStyles } from "@material-ui/core/styles";
 
 //FormiK
-import { TextField } from 'formik-material-ui';
-import { KeyboardDateTimePicker } from 'formik-material-ui-pickers';
+import { TextField } from "formik-material-ui";
+import { KeyboardDateTimePicker } from "formik-material-ui-pickers";
 
 //Formik
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field } from "formik";
 
 // Dialog
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 //Import Validation Schema
-import { hardwareValidationSchema } from '../../schema/validationSchema';
+import { hardwareValidationSchema } from "../../schema/validationSchema";
 
 //Modular Imports
-import { hardware_update, hardware_delete } from '../../reducers/hardwareSlice';
+import { hardware_update, hardware_delete } from "../../reducers/hardwareSlice";
 import {
   option_update_continue,
   option_update_onclick,
-} from '../../reducers/assetSelSlice';
+} from "../../reducers/assetSelSlice";
 
 const useStyles = makeStyles({
   table: {
@@ -89,7 +89,7 @@ const HardwareForm = () => {
       <Typography variant="h4" color="initial">
         Hardware
       </Typography>
-      <Grid container alignItems="center" direction="column" spacing={2}>
+      <Grid container alignItems="center" spacing={2}>
         <Grid item sm={10} container justify="flex-end">
           <Button
             variant="contained"
@@ -165,15 +165,15 @@ const HardwareForm = () => {
         <DialogContent>
           <Formik
             initialValues={{
-              hardwareName: '',
-              hardwareVersion: '',
+              hardwareName: "",
+              hardwareVersion: "",
               expDate: null,
             }}
             validationSchema={hardwareValidationSchema}
             onSubmit={(values) => {
               values.expDate =
                 values.expDate &&
-                format(values.expDate, 'yyyy-MM-dd hh:mm:ss a');
+                format(values.expDate, "yyyy-MM-dd hh:mm:ss a");
               const datawithkey = { ...values, id: uuidv4() };
               dispatch(hardware_update(datawithkey));
               handleClose();

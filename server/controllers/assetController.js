@@ -9,9 +9,10 @@ const addAsset = async (req, res) => {
   const { userid } = req.user;
   try {
     const results = await db.query(
-      "INSERT INTO asset (userid, onboard, software, hardware, depreciation) values ($1, $2, $3, $4, $5) returning *",
+      "INSERT INTO asset (userid, empid, onboard, software, hardware, depreciation) values ($1, $2, $3, $4, $5, $6) returning *",
       [
         userid,
+        null,
         onboard,
         JSON.stringify(software),
         JSON.stringify(hardware),
@@ -40,7 +41,7 @@ const addBulkAsset = async (req, res) => {
   try {
     const results = await db.query(
       format(
-        "INSERT INTO asset (onboard, software, hardware, depreciation, userid) VALUES %L returning *",
+        "INSERT INTO asset (onboard, software, hardware, depreciation, empid, userid) VALUES %L returning *",
         assets
       ),
       [],
@@ -111,18 +112,17 @@ const downlAsset = async (req, res) => {
     );
     const finalDownloadedAsset = downloadedAsset.rows.map((asset) => ({
       assetId: asset.onboard.assetId.value,
-      assetName: asset.onboard.assetName.value,
       assetStatus: asset.onboard.assetStatus.value,
       assetType: asset.onboard.assetType.value,
       cost: asset.onboard.cost.value,
       invoiceNumber: asset.onboard.invoiceNumber.value,
-      onboardDate: asset.onboard.onboardDate.value,
-      productSerial: asset.onboard.productSerial.value,
-      purchaseDate: asset.onboard.purchaseDate.value,
+      invoiceDate: asset.onboard.invoiceDate.value,
+      model: asset.onboard.model.value,
+      purchaseOrderDate: asset.onboard.purchaseOrderDate.value,
       purchaseOrder: asset.onboard.purchaseOrder.value,
       vendor: asset.onboard.vendor.value,
-      warranty: asset.onboard.warranty.value,
-      warrantyExp: asset.onboard.warrantyExp.value,
+      location: asset.onboard.location.value,
+      purchaseDate: asset.onboard.purchaseDate.value,
       name: asset.name,
     }));
 
@@ -157,10 +157,28 @@ const assignAsset = async (req, res) => {
   }
 };
 
+// @desc		View Asset
+// @route 	GET /api/assets/assettype
+// @access 	Public
+const getAssetType = async (req, res) => {
+  try {
+    const results = await db.query(
+      "SELECT assettypeid, assettypelev1, assettypelev2 FROM assettype"
+    );
+    res.status(200).json({
+      status: 200,
+      assettype: results.rows,
+    });
+  } catch (error) {
+    res.json({ status: 401, message: error.message });
+  }
+};
+
 module.exports = {
   addAsset: addAsset,
   addBulkAsset: addBulkAsset,
   viewAssets: viewAssets,
   searchAsset: searchAsset,
   downlAsset: downlAsset,
+  getAssetType: getAssetType,
 };

@@ -6,10 +6,6 @@ export const bulkuploadMApper = (assets) => {
         lable: "Asset Id",
         value: asset.assetId,
       },
-      assetName: {
-        lable: "Asset Name",
-        value: asset.assetName,
-      },
       assetStatus: {
         lable: "Asset Status",
         value: "Onboarding",
@@ -26,21 +22,21 @@ export const bulkuploadMApper = (assets) => {
         lable: "Invoice Number",
         value: asset.invoiceNumber,
       },
-      lastauditDate: {
-        lable: "Last Audit Date",
-        value: asset.lastauditDate,
+      putToUseDate: {
+        lable: "Put to use Date",
+        value: asset.putToUseDate,
       },
-      onboardDate: {
-        lable: "Onboard Date",
-        value: asset.onboardDate,
+      invoiceDate: {
+        lable: "Invoice Date",
+        value: asset.invoiceDate,
       },
-      productSerial: {
-        lable: "Product Serial",
-        value: asset.productSerial,
+      model: {
+        lable: "Model",
+        value: asset.model,
       },
-      purchaseDate: {
-        lable: "Purchase Date",
-        value: asset.purchaseDate,
+      purchaseOrderDate: {
+        lable: "Purchase Order Date",
+        value: asset.purchaseOrderDate,
       },
       purchaseOrder: {
         lable: "Purchase Order",
@@ -50,13 +46,13 @@ export const bulkuploadMApper = (assets) => {
         lable: "Vendor",
         value: asset.vendor,
       },
-      warranty: {
-        lable: "Warranty",
-        value: asset.warranty,
+      location: {
+        lable: "Location",
+        value: asset.location,
       },
-      warrantyExp: {
-        lable: "Warranty Exp Date",
-        value: asset.warrantyExp,
+      purchaseDate: {
+        lable: "Purchase Date",
+        value: asset.purchaseDate,
       },
     },
     software: "[]",
@@ -75,6 +71,7 @@ export const bulkuploadMApper = (assets) => {
         value: asset.depmethod,
       },
     },
+    empid: null,
   }));
   return bulkUpload;
 };

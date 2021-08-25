@@ -9,8 +9,10 @@ const addAsset = async (req, res) => {
   const { userid } = req.user;
   try {
     const results = await db.query(
-      "INSERT INTO asset (userid, empid, onboard, software, hardware, depreciation) values ($1, $2, $3, $4, $5, $6) returning *",
+      "INSERT INTO asset (assetid, assetstatus, userid, empid, onboard, software, hardware, depreciation) values ($1, $2, $3, $4, $5, $6, $7, $8) returning *",
       [
+        onboard.assetId.value,
+        onboard.assetStatus.value,
         userid,
         null,
         onboard,
@@ -41,7 +43,7 @@ const addBulkAsset = async (req, res) => {
   try {
     const results = await db.query(
       format(
-        "INSERT INTO asset (onboard, software, hardware, depreciation, empid, userid) VALUES %L returning *",
+        "INSERT INTO asset (assetid, assetstatus, onboard, software, hardware, depreciation, empid, userid) VALUES %L returning *",
         assets
       ),
       [],

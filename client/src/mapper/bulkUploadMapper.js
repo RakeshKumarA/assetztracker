@@ -1,6 +1,8 @@
 export const bulkuploadMApper = (assets) => {
   let bulkUpload = [];
   bulkUpload = assets.map((asset) => ({
+    assetId: asset.assetId,
+    assetStatus: "Onboarding",
     onboard: {
       assetId: {
         lable: "Asset Id",

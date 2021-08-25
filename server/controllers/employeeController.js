@@ -92,13 +92,33 @@ const assignEmp = async (req, res) => {
   const { userid } = req.user;
   try {
     const assignEmployee = await db.query(
-      "INSERT INTO assettransaction (transactiontype, assetid, empid, userid, transactionreason, transactionMethod, comments) values ($1, $2, $3, $4, $5, $6, $7) returning *",
-      ["Assign", assetid, id, userid, "", "", ""]
+      "update asset set assetstatus = $1, empid = $2 where id = $3 returning *",
+      ["Assigned", id, assetid]
     );
-
     res.json({
-      status: 201,
+      status: 200,
       assettoemployeeassigned: assignEmployee.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
+// @desc		Assign Employee to asset
+// @route 	POST /api/employee/assignEmp
+// @access 	Private
+
+const unAssignEmp = async (req, res) => {
+  const { assetid } = req.body;
+  const { userid } = req.user;
+  try {
+    const unAssignEmployee = await db.query(
+      "update asset set assetstatus = $1, empid = $2 where id = $3 returning *",
+      ["Inventory", null, assetid]
+    );
+    res.json({
+      status: 200,
+      assetunassigned: unAssignEmployee.rows,
     });
   } catch (error) {
     res.json({ status: 500, message: error.message });
@@ -111,4 +131,5 @@ module.exports = {
   searchEmployee: searchEmployee,
   downlEmp: downlEmp,
   assignEmp: assignEmp,
+  unAssignEmp: unAssignEmp,
 };

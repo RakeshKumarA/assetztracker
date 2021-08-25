@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 //Other Libraries
 import PieChart from "../components/charts/PieChart";
 import { useEffect } from "react";
-import { dashboardChart } from "../reducers/dashboardSlice";
+import { dashboardChart, dashboardTable } from "../reducers/dashboardSlice";
 import CustomTable from "../components/customcomponents/CustomTable";
 
 const useStyles = makeStyles({
@@ -38,27 +38,37 @@ const useStyles = makeStyles({
 const Dashboard = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { assetsCountByStatus, assetsCountByCategory, assetsCountByPeriod } = useSelector(
-    (state) => state.dashboard.stats
-  );
+  const { assetsCountByStatus, assetsCountByCategory, assetsCountByPeriod } =
+    useSelector((state) => state.dashboard.stats);
   const { assetsFilterList } = useSelector((state) => state.dashboard);
   const tableRows = assetsFilterList.map((value) => ({
     id: value.id,
     assetId: value.onboard.assetId.value,
     cost: value.onboard.cost.value,
     vendor: value.onboard.vendor.value,
-    purchaseDate: value.onboard.purchaseDate.value,
-    assetStatus: value.onboard.assetStatus.value,
+    empid: value.empid,
+    assetStatus: value.assetstatus,
     name: value.name,
   }));
   const statusCountLabel = ["Onboarded", "Assigned", "InStock"];
-  const categoryCountLabel = ["Computer", "Chair", "Table", "TV", "Coffee Maker", "Stationary"];
+  const categoryCountLabel = [
+    "Computer",
+    "Chair",
+    "Table",
+    "TV",
+    "Coffee Maker",
+    "Stationary",
+  ];
   const periodLable = ["Today", "Week", "Month"];
-
-  console.log(assetsCountByPeriod)
 
   useEffect(() => {
     dispatch(dashboardChart());
+    dispatch(
+      dashboardTable({
+        type: "assetByPeriod",
+        criteria: "Monthly",
+      })
+    );
   }, [dispatch]);
 
   return (
@@ -105,7 +115,11 @@ const Dashboard = () => {
             Asset Count by Period
           </Typography>
           <Card className={classes.cardStyle}>
-            <PieChart rawData={assetsCountByPeriod} type="assetByPeriod" labels={periodLable} />
+            <PieChart
+              rawData={assetsCountByPeriod}
+              type="assetByPeriod"
+              labels={periodLable}
+            />
           </Card>
         </Grid>
       </Grid>

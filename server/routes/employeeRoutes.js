@@ -8,5 +8,6 @@ router.route("/view").get(protect, controller.viewEmployee);
 router.route("/search").post(protect, controller.searchEmployee);
 router.route("/downemp").post(protect, controller.downlEmp);
 router.route("/assignemp").post(protect, controller.assignEmp);
+router.route("/unassignemp").post(protect, controller.unAssignEmp);
 
 module.exports = router;

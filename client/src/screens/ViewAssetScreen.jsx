@@ -50,8 +50,8 @@ const ViewAssetScreen = () => {
     assetId: value.onboard.assetId.value,
     cost: value.onboard.cost.value,
     vendor: value.onboard.vendor.value,
-    purchaseDate: value.onboard.purchaseDate.value,
-    assetStatus: value.onboard.assetStatus.value,
+    empid: value.empid,
+    assetStatus: value.assetstatus,
     name: value.name,
   }));
   // Search Asset
@@ -108,6 +108,7 @@ const ViewAssetScreen = () => {
     dispatch(assignEmployeeToAsset(assignEmployee));
     handleClose();
     setCheckboxres(true);
+    window.location.reload();
   };
 
   const handleEmployeeSelection = (event, values) => {

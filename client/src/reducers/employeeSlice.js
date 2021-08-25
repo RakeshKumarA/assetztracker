@@ -158,7 +158,7 @@ export const assignEmployeeToAsset =
         { assignEmployee },
         config
       );
-      if (data.status === 201) {
+      if (data.status === 200) {
         dispatch(
           set_snackbar({
             snackbarOpen: true,
@@ -190,5 +190,55 @@ export const assignEmployeeToAsset =
       );
     }
   };
+
+export const unAssignAsset = (assetid) => async (dispatch, getState) => {
+  try {
+    dispatch(employee_request());
+    const {
+      user: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.post(
+      "/api/employee/unassignemp",
+      { assetid },
+      config
+    );
+    if (data.status === 200) {
+      dispatch(
+        set_snackbar({
+          snackbarOpen: true,
+          snackbarType: "success",
+          snackbarMessage: "Asset successfully unassigned",
+          snackbarSeverity: "success",
+        })
+      );
+    } else {
+      dispatch(employee_failure(data.message));
+      dispatch(
+        set_snackbar({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: data.message,
+          snackbarSeverity: "error",
+        })
+      );
+    }
+  } catch (error) {
+    dispatch(employee_failure(error.message));
+    dispatch(
+      set_snackbar({
+        snackbarOpen: true,
+        snackbarType: "error",
+        snackbarMessage: error.message,
+        snackbarSeverity: "error",
+      })
+    );
+  }
+};
 
 export default employeeSlice.reducer;

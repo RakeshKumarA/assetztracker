@@ -10,8 +10,22 @@ const PieChart = ({ rawData, type, labels }) => {
     datasets: [
       {
         data: rawData,
-        backgroundColor: ["#F7685B", "#885AF8", "#C2CFE0", "#FAAD80", "#A03C78", "#FF3D68"],
-        borderColor: ["#F7685B", "#885AF8", "#C2CFE0", "#FAAD80", "#A03C78", "#FF3D68"],
+        backgroundColor: [
+          "#F7685B",
+          "#885AF8",
+          "#C2CFE0",
+          "#FAAD80",
+          "#A03C78",
+          "#93D9A3",
+        ],
+        borderColor: [
+          "#F7685B",
+          "#885AF8",
+          "#C2CFE0",
+          "#FAAD80",
+          "#A03C78",
+          "#93D9A3",
+        ],
         borderWidth: 1,
       },
     ],
@@ -34,7 +48,17 @@ const PieChart = ({ rawData, type, labels }) => {
           dispatch(dashboardTable(assetFilterCriteria));
         } else if (type === "assetByCategory") {
           const criteria =
-            index === 0 ? "Computer" : index === 1 ? "Chair" : index === 2 ? "Table" : index === 3 ? "TV" : index === 4 ? "Coffee Maker" : "Stationary" ;
+            index === 0
+              ? "Computer"
+              : index === 1
+              ? "Chair"
+              : index === 2
+              ? "Table"
+              : index === 3
+              ? "TV"
+              : index === 4
+              ? "Coffee Maker"
+              : "Stationary";
           const assetFilterCriteria = {
             type,
             criteria,

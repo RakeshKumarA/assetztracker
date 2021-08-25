@@ -109,13 +109,19 @@ FOR EACH ROW EXECUTE FUNCTION user_audit_trigger_func();
 
 CREATE TABLE asset(
 	id serial NOT NULL PRIMARY KEY,
-	userid bigint, 
+	assetid VARCHAR(20) NOT NULL,
+	assetstatus VARCHAR(20) NOT NULL,
+	userid bigint,
+	empid bigint,
 	onboard json NOT NULL,
 	software jsonb,
 	hardware jsonb,
 	depreciation json,
+	createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(), 
     FOREIGN KEY(userid) 
-      REFERENCES users(userid)
+      REFERENCES users(userid),
+	FOREIGN KEY(empid) 
+      REFERENCES employee(id)
 );
 
 --Employee Table Creation
@@ -159,11 +165,31 @@ BEGIN
 		   comments
        )
        VALUES(
-           'Onboard',
+           NEW.assetstatus,
            NEW.id,
 		   '',
            NEW.userid,
            'Onboarding',
+		   '',
+		   ''
+       );
+       RETURN NEW;
+       elsif (TG_OP = 'UPDATE') then
+       INSERT INTO assettransaction (
+			transactiontype,
+           assetid,
+           empid,
+           userid,
+           transactionreason,
+		   transactionMethod,
+		   comments
+       )
+       VALUES(
+           NEW.assetstatus,
+           NEW.id,
+		   NEW.empid,
+           NEW.userid,
+           '',
 		   '',
 		   ''
        );
@@ -175,7 +201,7 @@ $body$
 LANGUAGE plpgsql
 
 CREATE TRIGGER asset_onboard_trigger
-AFTER INSERT ON asset
+AFTER INSERT OR UPDATE OR DELETE ON asset
 FOR EACH ROW EXECUTE FUNCTION asset_onboard_trigger_func();
 
 ---ASSET TYPE TABLE CREATION---

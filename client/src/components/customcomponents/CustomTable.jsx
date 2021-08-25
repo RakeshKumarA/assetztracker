@@ -20,6 +20,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import { useDispatch } from "react-redux";
 import { downloadAssets } from "../../reducers/downloadAssetSlice";
 import Button from "@material-ui/core/Button";
+import { unAssignAsset } from "../../reducers/employeeSlice";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -57,10 +58,10 @@ const headCells = [
   { id: "cost", numeric: true, disablePadding: false, label: "COST" },
   { id: "vendor", numeric: false, disablePadding: false, label: "VENDOR" },
   {
-    id: "purchaseDate",
+    id: "empid",
     numeric: true,
     disablePadding: false,
-    label: "PURCHASE DATE",
+    label: "EMP ID",
   },
   {
     id: "assetStatus",
@@ -165,6 +166,7 @@ const EnhancedTableToolbar = ({
   Screen,
   assetSelected,
   checkboxres,
+  rows,
 }) => {
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
@@ -178,6 +180,14 @@ const EnhancedTableToolbar = ({
     assetSelected(Selected);
     e.preventDefault();
   };
+  const unassignClick = (e) => {
+    dispatch(unAssignAsset(Selected[0]));
+    window.location.reload();
+  };
+
+  const selectedStatus =
+    Selected[0] && rows.filter((row) => row.id === Selected[0])[0].assetStatus;
+
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -203,10 +213,22 @@ const EnhancedTableToolbar = ({
           Asset List
         </Typography>
       )}
-      {!checkboxres && numSelected === 1 && Screen === "viewScreen" ? (
+      {!checkboxres &&
+      numSelected === 1 &&
+      Screen === "viewScreen" &&
+      selectedStatus !== "Assigned" ? (
         <Tooltip title="Assign">
           <Button variant="contained" color="secondary" onClick={assignClick}>
             Assign
+          </Button>
+        </Tooltip>
+      ) : !checkboxres &&
+        numSelected === 1 &&
+        Screen === "viewScreen" &&
+        selectedStatus === "Assigned" ? (
+        <Tooltip title="Assign">
+          <Button variant="contained" color="secondary" onClick={unassignClick}>
+            Unassign
           </Button>
         </Tooltip>
       ) : null}
@@ -301,13 +323,6 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  function convert(str) {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [day, mnth, date.getFullYear()].join("-");
-  }
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -316,6 +331,7 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
           Screen={screen}
           assetSelected={assetSelected}
           checkboxres={checkboxres}
+          rows={rows}
         />
         <TableContainer>
           <Table
@@ -367,9 +383,7 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                       </TableCell>
                       <TableCell align="center">{row.cost}</TableCell>
                       <TableCell align="center">{row.vendor}</TableCell>
-                      <TableCell align="center">
-                        {convert(row.purchaseDate)}
-                      </TableCell>
+                      <TableCell align="center">{row.empid}</TableCell>
                       <TableCell align="center">{row.assetStatus}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>
                     </TableRow>

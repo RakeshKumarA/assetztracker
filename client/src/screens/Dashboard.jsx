@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 const Dashboard = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { assetsCountByStatus, assetsCountByCategory } = useSelector(
+  const { assetsCountByStatus, assetsCountByCategory, assetsCountByPeriod } = useSelector(
     (state) => state.dashboard.stats
   );
   const { assetsFilterList } = useSelector((state) => state.dashboard);
@@ -52,9 +52,10 @@ const Dashboard = () => {
     name: value.name,
   }));
   const statusCountLabel = ["Onboarded", "Assigned", "InStock"];
-  const categoryCountLabel = ["Rented", "Owned", "Leased"];
-  const rewardData = [55, 45, 98];
-  const rewardLable = ["Today", "Week", "Month"];
+  const categoryCountLabel = ["Computer", "Chair", "Table", "TV", "Coffee Maker", "Stationary"];
+  const periodLable = ["Today", "Week", "Month"];
+
+  console.log(assetsCountByPeriod)
 
   useEffect(() => {
     dispatch(dashboardChart());
@@ -104,7 +105,7 @@ const Dashboard = () => {
             Asset Count by Period
           </Typography>
           <Card className={classes.cardStyle}>
-            <PieChart rawData={rewardData} type="Reward" labels={rewardLable} />
+            <PieChart rawData={assetsCountByPeriod} type="assetByPeriod" labels={periodLable} />
           </Card>
         </Grid>
       </Grid>

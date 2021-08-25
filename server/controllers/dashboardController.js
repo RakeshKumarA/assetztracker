@@ -35,34 +35,69 @@ const dashboardLanding = async (req, res) => {
       const categoryCount = await db.query(
         "select onboard #>> '{assetType, value}' as type, count(*) from asset group by onboard #>> '{assetType, value}'"
       );
-      const rented = categoryCount.rows.filter(
-        (row) => row.type === "rented"
+      const Computer = categoryCount.rows.filter(
+        (row) => row.type === "Computer"
       )[0]
         ? Number(
-            categoryCount.rows.filter((row) => row.type === "rented")[0].count
+            categoryCount.rows.filter((row) => row.type === "Computer")[0].count
           )
         : 0;
-      const owned = categoryCount.rows.filter((row) => row.type === "owned")[0]
+      const Chair = categoryCount.rows.filter((row) => row.type === "Chair")[0]
         ? Number(
-            categoryCount.rows.filter((row) => row.type === "owned")[0].count
+            categoryCount.rows.filter((row) => row.type === "Chair")[0].count
           )
         : 0;
-      const leased = categoryCount.rows.filter(
-        (row) => row.type === "leased"
+      const Table = categoryCount.rows.filter(
+        (row) => row.type === "Table"
       )[0]
         ? Number(
-            categoryCount.rows.filter((row) => row.type === "leased")[0].count
+            categoryCount.rows.filter((row) => row.type === "Table")[0].count
           )
         : 0;
-      const finalCategoryCount = [rented, owned, leased];
+      const TV = categoryCount.rows.filter(
+        (row) => row.type === "TV"
+      )[0]
+        ? Number(
+            categoryCount.rows.filter((row) => row.type === "TV")[0].count
+          )
+        : 0;
+      const Coffee = categoryCount.rows.filter(
+        (row) => row.type === "Coffee Maker"
+      )[0]
+        ? Number(
+            categoryCount.rows.filter((row) => row.type === "Coffee Maker")[0].count
+          )
+        : 0;
+      const Stationary = categoryCount.rows.filter(
+        (row) => row.type === "Stationary"
+      )[0]
+        ? Number(
+            categoryCount.rows.filter((row) => row.type === "Stationary")[0].count
+          )
+        : 0;
+      const finalCategoryCount = [Computer, Chair, Table, TV, Coffee, Stationary];
 
-      res.status(200).json({
-        status: 200,
-        stats: {
-          assetsCountByStatus: finalStatusCount,
-          assetsCountByCategory: finalCategoryCount,
-        },
-      });
+      try {
+        const periodCount = await db.query(
+          "select SUM(CASE WHEN createdat >= date_trunc('day', CURRENT_DATE) and createdat <= date_trunc('day', CURRENT_DATE+1) THEN 1 ELSE 0 END) AS dailycount, SUM(CASE WHEN createdat >= date_trunc('week', CURRENT_DATE) and createdat <=(date_trunc('week', current_date) + interval '1 week' - interval '1 day') THEN 1 ELSE 0 END) AS weeklycount, COUNT(*) AS monthlycount FROM   asset WHERE  createdat >= date_trunc('month', CURRENT_DATE) and createdat <=(date_trunc('month', current_date) + interval '1 month' - interval '1 day')"
+        );
+        
+        const finalPeriodCount = [periodCount.rows[0].dailycount, periodCount.rows[0].weeklycount, periodCount.rows[0].monthlycount];
+
+        res.status(200).json({
+          status: 200,
+          stats: {
+            assetsCountByStatus: finalStatusCount,
+            assetsCountByCategory: finalCategoryCount,
+            assetsCountByPeriod: finalPeriodCount
+          },
+        });
+
+      } catch (error) {
+        res.json({ status: 401, message: error.message });
+      }
+
+      
     } catch (error) {
       res.json({ status: 401, message: error.message });
     }
@@ -113,8 +148,47 @@ const assetByCategory = async (req, res) => {
   }
 };
 
+// @desc	Get Asset Count by period
+// @route 	POST /api/dashboard/abp
+// @access 	Public
+
+const assetByPeriod = async (req, res) => {
+  const { assetByPeriod } = req.body;
+
+  try {
+    if (assetByPeriod === 'Daily') {
+      const assetByPeriodList = await db.query(
+        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.createdat >= current_date and a2.createdat <= current_date + 1"
+      );
+      res.json({
+        status: 200,
+        assets: assetByPeriodList.rows,
+      });
+    } else if (assetByPeriod === 'Weekly') {
+      const assetByPeriodList = await db.query(
+        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.createdat >= date_trunc('week', CURRENT_DATE) and a2.createdat <=(date_trunc('week', current_date) + interval '1 week' - interval '1 day')"
+      );
+      res.json({
+        status: 200,
+        assets: assetByPeriodList.rows,
+      });
+    } else if (assetByPeriod === 'Monthly') {
+      const assetByPeriodList = await db.query(
+        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.createdat >= date_trunc('month', CURRENT_DATE) and a2.createdat <=(date_trunc('month', current_date) + interval '1 month' - interval '1 day')"
+      );
+      res.json({
+        status: 200,
+        assets: assetByPeriodList.rows,
+      });
+    }
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 module.exports = {
   dashboardLanding: dashboardLanding,
   assetByStatus: assetByStatus,
   assetByCategory: assetByCategory,
+  assetByPeriod: assetByPeriod
 };

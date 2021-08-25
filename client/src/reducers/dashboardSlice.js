@@ -8,6 +8,7 @@ const initialState = {
   stats: {
     assetsCountByStatus: [],
     assetsCountByCategory: [],
+    assetsCountByPeriod: []
   },
   assetsFilterList: [],
   error: "",
@@ -25,6 +26,7 @@ export const dashboardSlice = createSlice({
       state.loading = false;
       state.stats.assetsCountByStatus = action.payload.assetsCountByStatus;
       state.stats.assetsCountByCategory = action.payload.assetsCountByCategory;
+      state.stats.assetsCountByPeriod = action.payload.assetsCountByPeriod;
     },
     dashboard_table_sucess: (state, action) => {
       state.loading = false;
@@ -124,6 +126,27 @@ export const dashboardTable =
         const { data } = await axios.post(
           "/api/dashboard/abc",
           { assetByCategory: assetFilterCriteria.criteria },
+          config
+        );
+        if (data.status === 200) {
+          delete data.status;
+
+          dispatch(dashboard_table_sucess(data.assets));
+        } else {
+          dispatch(dashboard_failure(data.message));
+          dispatch(
+            set_snackbar({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: data.message,
+              snackbarSeverity: "error",
+            })
+          );
+        }
+      } else if (assetFilterCriteria.type === "assetByPeriod") {
+        const { data } = await axios.post(
+          "/api/dashboard/abp",
+          { assetByPeriod: assetFilterCriteria.criteria },
           config
         );
         if (data.status === 200) {

@@ -159,7 +159,7 @@ const assignAsset = async (req, res) => {
   }
 };
 
-// @desc		View Asset
+// @desc		View Asset Type
 // @route 	GET /api/assets/assettype
 // @access 	Public
 const getAssetType = async (req, res) => {
@@ -176,6 +176,26 @@ const getAssetType = async (req, res) => {
   }
 };
 
+// @desc		Asset Audit
+// @route 	GET /api/assets/assetaudit/
+// @access 	Public
+const getAssetAudit = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const results = await db.query(
+      "select a2.*, e2.empname from assettransaction a2 LEFT JOIN employee e2 ON a2.empid = e2.id WHERE a2.assetid = $1 order by a2.transactionid ",
+      [id]
+    );
+    res.status(200).json({
+      status: 200,
+      assettransaction: results.rows,
+    });
+  } catch (error) {
+    res.json({ status: 401, message: error.message });
+  }
+};
+
 module.exports = {
   addAsset: addAsset,
   addBulkAsset: addBulkAsset,
@@ -183,4 +203,5 @@ module.exports = {
   searchAsset: searchAsset,
   downlAsset: downlAsset,
   getAssetType: getAssetType,
+  getAssetAudit: getAssetAudit,
 };

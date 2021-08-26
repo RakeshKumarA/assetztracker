@@ -17,10 +17,20 @@ import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import { useDispatch } from "react-redux";
+import FindInPageIcon from "@material-ui/icons/FindInPage";
+import { useDispatch, useSelector } from "react-redux";
 import { downloadAssets } from "../../reducers/downloadAssetSlice";
 import Button from "@material-ui/core/Button";
 import { unAssignAsset } from "../../reducers/employeeSlice";
+import { viewAssetAudit } from "../../reducers/viewAssetAuditSlice";
+import CloseIcon from "@material-ui/icons/Close";
+import { AppBar, Dialog, Slide } from "@material-ui/core";
+import Timeline from "@material-ui/lab/Timeline";
+import TimelineItem from "@material-ui/lab/TimelineItem";
+import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
+import TimelineConnector from "@material-ui/lab/TimelineConnector";
+import TimelineContent from "@material-ui/lab/TimelineContent";
+import TimelineDot from "@material-ui/lab/TimelineDot";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -74,6 +84,11 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "ASSET ADDED BY",
+  },
+  {
+    id: "assetAudit",
+    numeric: false,
+    disablePadding: false,
   },
 ];
 
@@ -276,11 +291,18 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { assetaudit } = useSelector((state) => state.assetAudit);
+  const [open, setOpen] = React.useState(false);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("assetId");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const rowsPerPage = 10;
+
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -323,6 +345,17 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
+  const handleAuditClick = (id) => {
+    dispatch(viewAssetAudit(id));
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  console.log(assetaudit);
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -359,7 +392,6 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -370,6 +402,7 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                         <Checkbox
                           checked={checkboxres ? false : isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
+                          onClick={(event) => handleClick(event, row.id)}
                         />
                       </TableCell>
                       <TableCell
@@ -386,6 +419,11 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                       <TableCell align="center">{row.empid}</TableCell>
                       <TableCell align="center">{row.assetStatus}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">
+                        <IconButton onClick={() => handleAuditClick(row.id)}>
+                          <FindInPageIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -401,6 +439,50 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
           onChangePage={handleChangePage}
         />
       </Paper>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" color="initial">
+              Audit
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Timeline align="alternate" style={{ paddingTop: "5rem" }}>
+          {assetaudit.map((asset) => (
+            <TimelineItem key={asset.transactionid}>
+              <TimelineSeparator>
+                {asset.empid ? (
+                  <TimelineDot color="secondary" />
+                ) : (
+                  <TimelineDot />
+                )}
+
+                <TimelineConnector />
+              </TimelineSeparator>
+              {asset.empid ? (
+                <TimelineContent>
+                  {asset.transactiontype} to {asset.empname}
+                </TimelineContent>
+              ) : (
+                <TimelineContent>{asset.transactiontype}</TimelineContent>
+              )}
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </Dialog>
     </div>
   );
 };

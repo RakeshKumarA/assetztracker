@@ -229,6 +229,7 @@ FOR EACH ROW EXECUTE FUNCTION asset_onboard_trigger_func();
 CREATE TABLE assettype (
 assettypeid BIGSERIAL NOT NULL,
 assettypelev1 VARCHAR(50) NOT NULL,
+assettypelev2 varchar(50) NOT NULL,
 createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 PRIMARY KEY(assettypeid)
 );

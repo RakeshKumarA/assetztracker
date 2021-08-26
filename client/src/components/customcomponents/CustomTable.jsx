@@ -354,8 +354,6 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
     setOpen(false);
   };
 
-  console.log(assetaudit);
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>

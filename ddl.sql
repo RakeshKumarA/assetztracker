@@ -140,7 +140,7 @@ CREATE TABLE assettransaction (
 transactionid BIGSERIAL NOT NULL,
 transactiontype VARCHAR(20) NOT NULL,
 assetid int NOT NULL,
-empid VARCHAR(20) NULL,
+empid bigint,
 userid int NOT NULL,
 transactionreason VARCHAR(200) NULL,
 transactionMethod VARCHAR(200) NULL,
@@ -167,7 +167,7 @@ BEGIN
        VALUES(
            NEW.assetstatus,
            NEW.id,
-		   '',
+		   null,
            NEW.userid,
            'Onboarding',
 		   '',
@@ -194,6 +194,26 @@ BEGIN
 		   ''
        );
        RETURN NEW;
+       elsif (TG_OP = 'DELETE') then
+       INSERT INTO assettransaction (
+			transactiontype,
+           assetid,
+           empid,
+           userid,
+           transactionreason,
+		   transactionMethod,
+		   comments
+       )
+       VALUES(
+           OLD.assetstatus,
+           OLD.id,
+		   OLD.empid,
+           OLD.userid,
+           '',
+		   '',
+		   ''
+       );
+       RETURN OLD;
    end if;
 
 END;

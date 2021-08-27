@@ -215,7 +215,7 @@ const OnBoardForm = () => {
                       label="Purchase Order Date"
                       autoOk
                       inputVariant="outlined"
-                      format="yyyy-mm-dd HH:MM:SS p"
+                      format="yyyy/MM/dd hh:mm a"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -230,7 +230,7 @@ const OnBoardForm = () => {
                       label="Invoice Date"
                       autoOk
                       inputVariant="outlined"
-                      format="yyyy-mm-dd HH:MM:SS p"
+                      format="yyyy/MM/dd hh:mm a"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -284,7 +284,7 @@ const OnBoardForm = () => {
                       label="Purchase Date"
                       autoOk
                       inputVariant="outlined"
-                      format="yyyy-mm-dd HH:MM:SS p"
+                      format="yyyy/MM/dd hh:mm a"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -302,7 +302,7 @@ const OnBoardForm = () => {
                       label="Put To Use Date"
                       autoOk
                       inputVariant="outlined"
-                      format="yyyy-mm-dd HH:MM:SS p"
+                      format="yyyy/MM/dd hh:mm a"
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>

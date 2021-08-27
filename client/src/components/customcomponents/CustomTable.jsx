@@ -418,8 +418,11 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                       <TableCell align="center">{row.assetStatus}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>
                       <TableCell align="center">
-                        <IconButton onClick={() => handleAuditClick(row.id)}>
-                          <FindInPageIcon />
+                        <IconButton
+                          onClick={() => handleAuditClick(row.id)}
+                          style={{ padding: 0 }}
+                        >
+                          <FindInPageIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>

@@ -50,7 +50,7 @@ const ViewAssetScreen = () => {
     assetId: value.onboard.assetId.value,
     cost: value.onboard.cost.value,
     vendor: value.onboard.vendor.value,
-    empid: value.empid,
+    empname: value.empname,
     assetStatus: value.assetstatus,
     name: value.name,
   }));

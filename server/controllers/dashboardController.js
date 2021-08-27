@@ -119,7 +119,7 @@ const assetByStatus = async (req, res) => {
 
   try {
     const assetByStatusList = await db.query(
-      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.assetstatus=$1",
+      "SELECT a2.*, u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id) where a2.assetstatus=$1",
       [assetByStatus]
     );
     res.json({
@@ -140,7 +140,7 @@ const assetByCategory = async (req, res) => {
 
   try {
     const assetByCategoryList = await db.query(
-      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetType' ->> 'value' =$1",
+      "SELECT a2.*,u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id) where a2.onboard -> 'assetType' ->> 'value' =$1",
       [assetByCategory]
     );
     res.json({
@@ -162,7 +162,7 @@ const assetByPeriod = async (req, res) => {
   try {
     if (assetByPeriod === "Daily") {
       const assetByPeriodList = await db.query(
-        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.createdat >= current_date and a2.createdat <= current_date + 1"
+        "SELECT a2.*,u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id) where a2.createdat >= current_date and a2.createdat <= current_date + 1"
       );
       res.json({
         status: 200,
@@ -170,7 +170,7 @@ const assetByPeriod = async (req, res) => {
       });
     } else if (assetByPeriod === "Weekly") {
       const assetByPeriodList = await db.query(
-        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.createdat >= date_trunc('week', CURRENT_DATE) and a2.createdat <=(date_trunc('week', current_date) + interval '1 week' - interval '1 day')"
+        "SELECT a2.*,u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id) where a2.createdat >= date_trunc('week', CURRENT_DATE) and a2.createdat <=(date_trunc('week', current_date) + interval '1 week' - interval '1 day')"
       );
       res.json({
         status: 200,
@@ -178,7 +178,7 @@ const assetByPeriod = async (req, res) => {
       });
     } else if (assetByPeriod === "Monthly") {
       const assetByPeriodList = await db.query(
-        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.createdat >= date_trunc('month', CURRENT_DATE) and a2.createdat <=(date_trunc('month', current_date) + interval '1 month' - interval '1 day')"
+        "SELECT a2.*,u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id) where a2.createdat >= date_trunc('month', CURRENT_DATE) and a2.createdat <=(date_trunc('month', current_date) + interval '1 month' - interval '1 day')"
       );
       res.json({
         status: 200,

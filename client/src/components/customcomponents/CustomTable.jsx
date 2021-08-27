@@ -21,7 +21,7 @@ import FindInPageIcon from "@material-ui/icons/FindInPage";
 import { useDispatch, useSelector } from "react-redux";
 import { downloadAssets } from "../../reducers/downloadAssetSlice";
 import Button from "@material-ui/core/Button";
-import { unAssignAsset } from "../../reducers/employeeSlice";
+import { unAssignAsset, viewEmployeeToAssign } from "../../reducers/employeeSlice";
 import { viewAssetAudit } from "../../reducers/viewAssetAuditSlice";
 import CloseIcon from "@material-ui/icons/Close";
 import { AppBar, Dialog, Slide } from "@material-ui/core";
@@ -193,6 +193,7 @@ const EnhancedTableToolbar = ({
 
   const assignClick = (e) => {
     assetSelected(Selected);
+    dispatch(viewEmployeeToAssign());
     e.preventDefault();
   };
   const unassignClick = (e) => {

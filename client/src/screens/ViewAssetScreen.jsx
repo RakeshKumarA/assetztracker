@@ -17,7 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { searchAsset, viewAssets } from ".././reducers/viewAssetSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { set_snackbar } from "../reducers/snackSlice";
-import { assignEmployeeToAsset, viewEmployee } from "../reducers/employeeSlice";
+import { assignEmployeeToAsset } from "../reducers/employeeSlice";
 
 const useStyles = makeStyles({
   paperStyle: {
@@ -59,7 +59,6 @@ const ViewAssetScreen = () => {
 
   useEffect(() => {
     dispatch(viewAssets());
-    dispatch(viewEmployee());
   }, [dispatch]);
 
   const onSearchHandler = () => {

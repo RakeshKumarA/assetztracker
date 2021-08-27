@@ -40,7 +40,7 @@ const PieChart = ({ rawData, type, labels }) => {
 
         if (type === "assetByStatus") {
           const criteria =
-            index === 0 ? "Onboarding" : index === 1 ? "Assigned" : "Instock";
+            index === 0 ? "Onboarding" : index === 1 ? "Assigned" : "Inventory";
           const assetFilterCriteria = {
             type,
             criteria,

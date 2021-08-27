@@ -50,7 +50,7 @@ const Dashboard = () => {
     assetStatus: value.assetstatus,
     name: value.name,
   }));
-  const statusCountLabel = ["Onboarded", "Assigned", "InStock"];
+  const statusCountLabel = ["Onboarded", "Assigned", "Inventory"];
   const categoryCountLabel = [
     "Computer",
     "Chair",

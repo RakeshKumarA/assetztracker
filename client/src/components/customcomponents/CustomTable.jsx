@@ -289,6 +289,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -299,10 +303,6 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const rowsPerPage = 10;
-
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";

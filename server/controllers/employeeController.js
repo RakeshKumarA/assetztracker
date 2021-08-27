@@ -39,6 +39,18 @@ const viewEmployee = async (req, res) => {
   }
 };
 
+// @desc	View List of Employess to Assign
+// @route 	GET /api/employee/viewtoassign
+// @access 	Private
+const viewEmployeeToAssign = async (req, res) => {
+  try {
+    const view = await db.query("select e.* from employee e left join asset a on e.id = a.empid where a.empid is null");
+    res.json({ status: 200, employees: view.rows });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 // @desc	Search users by Name
 // @route 	POST /api/employee/search
 // @access 	Private
@@ -132,4 +144,5 @@ module.exports = {
   downlEmp: downlEmp,
   assignEmp: assignEmp,
   unAssignEmp: unAssignEmp,
+  viewEmployeeToAssign: viewEmployeeToAssign
 };

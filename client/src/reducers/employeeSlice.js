@@ -140,6 +140,47 @@ export const viewEmployee = () => async (dispatch, getState) => {
   }
 };
 
+export const viewEmployeeToAssign = () => async (dispatch, getState) => {
+  try {
+    dispatch(employee_request());
+    const {
+      user: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get("/api/employee/viewtoassign", config);
+    if (data.status === 200) {
+      delete data.status;
+
+      dispatch(employee_view_sucess(data.employees));
+    } else {
+      dispatch(employee_failure(data.message));
+      dispatch(
+        set_snackbar({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: data.message,
+          snackbarSeverity: "error",
+        })
+      );
+    }
+  } catch (error) {
+    dispatch(employee_failure(error.message));
+    dispatch(
+      set_snackbar({
+        snackbarOpen: true,
+        snackbarType: "error",
+        snackbarMessage: error.message,
+        snackbarSeverity: "error",
+      })
+    );
+  }
+};
+
 export const assignEmployeeToAsset =
   (assignEmployee) => async (dispatch, getState) => {
     try {

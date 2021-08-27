@@ -67,7 +67,7 @@ const addBulkAsset = async (req, res) => {
 const viewAssets = async (req, res) => {
   try {
     const results = await db.query(
-      "SELECT a2.*,u2.name FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid)"
+      "SELECT a2.*, u2.name, e2.empname  FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id)"
     );
     res.status(200).json({
       status: 200,

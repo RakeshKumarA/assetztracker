@@ -71,7 +71,7 @@ const headCells = [
     id: "empid",
     numeric: true,
     disablePadding: false,
-    label: "EMP ID",
+    label: "EMP NAME",
   },
   {
     id: "assetStatus",
@@ -415,7 +415,7 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
                       </TableCell>
                       <TableCell align="center">{row.cost}</TableCell>
                       <TableCell align="center">{row.vendor}</TableCell>
-                      <TableCell align="center">{row.empid}</TableCell>
+                      <TableCell align="center">{row.empname}</TableCell>
                       <TableCell align="center">{row.assetStatus}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>
                       <TableCell align="center">

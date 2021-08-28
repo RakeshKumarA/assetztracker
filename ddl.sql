@@ -118,6 +118,8 @@ CREATE TABLE asset(
 	hardware jsonb,
 	depreciation json,
 	createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(), 
+	returnreason VARCHAR(200) NOT NULL DEFAULT '',
+	returnmethod VARCHAR(50) NOT NULL DEFAULT '',
     FOREIGN KEY(userid) 
       REFERENCES users(userid),
 	FOREIGN KEY(empid) 
@@ -170,7 +172,7 @@ BEGIN
 		   null,
            NEW.userid,
            'Onboarding',
-		   '',
+		   NEW.returnmethod,
 		   ''
        );
        RETURN NEW;
@@ -189,8 +191,8 @@ BEGIN
            NEW.id,
 		   NEW.empid,
            NEW.userid,
-           '',
-		   '',
+           NEW.returnreason,
+		   NEW.returnmethod,
 		   ''
        );
        RETURN NEW;
@@ -209,8 +211,8 @@ BEGIN
            OLD.id,
 		   OLD.empid,
            OLD.userid,
-           '',
-		   '',
+           OLD.returnreason,
+		   OLD.returnmethod,
 		   ''
        );
        RETURN OLD;

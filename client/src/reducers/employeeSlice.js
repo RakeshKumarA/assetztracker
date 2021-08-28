@@ -232,7 +232,7 @@ export const assignEmployeeToAsset =
     }
   };
 
-export const unAssignAsset = (assetid) => async (dispatch, getState) => {
+export const unAssignAsset = (assetid, reason, method) => async (dispatch, getState) => {
   try {
     dispatch(employee_request());
     const {
@@ -246,7 +246,7 @@ export const unAssignAsset = (assetid) => async (dispatch, getState) => {
     };
     const { data } = await axios.post(
       "/api/employee/unassignemp",
-      { assetid },
+      { assetid, reason, method },
       config
     );
     if (data.status === 200) {

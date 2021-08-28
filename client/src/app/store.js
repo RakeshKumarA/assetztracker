@@ -18,6 +18,8 @@ import employeeReducer from "../reducers/employeeSlice";
 import assetTypeReducer from "../reducers/assetTypeSlice";
 import locationReducer from "../reducers/locationSlice";
 import assetAuditReducer from "../reducers/viewAssetAuditSlice";
+import assetOperationReducer from "../reducers/assetOperationSlice";
+import editAssetReducer from "../reducers/editAssetSlice";
 
 export default configureStore({
   reducer: {
@@ -39,6 +41,8 @@ export default configureStore({
     employee: employeeReducer,
     assetType: assetTypeReducer,
     assetAudit: assetAuditReducer,
-    location: locationReducer
+    location: locationReducer,
+    assetOperation: assetOperationReducer,
+    editAsset: editAssetReducer
   },
 });

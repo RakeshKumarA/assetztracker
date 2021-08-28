@@ -12,6 +12,9 @@ export const hardwareSlice = createSlice({
         hardware: [action.payload, ...state.hardware], // new todos array
       };
     },
+    hardware_update_for_edit: (state, action) => {
+      state.hardware = action.payload
+    },
     hardware_delete: (state, action) => {
       return {
         ...state,
@@ -28,6 +31,7 @@ export const {
   hardware_update,
   hardware_delete,
   hardware_reset,
+  hardware_update_for_edit
 } = hardwareSlice.actions;
 
 export default hardwareSlice.reducer;

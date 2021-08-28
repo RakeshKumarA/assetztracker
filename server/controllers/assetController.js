@@ -34,6 +34,38 @@ const addAsset = async (req, res) => {
   }
 };
 
+// @desc		Edit Asset
+// @route 	POST /api/assets/editAsset
+// @access 	Public
+const editAsset = async (req, res) => {
+  const { assetid, onboard, software, hardware, depreciation } = req.body;
+  const { userid } = req.user;
+  try {
+    const results = await db.query(
+      "UPDATE asset set assetid = $1, userid=$2, onboard=$3, software = $4, hardware = $5, depreciation=$6 where id=$7 returning *",
+      [
+        onboard.assetId.value,
+        userid,
+        onboard,
+        JSON.stringify(software),
+        JSON.stringify(hardware),
+        depreciation,
+        assetid
+      ]
+    );
+    res.status(200).json({
+      status: 200,
+      userid: results.rows[0].userid,
+      onboard: results.rows[0].onboard,
+      software: results.rows[0].software,
+      hardware: results.rows[0].hardware,
+      depreciation: results.rows[0].depreciation,
+    });
+  } catch (error) {
+    res.json({ status: 401, message: error.message });
+  }
+};
+
 // @desc		Add Bulk Asset
 // @route 	POST /api/bulkassets/
 // @access 	Public
@@ -94,6 +126,27 @@ const searchAsset = async (req, res) => {
       status: 200,
       noOfAssets: searchedAsset.rowCount,
       asset: searchedAsset.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
+// @desc		Get Asset
+// @route 	Get /api/assets/getAsset
+// @access 	Public
+const getAssetById = async (req, res) => {
+
+  const id = req.params.id;
+  
+  try {
+    const getAsset = await db.query(
+      "SELECT * from asset where id =$1",
+      [id]
+    );
+    res.json({
+      status: 200,
+      assetbyid: getAsset.rows,
     });
   } catch (error) {
     res.json({ status: 500, message: error.message });
@@ -239,6 +292,7 @@ const getAssetAudit = async (req, res) => {
 
 module.exports = {
   addAsset: addAsset,
+  editAsset: editAsset,
   addBulkAsset: addBulkAsset,
   viewAssets: viewAssets,
   searchAsset: searchAsset,
@@ -247,4 +301,5 @@ module.exports = {
   getAssetType: getAssetType,
   getAssetLocation: getAssetLocation,
   getAssetAudit: getAssetAudit,
+  getAssetById: getAssetById
 };

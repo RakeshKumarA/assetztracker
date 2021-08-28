@@ -33,6 +33,10 @@ import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { asset_operation } from "../../reducers/assetOperationSlice";
+import { geteditAsset } from "../../reducers/editAssetSlice";
+import { useHistory } from "react-router-dom";
+import { option_update_continue } from "../../reducers/assetSelSlice";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -189,6 +193,10 @@ const EnhancedTableToolbar = ({
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const numSelected = Selected.length;
+  const history = useHistory()
+  const { loading } = useSelector(state => state.editAsset)
+  console.log(loading)
+  
 
   const handleDownloadClick = (Selected) => {
     dispatch(downloadAssets(Selected));
@@ -223,6 +231,41 @@ const EnhancedTableToolbar = ({
       setAnchorEl(null);
     };
 
+    const editClick = () => {
+      dispatch(asset_operation('Edit'))
+      dispatch(geteditAsset(Selected[0], 'edit')).then(res => {
+        history.push("/addasset")
+      })
+      dispatch(option_update_continue({
+        option: 1,
+        enable: {
+          onboard: false,
+          software: false,
+          hardware: false,
+          depreciation: false,
+          documents: true,
+        }
+      }))
+      // !loading && history.push("/addasset");
+      
+    }
+    const cloneClick = () => {
+      dispatch(asset_operation('Clone'))
+      dispatch(geteditAsset(Selected[0], 'clone')).then(res => {
+        history.push("/addasset")
+      })
+      dispatch(option_update_continue({
+        option: 1,
+        enable: {
+          onboard: false,
+          software: false,
+          hardware: false,
+          depreciation: false,
+          documents: true,
+        }
+      }))
+    }
+
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -248,6 +291,22 @@ const EnhancedTableToolbar = ({
           Asset List
         </Typography>
       )}
+      {!checkboxres &&
+      numSelected === 1 &&
+      Screen === "viewScreen" ? (
+        <>
+        <Tooltip title="Edit">
+          <Button variant="contained" color="secondary" style={{marginRight: '1rem'}} onClick={editClick}>
+            Edit
+          </Button>
+        </Tooltip>
+        <Tooltip title="Clone">
+          <Button variant="contained" color="secondary" style={{marginRight: '1rem'}} onClick={cloneClick}>
+            Clone
+          </Button>
+        </Tooltip>
+        </>
+      ) : null}
       {!checkboxres &&
       numSelected === 1 &&
       Screen === "viewScreen" &&

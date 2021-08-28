@@ -235,3 +235,12 @@ assettypelev2 varchar(50) NOT NULL,
 createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 PRIMARY KEY(assettypeid)
 );
+
+---LOCATION TABLE CREATION---
+
+CREATE TABLE location (
+locationid BIGSERIAL NOT NULL,
+locationname VARCHAR(10) NOT NULL,
+createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+PRIMARY KEY(locationid)
+);

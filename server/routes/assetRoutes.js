@@ -10,6 +10,7 @@ router.route("/searchAsset").post(protect, controller.searchAsset);
 router.route("/downlAsset").post(protect, controller.downlAsset);
 router.route("/downlAssetAudit").post(protect, controller.downlAssetAudit);
 router.route("/assettype").get(protect, controller.getAssetType);
+router.route("/assetlocation").get(protect, controller.getAssetLocation);
 router.route("/assetaudit/:id").get(protect, controller.getAssetAudit);
 
 module.exports = router;

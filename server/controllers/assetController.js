@@ -200,6 +200,23 @@ const getAssetType = async (req, res) => {
   }
 };
 
+// @desc		View Asset Location
+// @route 	GET /api/assets/assetlocation
+// @access 	Private
+const getAssetLocation = async (req, res) => {
+  try {
+    const results = await db.query(
+      "SELECT * FROM location"
+    );
+    res.status(200).json({
+      status: 200,
+      location: results.rows,
+    });
+  } catch (error) {
+    res.json({ status: 401, message: error.message });
+  }
+};
+
 // @desc		Asset Audit
 // @route 	GET /api/assets/assetaudit/
 // @access 	Public
@@ -228,5 +245,6 @@ module.exports = {
   downlAsset: downlAsset,
   downlAssetAudit: downlAssetAudit,
   getAssetType: getAssetType,
+  getAssetLocation: getAssetLocation,
   getAssetAudit: getAssetAudit,
 };

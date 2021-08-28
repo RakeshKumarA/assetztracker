@@ -28,6 +28,7 @@ import CustomTextField from "../customcomponents/CustomTextField";
 import { onboard_update } from "../../reducers/onboardSlice";
 import { option_update_continue } from "../../reducers/assetSelSlice";
 import { getAssetType } from "../../reducers/assetTypeSlice";
+import { location } from "../../reducers/locationSlice";
 
 const useStyles = makeStyles({
   container: {
@@ -46,6 +47,7 @@ const OnBoardForm = () => {
   const { onboard } = useSelector((state) => state.onboard);
   const { enable } = useSelector((state) => state.assetSel);
   const { assetType } = useSelector((state) => state.assetType);
+  const { locationList } = useSelector((state) => state.location);
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -67,6 +69,7 @@ const OnBoardForm = () => {
 
   useEffect(() => {
     dispatch(getAssetType());
+    dispatch(location());
   }, [dispatch]);
 
   const enableoncontinue = { ...enable, software: false };
@@ -238,7 +241,26 @@ const OnBoardForm = () => {
                   <CustomTextField name="cost" label="Cost" />
                 </Grid>
                 <Grid item container>
-                  <CustomTextField name="location" label="Location" />
+                  
+                  <FormControl fullWidth>
+                    <Field
+                      fullWidth
+                      name="location"
+                      label="Location"
+                      variant="outlined"
+                      as={TextFieldMaterial}
+                      select
+                    >
+                      {locationList.map((locationin) => (
+                        <MenuItem
+                          value={locationin.locationname}
+                          key={locationin.locationid}
+                        >
+                          {locationin.locationname}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </FormControl>
                 </Grid>
               </Grid>
               <Grid

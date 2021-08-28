@@ -17,7 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { searchAsset, viewAssets } from ".././reducers/viewAssetSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { set_snackbar } from "../reducers/snackSlice";
-import { assignEmployeeToAsset } from "../reducers/employeeSlice";
+import { assignEmployeeToAsset, unAssignAsset } from "../reducers/employeeSlice";
 
 const useStyles = makeStyles({
   paperStyle: {
@@ -44,6 +44,13 @@ const ViewAssetScreen = () => {
   // View Assets
   const { assets } = useSelector((state) => state.viewAsset);
   const { employeeViewed } = useSelector((state) => state.employee);
+
+  //Dialog
+
+  const [open, setOpen] = React.useState(false);
+  const [unassignOpen, setUnassignOpen] = React.useState(false);
+  const [reason, setReason] = React.useState('');
+  const [method, setMethod] = React.useState('');
 
   const tableRows = assets.map((value) => ({
     id: value.id,
@@ -86,9 +93,7 @@ const ViewAssetScreen = () => {
     dispatch(viewAssets());
   };
 
-  //Dialog
 
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = (selected) => {
     setSelectedAsset(selected);
@@ -99,6 +104,15 @@ const ViewAssetScreen = () => {
     setOpen(false);
   };
 
+  const handleClickOpenToUnassign = (selected) => {
+    setSelectedAsset(selected);
+    setUnassignOpen(true);
+  };
+
+  const handleUnassignClose = () => {
+    setUnassignOpen(false);
+  };
+
   const handleAssign = () => {
     const assignEmployee = {
       id: selectedEmployee,
@@ -107,6 +121,11 @@ const ViewAssetScreen = () => {
     dispatch(assignEmployeeToAsset(assignEmployee));
     handleClose();
     setCheckboxres(true);
+    window.location.reload();
+  };
+  const handleUnAssign = () => {
+    dispatch(unAssignAsset(selectedAsset[0], reason, method));
+    handleUnassignClose();
     window.location.reload();
   };
 
@@ -159,15 +178,15 @@ const ViewAssetScreen = () => {
             screen="viewScreen"
             assetSelected={handleClickOpen}
             checkboxres={checkboxres}
+            assetUnassigned={handleClickOpenToUnassign}
           />
         </Grid>
-      </Paper>
+      </Paper>  
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Assign Asset</DialogTitle>
+        <DialogTitle>Assign Asset</DialogTitle>
         <DialogContent>
           <Autocomplete
             options={employeeViewed}
@@ -189,6 +208,39 @@ const ViewAssetScreen = () => {
           </Button>
           <Button onClick={handleAssign} color="primary">
             Assign
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={unassignOpen}
+        onClose={handleUnassignClose}
+      >
+        <DialogTitle>Unassign the Asset</DialogTitle>
+        <DialogContent>
+        <TextField
+            autoFocus
+            margin="dense"
+            id="reason"
+            label="Return Reason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            id="name"
+            label="Return Method"
+            fullWidth
+            value={method}
+            onChange={(e) => setMethod(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUnassignClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUnAssign} color="primary">
+            UnAssign
           </Button>
         </DialogActions>
       </Dialog>

@@ -21,7 +21,7 @@ import FindInPageIcon from "@material-ui/icons/FindInPage";
 import { useDispatch, useSelector } from "react-redux";
 import { downloadAssets } from "../../reducers/downloadAssetSlice";
 import Button from "@material-ui/core/Button";
-import { unAssignAsset, viewEmployeeToAssign } from "../../reducers/employeeSlice";
+import { viewEmployeeToAssign } from "../../reducers/employeeSlice";
 import { viewAssetAudit } from "../../reducers/viewAssetAuditSlice";
 import CloseIcon from "@material-ui/icons/Close";
 import { AppBar, Dialog, Slide } from "@material-ui/core";
@@ -180,6 +180,7 @@ const EnhancedTableToolbar = ({
   Selected,
   Screen,
   assetSelected,
+  assetUnassigned,
   checkboxres,
   rows,
 }) => {
@@ -197,8 +198,10 @@ const EnhancedTableToolbar = ({
     e.preventDefault();
   };
   const unassignClick = (e) => {
-    dispatch(unAssignAsset(Selected[0]));
-    window.location.reload();
+    assetUnassigned(Selected)
+    // dispatch(unAssignAsset(Selected[0], Selected[0], Selected[0]));
+    // window.location.reload();
+    e.preventDefault();
   };
 
   const selectedStatus =
@@ -294,7 +297,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
+const CustomTable = ({ rows, screen, assetSelected, checkboxres, assetUnassigned }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { assetaudit } = useSelector((state) => state.assetAudit);
@@ -362,6 +365,7 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
           Selected={selected}
           Screen={screen}
           assetSelected={assetSelected}
+          assetUnassigned={assetUnassigned}
           checkboxres={checkboxres}
           rows={rows}
         />
@@ -476,10 +480,14 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres }) => {
               </TimelineSeparator>
               {asset.empid ? (
                 <TimelineContent>
-                  {asset.transactiontype} to {asset.empname}
+                  {asset.transactiontype} to {asset.empname} on {asset.transactiondate.slice(0,10)} by {asset.name}
                 </TimelineContent>
-              ) : (
-                <TimelineContent>{asset.transactiontype}</TimelineContent>
+              ) : asset.transactiontype === 'Onboarding' ? (
+                <TimelineContent>{asset.transactiontype} on {asset.transactiondate.slice(0,10)} by {asset.name}</TimelineContent>
+              ) : asset.transactionreason && asset.transactionmethod ? (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} because {asset.transactionreason} by {asset.transactionmethod}</TimelineContent>
+              ) : asset.transactionreason && !asset.transactionmethod ? (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} because {asset.transactionreason}  </TimelineContent>
+              ) : !asset.transactionreason && asset.transactionmethod ? (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} by {asset.transactionmethod}  </TimelineContent>
+              ) : (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} </TimelineContent>
               )}
             </TimelineItem>
           ))}

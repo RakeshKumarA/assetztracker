@@ -104,8 +104,8 @@ const assignEmp = async (req, res) => {
   const { userid } = req.user;
   try {
     const assignEmployee = await db.query(
-      "update asset set assetstatus = $1, empid = $2 where id = $3 returning *",
-      ["Assigned", id, assetid]
+      "update asset set assetstatus = $1, empid = $2, userid = $3 where id = $4 returning *",
+      ["Assigned", id, userid, assetid]
     );
     res.json({
       status: 200,
@@ -121,12 +121,12 @@ const assignEmp = async (req, res) => {
 // @access 	Private
 
 const unAssignEmp = async (req, res) => {
-  const { assetid } = req.body;
+  const { assetid, reason, method } = req.body;
   const { userid } = req.user;
   try {
     const unAssignEmployee = await db.query(
-      "update asset set assetstatus = $1, empid = $2 where id = $3 returning *",
-      ["Inventory", null, assetid]
+      "update asset set assetstatus = $1, empid = $2, userid = $3, returnreason = $4, returnmethod = $5  where id = $6 returning *",
+      ["Inventory", null, userid, reason, method, assetid]
     );
     res.json({
       status: 200,

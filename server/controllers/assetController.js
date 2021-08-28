@@ -184,7 +184,7 @@ const getAssetAudit = async (req, res) => {
 
   try {
     const results = await db.query(
-      "select a2.*, e2.empname from assettransaction a2 LEFT JOIN employee e2 ON a2.empid = e2.id WHERE a2.assetid = $1 order by a2.transactionid ",
+      "select a2.*, e2.empname, u2.name from assettransaction a2 LEFT JOIN employee e2 ON a2.empid = e2.id LEFT JOIN users u2 ON a2.userid = u2.userid WHERE a2.assetid = $1 order by a2.transactionid ",
       [id]
     );
     res.status(200).json({

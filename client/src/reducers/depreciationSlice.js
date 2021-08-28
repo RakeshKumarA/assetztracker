@@ -11,7 +11,7 @@ const initialState = {
       value: '',
     },
     depmethod: {
-      lable: 'Asset Status',
+      lable: 'Depreciation Method',
       value: '',
     },
   },

@@ -15,7 +15,7 @@ import {
 //Modular Import
 import { option_update_onclick } from "../../reducers/assetSelSlice";
 import { depreciation_update } from "../../reducers/depreciationSlice";
-import { addAsset } from "../../reducers/submitAssetSlice";
+import { addAsset, editAsset } from "../../reducers/submitAssetSlice";
 import CustomTextField from "../customcomponents/CustomTextField";
 import OnboardTable from "./review/OnboardTable";
 import SoftwareTable from "./review/SoftwareTable";
@@ -35,6 +35,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { useHistory } from "react-router-dom";
 import { format } from "date-fns/esm";
+import { set_snackbar } from "../../reducers/snackSlice";
 
 const useStyles = makeStyles({
   container: {
@@ -61,6 +62,8 @@ const DepreciationForm = () => {
   const { onboard } = useSelector((state) => state.onboard);
   const { software } = useSelector((state) => state.software);
   const { hardware } = useSelector((state) => state.hardware);
+  const { assetOperation } = useSelector((state) => state.assetOperation);
+  const { editassetid } = useSelector((state) => state.editAsset);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -130,9 +133,61 @@ const DepreciationForm = () => {
   };
 
   const handleSubmitAsset = () => {
-    dispatch(addAsset(onboard, software, hardware, depreciation));
-    handleClose();
-    history.push("/dashboard");
+    switch(assetOperation) {
+      case 'Add':
+          if (onboard.assetId.value !== '') {
+            dispatch(addAsset(onboard, software, hardware, depreciation));
+            handleClose();
+            history.push("/dashboard");
+            break;
+          } else {
+            dispatch(
+              set_snackbar({
+                snackbarOpen: true,
+                snackbarType: "error",
+                snackbarMessage: 'Asset Id Missing',
+                snackbarSeverity: "error",
+              })
+            );
+          }
+        break;
+      case 'Edit':
+        if (onboard.assetId.value !== '') {
+          dispatch(editAsset(editassetid, onboard, software, hardware, depreciation));
+          handleClose();
+          history.push("/dashboard");
+          break;
+        } else {
+          dispatch(
+            set_snackbar({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: 'Asset Id Missing',
+              snackbarSeverity: "error",
+            })
+          );
+        }
+      break;
+      case 'Clone':
+        if (onboard.assetId.value !== '') {
+          dispatch(addAsset(onboard, software, hardware, depreciation));
+          handleClose();
+          history.push("/dashboard");
+          break;
+        } else {
+          dispatch(
+            set_snackbar({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: 'Asset Id Missing',
+              snackbarSeverity: "error",
+            })
+          );
+        }
+      break;
+      default:
+        console.log('None')
+    }
   };
 
   const initialValues = {

@@ -20,12 +20,16 @@ export const softwareSlice = createSlice({
         ),
       };
     },
+    software_update_for_edit: (state, action) => {
+      state.software = action.payload
+    },
     software_reset: (state) => initialState,
   },
 });
 
 export const {
   software_update,
+  software_update_for_edit,
   software_delete,
   software_reset,
 } = softwareSlice.actions;

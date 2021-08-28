@@ -8,6 +8,7 @@ router.route("/bulkassets").post(protect, controller.addBulkAsset);
 router.route("/viewassets").get(protect, controller.viewAssets);
 router.route("/searchAsset").post(protect, controller.searchAsset);
 router.route("/downlAsset").post(protect, controller.downlAsset);
+router.route("/downlAssetAudit").post(protect, controller.downlAssetAudit);
 router.route("/assettype").get(protect, controller.getAssetType);
 router.route("/assetaudit/:id").get(protect, controller.getAssetAudit);
 

@@ -137,6 +137,30 @@ const downlAsset = async (req, res) => {
   }
 };
 
+
+// @desc		Download Asset Audit
+// @route 	POST /api/assets/downlAssetAudit
+// @access 	Public
+
+const downlAssetAudit = async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    const downloadedAssetAudit = await db.query(
+      "select a.*, e.empname, u.name from assettransaction a left join employee e on a.empid = e.id left join users u on a.userid = u.userid where a.assetid = ANY($1::int[]) order by a.assetid, a.transactionid",
+      [id]
+    );
+    
+
+    res.json({
+      status: 200,
+      assetsaudit: downloadedAssetAudit.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 // @desc		Assign Employee to asset
 // @route 	POST /api/employee/assignEmp
 // @access 	Private
@@ -202,6 +226,7 @@ module.exports = {
   viewAssets: viewAssets,
   searchAsset: searchAsset,
   downlAsset: downlAsset,
+  downlAssetAudit: downlAssetAudit,
   getAssetType: getAssetType,
   getAssetAudit: getAssetAudit,
 };

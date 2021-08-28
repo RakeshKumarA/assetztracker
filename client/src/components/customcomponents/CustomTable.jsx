@@ -19,7 +19,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import FindInPageIcon from "@material-ui/icons/FindInPage";
 import { useDispatch, useSelector } from "react-redux";
-import { downloadAssets } from "../../reducers/downloadAssetSlice";
+import { downloadAssets, downloadAssetsAudit } from "../../reducers/downloadAssetSlice";
 import Button from "@material-ui/core/Button";
 import { viewEmployeeToAssign } from "../../reducers/employeeSlice";
 import { viewAssetAudit } from "../../reducers/viewAssetAuditSlice";
@@ -31,6 +31,8 @@ import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
 import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -190,6 +192,12 @@ const EnhancedTableToolbar = ({
 
   const handleDownloadClick = (Selected) => {
     dispatch(downloadAssets(Selected));
+    handleClose()
+  };
+
+  const handleDownloadAuditClick = (Selected) => {
+    dispatch(downloadAssetsAudit(Selected));
+    handleClose()
   };
 
   const assignClick = (e) => {
@@ -199,13 +207,21 @@ const EnhancedTableToolbar = ({
   };
   const unassignClick = (e) => {
     assetUnassigned(Selected)
-    // dispatch(unAssignAsset(Selected[0], Selected[0], Selected[0]));
-    // window.location.reload();
     e.preventDefault();
   };
 
   const selectedStatus =
     Selected[0] && rows.filter((row) => row.id === Selected[0])[0].assetStatus;
+  
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleMenuClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
   return (
     <Toolbar
@@ -252,14 +268,24 @@ const EnhancedTableToolbar = ({
         </Tooltip>
       ) : null}
       {!checkboxres && numSelected > 0 ? (
+        <>
         <Tooltip title="Download">
           <IconButton
-            aria-label="delete"
-            onClick={() => handleDownloadClick(Selected)}
+            onClick={handleMenuClick}
           >
             <GetAppIcon />
           </IconButton>
         </Tooltip>
+        <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleDownloadClick(Selected)}>Download Asset Info</MenuItem>
+        <MenuItem onClick={() => handleDownloadAuditClick(Selected)}>Download Asset Audit</MenuItem>
+      </Menu>
+</>
       ) : null}
     </Toolbar>
   );

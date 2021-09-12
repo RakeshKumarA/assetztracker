@@ -48,7 +48,6 @@ const EmployeeScreen = () => {
           const wsname = wb.SheetNames[0];
           const ws = wb.Sheets[wsname];
           const data = XLSX.utils.sheet_to_json(ws);
-          console.log("data", data);
           data.forEach((data) => (data.empid += ""));
           resolve(data);
         };

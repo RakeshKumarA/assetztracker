@@ -157,7 +157,6 @@ const EnhancedTableToolbar = (props) => {
 
   const handleDownloadClick = (Selected) => {
     const numconvertedSelect = Selected.map((i) => Number(i));
-    console.log(numconvertedSelect);
     dispatch(downloadEmployees(numconvertedSelect));
   };
   return (
@@ -273,7 +272,6 @@ const CustomEmployeeTable = ({ rows, screen }) => {
         selected.slice(selectedIndex + 1)
       );
     }
-    console.log("newSelected", newSelected);
     setSelected(newSelected);
   };
 

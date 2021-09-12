@@ -30,8 +30,17 @@ export const userSlice = createSlice({
       state.error = action.payload;
     },
     user_logout: (state, action) => {
-      localStorage.removeItem("userInfo");
-      return initialState;
+      async function removeItemValue(key) {
+        try {
+          await localStorage.removeItem(key);
+        } catch (exception) {
+          return false;
+        }
+      }
+      removeItemValue("userInfo");
+      state.loading = false;
+      state.userInfo = {};
+      state.error = "";
     },
   },
 });

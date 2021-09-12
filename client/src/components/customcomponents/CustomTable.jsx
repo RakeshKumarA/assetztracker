@@ -19,7 +19,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import FindInPageIcon from "@material-ui/icons/FindInPage";
 import { useDispatch, useSelector } from "react-redux";
-import { downloadAssets, downloadAssetsAudit } from "../../reducers/downloadAssetSlice";
+import {
+  downloadAssets,
+  downloadAssetsAudit,
+} from "../../reducers/downloadAssetSlice";
 import Button from "@material-ui/core/Button";
 import { viewEmployeeToAssign } from "../../reducers/employeeSlice";
 import { viewAssetAudit } from "../../reducers/viewAssetAuditSlice";
@@ -31,8 +34,8 @@ import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
 import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import { asset_operation } from "../../reducers/assetOperationSlice";
 import { geteditAsset } from "../../reducers/editAssetSlice";
 import { useHistory } from "react-router-dom";
@@ -193,19 +196,17 @@ const EnhancedTableToolbar = ({
   const classes = useToolbarStyles();
   const dispatch = useDispatch();
   const numSelected = Selected.length;
-  const history = useHistory()
-  const { loading } = useSelector(state => state.editAsset)
-  console.log(loading)
-  
+  const history = useHistory();
+  const { loading } = useSelector((state) => state.editAsset);
 
   const handleDownloadClick = (Selected) => {
     dispatch(downloadAssets(Selected));
-    handleClose()
+    handleClose();
   };
 
   const handleDownloadAuditClick = (Selected) => {
     dispatch(downloadAssetsAudit(Selected));
-    handleClose()
+    handleClose();
   };
 
   const assignClick = (e) => {
@@ -214,29 +215,30 @@ const EnhancedTableToolbar = ({
     e.preventDefault();
   };
   const unassignClick = (e) => {
-    assetUnassigned(Selected)
+    assetUnassigned(Selected);
     e.preventDefault();
   };
 
   const selectedStatus =
     Selected[0] && rows.filter((row) => row.id === Selected[0])[0].assetStatus;
-  
-    const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const handleMenuClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const editClick = () => {
-      dispatch(asset_operation('Edit'))
-      dispatch(geteditAsset(Selected[0], 'edit')).then(res => {
-        history.push("/addasset")
-      })
-      dispatch(option_update_continue({
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const editClick = () => {
+    dispatch(asset_operation("Edit"));
+    dispatch(geteditAsset(Selected[0], "edit")).then((res) => {
+      history.push("/addasset");
+    });
+    dispatch(
+      option_update_continue({
         option: 1,
         enable: {
           onboard: false,
@@ -244,17 +246,18 @@ const EnhancedTableToolbar = ({
           hardware: false,
           depreciation: false,
           documents: true,
-        }
-      }))
-      // !loading && history.push("/addasset");
-      
-    }
-    const cloneClick = () => {
-      dispatch(asset_operation('Clone'))
-      dispatch(geteditAsset(Selected[0], 'clone')).then(res => {
-        history.push("/addasset")
+        },
       })
-      dispatch(option_update_continue({
+    );
+    // !loading && history.push("/addasset");
+  };
+  const cloneClick = () => {
+    dispatch(asset_operation("Clone"));
+    dispatch(geteditAsset(Selected[0], "clone")).then((res) => {
+      history.push("/addasset");
+    });
+    dispatch(
+      option_update_continue({
         option: 1,
         enable: {
           onboard: false,
@@ -262,9 +265,10 @@ const EnhancedTableToolbar = ({
           hardware: false,
           depreciation: false,
           documents: true,
-        }
-      }))
-    }
+        },
+      })
+    );
+  };
 
   return (
     <Toolbar
@@ -291,20 +295,28 @@ const EnhancedTableToolbar = ({
           Asset List
         </Typography>
       )}
-      {!checkboxres &&
-      numSelected === 1 &&
-      Screen === "viewScreen" ? (
+      {!checkboxres && numSelected === 1 && Screen === "viewScreen" ? (
         <>
-        <Tooltip title="Edit">
-          <Button variant="contained" color="secondary" style={{marginRight: '1rem'}} onClick={editClick}>
-            Edit
-          </Button>
-        </Tooltip>
-        <Tooltip title="Clone">
-          <Button variant="contained" color="secondary" style={{marginRight: '1rem'}} onClick={cloneClick}>
-            Clone
-          </Button>
-        </Tooltip>
+          <Tooltip title="Edit">
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ marginRight: "1rem" }}
+              onClick={editClick}
+            >
+              Edit
+            </Button>
+          </Tooltip>
+          <Tooltip title="Clone">
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ marginRight: "1rem" }}
+              onClick={cloneClick}
+            >
+              Clone
+            </Button>
+          </Tooltip>
         </>
       ) : null}
       {!checkboxres &&
@@ -328,23 +340,25 @@ const EnhancedTableToolbar = ({
       ) : null}
       {!checkboxres && numSelected > 0 ? (
         <>
-        <Tooltip title="Download">
-          <IconButton
-            onClick={handleMenuClick}
+          <Tooltip title="Download">
+            <IconButton onClick={handleMenuClick}>
+              <GetAppIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
           >
-            <GetAppIcon />
-          </IconButton>
-        </Tooltip>
-        <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={() => handleDownloadClick(Selected)}>Download Asset Info</MenuItem>
-        <MenuItem onClick={() => handleDownloadAuditClick(Selected)}>Download Asset Audit</MenuItem>
-      </Menu>
-</>
+            <MenuItem onClick={() => handleDownloadClick(Selected)}>
+              Download Asset Info
+            </MenuItem>
+            <MenuItem onClick={() => handleDownloadAuditClick(Selected)}>
+              Download Asset Audit
+            </MenuItem>
+          </Menu>
+        </>
       ) : null}
     </Toolbar>
   );
@@ -382,7 +396,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CustomTable = ({ rows, screen, assetSelected, checkboxres, assetUnassigned }) => {
+const CustomTable = ({
+  rows,
+  screen,
+  assetSelected,
+  checkboxres,
+  assetUnassigned,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { assetaudit } = useSelector((state) => state.assetAudit);
@@ -565,14 +585,37 @@ const CustomTable = ({ rows, screen, assetSelected, checkboxres, assetUnassigned
               </TimelineSeparator>
               {asset.empid ? (
                 <TimelineContent>
-                  {asset.transactiontype} to {asset.empname} on {asset.transactiondate.slice(0,10)} by {asset.name}
+                  {asset.transactiontype} to {asset.empname} on{" "}
+                  {asset.transactiondate.slice(0, 10)} by {asset.name}
                 </TimelineContent>
-              ) : asset.transactiontype === 'Onboarding' ? (
-                <TimelineContent>{asset.transactiontype} on {asset.transactiondate.slice(0,10)} by {asset.name}</TimelineContent>
-              ) : asset.transactionreason && asset.transactionmethod ? (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} because {asset.transactionreason} by {asset.transactionmethod}</TimelineContent>
-              ) : asset.transactionreason && !asset.transactionmethod ? (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} because {asset.transactionreason}  </TimelineContent>
-              ) : !asset.transactionreason && asset.transactionmethod ? (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} by {asset.transactionmethod}  </TimelineContent>
-              ) : (<TimelineContent>Returned back to {asset.transactiontype} on {asset.transactiondate.slice(0,10)} to {asset.name} </TimelineContent>
+              ) : asset.transactiontype === "Onboarding" ? (
+                <TimelineContent>
+                  {asset.transactiontype} on{" "}
+                  {asset.transactiondate.slice(0, 10)} by {asset.name}
+                </TimelineContent>
+              ) : asset.transactionreason && asset.transactionmethod ? (
+                <TimelineContent>
+                  Returned back to {asset.transactiontype} on{" "}
+                  {asset.transactiondate.slice(0, 10)} to {asset.name} because{" "}
+                  {asset.transactionreason} by {asset.transactionmethod}
+                </TimelineContent>
+              ) : asset.transactionreason && !asset.transactionmethod ? (
+                <TimelineContent>
+                  Returned back to {asset.transactiontype} on{" "}
+                  {asset.transactiondate.slice(0, 10)} to {asset.name} because{" "}
+                  {asset.transactionreason}{" "}
+                </TimelineContent>
+              ) : !asset.transactionreason && asset.transactionmethod ? (
+                <TimelineContent>
+                  Returned back to {asset.transactiontype} on{" "}
+                  {asset.transactiondate.slice(0, 10)} to {asset.name} by{" "}
+                  {asset.transactionmethod}{" "}
+                </TimelineContent>
+              ) : (
+                <TimelineContent>
+                  Returned back to {asset.transactiontype} on{" "}
+                  {asset.transactiondate.slice(0, 10)} to {asset.name}{" "}
+                </TimelineContent>
               )}
             </TimelineItem>
           ))}

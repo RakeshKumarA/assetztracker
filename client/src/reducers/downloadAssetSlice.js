@@ -77,7 +77,6 @@ export const downloadAssets = (id) => async (dispatch, getState) => {
         column.width = column.header.length + 5;
         column.alignment = { horizontal: "center" };
       });
-      console.log(data)
       data.assets.forEach((singleData) => {
         worksheet.addRow(singleData);
       });
@@ -120,10 +119,13 @@ export const downloadAssetsAudit = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.post("/api/assets/downlAssetAudit", { id }, config);
+    const { data } = await axios.post(
+      "/api/assets/downlAssetAudit",
+      { id },
+      config
+    );
     if (data.status === 200) {
       dispatch(download_assets_audit_success());
-      console.log(data)
       const columns = [
         { header: "Asset ID", key: "assetid" },
         { header: "Employee Name", key: "empname" },

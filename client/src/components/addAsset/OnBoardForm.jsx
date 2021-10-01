@@ -30,6 +30,7 @@ import { option_update_continue } from "../../reducers/assetSelSlice";
 import { getAssetType } from "../../reducers/assetTypeSlice";
 import { location } from "../../reducers/locationSlice";
 
+
 const useStyles = makeStyles({
   container: {
     paddingTop: "2rem",
@@ -48,6 +49,7 @@ const OnBoardForm = () => {
   const { enable } = useSelector((state) => state.assetSel);
   const { assetType } = useSelector((state) => state.assetType);
   const { locationList } = useSelector((state) => state.location);
+  const { assetOperation } = useSelector((state) => state.assetOperation);
   const dispatch = useDispatch();
 
   const initialValues = {
@@ -329,7 +331,7 @@ const OnBoardForm = () => {
                   </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item container>
-                  <CustomTextField name="assetId" label="Asset Id" />
+                <CustomTextField name="assetId" label="Asset Id" disabled={assetOperation==="Edit"}/>
                 </Grid>
 
                 <Grid item container>

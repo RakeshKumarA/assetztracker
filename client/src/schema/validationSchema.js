@@ -17,6 +17,10 @@ export const adminFormValidationSchema = yup.object().shape({
 export const onboardValidationSchema = yup.object().shape({
   assetId: yup.string().required("Asset id Required"),
   location: yup.string().required("Location is Required"),
+  putToUseDate: yup.date().min(
+    yup.ref('purchaseDate'),
+    "PutToUseDate can't be before PurchaseDate"
+  )
 });
 
 export const softwareValidationSchema = yup.object().shape({

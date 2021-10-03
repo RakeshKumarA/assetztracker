@@ -24,7 +24,7 @@ PRIMARY KEY(userid)
 
 ---USER TABLE INSERTION(ADMIN)---
 
-INSERT INTO users (name,email, password,role) values ('Rakesh', 'rakesh@example.com','$2y$10$nRlYCXu2zTuDvxhaqmlTR.jopPvQQgTv1Lp4A9rb9HTvdEcc/8oYa','admin', 'System Created');
+INSERT INTO users (name,email, password,role,createby) values ('Rakesh', 'rakesh@example.com','$2y$10$nRlYCXu2zTuDvxhaqmlTR.jopPvQQgTv1Lp4A9rb9HTvdEcc/8oYa','admin', 'System Created');
 
 ---USERAUDIT TABLE CREATION---
 
@@ -99,7 +99,7 @@ BEGIN
 
 END;
 $body$
-LANGUAGE plpgsql
+LANGUAGE plpgsql;
 
 CREATE TRIGGER user_audit_trigger
 AFTER INSERT OR UPDATE OR DELETE ON users
@@ -220,7 +220,7 @@ BEGIN
 
 END;
 $body$
-LANGUAGE plpgsql
+LANGUAGE plpgsql;
 
 CREATE TRIGGER asset_onboard_trigger
 AFTER INSERT OR UPDATE OR DELETE ON asset
@@ -244,3 +244,49 @@ locationname VARCHAR(10) NOT NULL,
 createdat TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 PRIMARY KEY(locationid)
 );
+
+---INSERT INTO LOCATION---
+INSERT INTO LOCATION (locationname) values ('India');
+INSERT INTO LOCATION (locationname) values ('USA');
+
+---INSERT INTO ASSETTYPE---
+
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(1, 'Computer', 'Desktop', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(2, 'Computer', 'Laptop', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(3, 'Computer', 'Charger', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(4, 'Computer', 'Docking Station', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(5, 'Chair', 'Upright Chair', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(6, 'Chair', 'Sitting Chair', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(7, 'Table', 'Working Table', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(8, 'Table', 'Canteen Table', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(9, 'TV', 'TV', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(10, 'Coffee Maker', 'Coffee Maker', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(11, 'Stationary', 'Staples', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(12, 'Stationary', 'Pen', '2021-08-21 10:54:39.998');
+INSERT INTO public.assettype
+(assettypeid, assettypelev1, assettypelev2, createdat)
+VALUES(13, 'Stationary', 'Book', '2021-08-21 10:54:39.998');

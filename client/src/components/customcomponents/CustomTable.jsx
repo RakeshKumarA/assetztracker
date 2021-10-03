@@ -18,6 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import FindInPageIcon from "@material-ui/icons/FindInPage";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import { useDispatch, useSelector } from "react-redux";
 import {
   downloadAssets,
@@ -27,7 +28,14 @@ import Button from "@material-ui/core/Button";
 import { viewEmployeeToAssign } from "../../reducers/employeeSlice";
 import { viewAssetAudit } from "../../reducers/viewAssetAuditSlice";
 import CloseIcon from "@material-ui/icons/Close";
-import { AppBar, Dialog, Slide } from "@material-ui/core";
+import {
+  AppBar,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  DialogActions,
+} from "@material-ui/core";
 import Timeline from "@material-ui/lab/Timeline";
 import TimelineItem from "@material-ui/lab/TimelineItem";
 import TimelineSeparator from "@material-ui/lab/TimelineSeparator";
@@ -40,6 +48,11 @@ import { asset_operation } from "../../reducers/assetOperationSlice";
 import { geteditAsset } from "../../reducers/editAssetSlice";
 import { useHistory } from "react-router-dom";
 import { option_update_continue } from "../../reducers/assetSelSlice";
+import DepreciationTable from "../addAsset/review/DepreciationTable";
+import HardwareTable from "../addAsset/review/HardwareTable";
+import SoftwareTable from "../addAsset/review/SoftwareTable";
+import OnboardTable from "../addAsset/review/OnboardTable";
+import { format } from "date-fns/esm";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -93,6 +106,11 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "ASSET ADDED BY",
+  },
+  {
+    id: "assetView",
+    numeric: false,
+    disablePadding: false,
   },
   {
     id: "assetAudit",
@@ -411,6 +429,11 @@ const CustomTable = ({
   const [page, setPage] = React.useState(0);
   const rowsPerPage = 10;
 
+  const { depreciation } = useSelector((state) => state.depreciation);
+  const { onboard } = useSelector((state) => state.onboard);
+  const { software } = useSelector((state) => state.software);
+  const { hardware } = useSelector((state) => state.hardware);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -456,9 +479,71 @@ const CustomTable = ({
     dispatch(viewAssetAudit(id));
     setOpen(true);
   };
+  const handleViewClick = (id) => {
+    dispatch(asset_operation("View"));
+    dispatch(geteditAsset(id, "view")).then((res) => {
+      setViewOpen(true);
+    });
+  };
+
+  const formattedOnboard = {
+    ...onboard,
+    putToUseDate: {
+      lable: "Put to use Date",
+      value: onboard.putToUseDate.value
+        ? format(new Date(onboard.putToUseDate.value), "yyyy-mm-dd HH:MM:SS p")
+        : onboard.putToUseDate.value,
+    },
+    invoiceDate: {
+      lable: "Invoice Date",
+      value: onboard.invoiceDate.value
+        ? format(new Date(onboard.invoiceDate.value), "yyyy-mm-dd HH:MM:SS p")
+        : onboard.invoiceDate.value,
+    },
+    purchaseOrderDate: {
+      lable: "Purchase Order Date",
+      value: onboard.purchaseOrderDate.value
+        ? format(
+            new Date(onboard.purchaseOrderDate.value),
+            "yyyy-mm-dd HH:MM:SS p"
+          )
+        : onboard.purchaseOrderDate.value,
+    },
+    purchaseDate: {
+      lable: "Purchase Date",
+      value: onboard.purchaseDate.value
+        ? format(new Date(onboard.purchaseDate.value), "yyyy-mm-dd HH:MM:SS p")
+        : onboard.purchaseDate.value,
+    },
+  };
+
+  const onboarddata = Object.entries({
+    ...formattedOnboard,
+  }).map((e) => ({ [e[1].lable]: e[1].value }));
+
+  const depreciationdata = Object.entries({
+    ...depreciation,
+  }).map((e) => ({ [e[1].lable]: e[1].value }));
+
+  const descriptionElementRef = React.useRef(null);
+  React.useEffect(() => {
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  //Dialog
+  const [viewOpen, setViewOpen] = React.useState(false);
+
+  const handleViewClose = () => {
+    setViewOpen(false);
   };
 
   return (
@@ -525,10 +610,20 @@ const CustomTable = ({
                       <TableCell align="center">{row.empname}</TableCell>
                       <TableCell align="center">{row.assetStatus}</TableCell>
                       <TableCell align="center">{row.name}</TableCell>
-                      <TableCell align="center">
+                      <TableCell align="center" size="small" padding="checkbox">
+                        <IconButton
+                          onClick={() => handleViewClick(row.id)}
+                          style={{ padding: 0 }}
+                          size="small"
+                        >
+                          <VisibilityIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center" size="small" padding="checkbox">
                         <IconButton
                           onClick={() => handleAuditClick(row.id)}
                           style={{ padding: 0 }}
+                          size="small"
                         >
                           <FindInPageIcon fontSize="small" />
                         </IconButton>
@@ -618,6 +713,24 @@ const CustomTable = ({
             </TimelineItem>
           ))}
         </Timeline>
+      </Dialog>
+      <Dialog open={viewOpen} onClose={handleViewClose} scroll="paper">
+        <DialogTitle>Review</DialogTitle>
+        <DialogContent
+          dividers={true}
+          ref={descriptionElementRef}
+          tabIndex={-1}
+        >
+          <OnboardTable onboarddata={onboarddata} />
+          <SoftwareTable software={software} />
+          <HardwareTable hardware={hardware} />
+          <DepreciationTable depreciationdata={depreciationdata} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleViewClose} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

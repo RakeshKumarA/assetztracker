@@ -50,15 +50,13 @@ const Dashboard = () => {
     assetStatus: value.assetstatus,
     name: value.name,
   }));
-  const statusCountLabel = ["Onboarded", "Assigned", "Inventory"];
-  const categoryCountLabel = [
-    "Computer",
-    "Chair",
-    "Table",
-    "TV",
-    "Coffee Maker",
-    "Stationary",
-  ];
+
+  const statusCountLabel = assetsCountByStatus.map(
+    (status) => status.assetstatus
+  );
+  const categoryCountLabel = assetsCountByCategory.map(
+    (category) => category.type
+  );
   const periodLable = ["Today", "Week", "Month"];
 
   useEffect(() => {

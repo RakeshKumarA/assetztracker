@@ -5,27 +5,28 @@ import { dashboardTable } from "../../reducers/dashboardSlice";
 
 const PieChart = ({ rawData, type, labels }) => {
   const dispatch = useDispatch();
+
+  const randomData = Array.from({ length: rawData.length }, (_, i) => i + 1);
+
+  const random_hex_color_code = () => {
+    const m = randomData.map(
+      (data) => "#" + (data * 0xfffff * 1000000).toString(16).slice(0, 6)
+    );
+    return m;
+  };
+
   const data = {
     labels,
     datasets: [
       {
-        data: rawData,
-        backgroundColor: [
-          "#F7685B",
-          "#885AF8",
-          "#C2CFE0",
-          "#FAAD80",
-          "#A03C78",
-          "#93D9A3",
-        ],
-        borderColor: [
-          "#F7685B",
-          "#885AF8",
-          "#C2CFE0",
-          "#FAAD80",
-          "#A03C78",
-          "#93D9A3",
-        ],
+        data:
+          type === "assetByStatus"
+            ? rawData.map((status) => status.count)
+            : type === "assetByCategory"
+            ? rawData.map((cat) => cat.count)
+            : rawData,
+        backgroundColor: random_hex_color_code(),
+        borderColor: random_hex_color_code(),
         borderWidth: 1,
       },
     ],
@@ -38,9 +39,13 @@ const PieChart = ({ rawData, type, labels }) => {
         const index =
           elems[0] && elems[0].index !== undefined && elems[0].index;
 
+        const indexString = index !== undefined && index.toString();
+
         if (type === "assetByStatus") {
           const criteria =
-            index === 0 ? "Onboarding" : index === 1 ? "Assigned" : "Inventory";
+            rawData.filter((data) => data.rowindex === indexString)[0] &&
+            rawData.filter((data) => data.rowindex === indexString)[0]
+              .assetstatus;
           const assetFilterCriteria = {
             type,
             criteria,
@@ -48,17 +53,8 @@ const PieChart = ({ rawData, type, labels }) => {
           dispatch(dashboardTable(assetFilterCriteria));
         } else if (type === "assetByCategory") {
           const criteria =
-            index === 0
-              ? "Computer"
-              : index === 1
-              ? "Chair"
-              : index === 2
-              ? "Table"
-              : index === 3
-              ? "TV"
-              : index === 4
-              ? "Coffee Maker"
-              : "Stationary";
+            rawData.filter((data) => data.rowindex === indexString)[0] &&
+            rawData.filter((data) => data.rowindex === indexString)[0].type;
           const assetFilterCriteria = {
             type,
             criteria,

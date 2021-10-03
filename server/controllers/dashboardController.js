@@ -6,79 +6,65 @@ const db = require("../db");
 const dashboardLanding = async (req, res) => {
   try {
     const statusCount = await db.query(
-      "select assetstatus as status, count(*) from asset group by assetstatus"
+      "select ROW_NUMBER () OVER (ORDER BY assetstatus) - 1 as rowindex ,assetstatus, count(*) from asset a group by assetstatus order by  assetstatus"
     );
-    const assigned = statusCount.rows.filter(
-      (row) => row.status === "Assigned"
-    )[0]
-      ? Number(
-          statusCount.rows.filter((row) => row.status === "Assigned")[0].count
-        )
-      : 0;
-    const onboarded = statusCount.rows.filter(
-      (row) => row.status === "Onboarding"
-    )[0]
-      ? Number(
-          statusCount.rows.filter((row) => row.status === "Onboarding")[0].count
-        )
-      : 0;
-    const inventory = statusCount.rows.filter(
-      (row) => row.status === "Inventory"
-    )[0]
-      ? Number(
-          statusCount.rows.filter((row) => row.status === "Inventory")[0].count
-        )
-      : 0;
-    const finalStatusCount = [onboarded, assigned, inventory];
+
+    const finalStatusCount = statusCount.rows;
 
     try {
+      // const categoryCount = await db.query(
+      //   "select onboard #>> '{assetType, value}' as type, count(*) from asset group by onboard #>> '{assetType, value}'"
+      // );
+      // const Computer = categoryCount.rows.filter(
+      //   (row) => row.type === "Computer"
+      // )[0]
+      //   ? Number(
+      //       categoryCount.rows.filter((row) => row.type === "Computer")[0].count
+      //     )
+      //   : 0;
+      // const Chair = categoryCount.rows.filter((row) => row.type === "Chair")[0]
+      //   ? Number(
+      //       categoryCount.rows.filter((row) => row.type === "Chair")[0].count
+      //     )
+      //   : 0;
+      // const Table = categoryCount.rows.filter((row) => row.type === "Table")[0]
+      //   ? Number(
+      //       categoryCount.rows.filter((row) => row.type === "Table")[0].count
+      //     )
+      //   : 0;
+      // const TV = categoryCount.rows.filter((row) => row.type === "TV")[0]
+      //   ? Number(categoryCount.rows.filter((row) => row.type === "TV")[0].count)
+      //   : 0;
+      // const Coffee = categoryCount.rows.filter(
+      //   (row) => row.type === "Coffee Maker"
+      // )[0]
+      //   ? Number(
+      //       categoryCount.rows.filter((row) => row.type === "Coffee Maker")[0]
+      //         .count
+      //     )
+      //   : 0;
+      // const Stationary = categoryCount.rows.filter(
+      //   (row) => row.type === "Stationary"
+      // )[0]
+      //   ? Number(
+      //       categoryCount.rows.filter((row) => row.type === "Stationary")[0]
+      //         .count
+      //     )
+      //   : 0;
+      // const finalCategoryCount = [
+      //   Computer,
+      //   Chair,
+      //   Table,
+      //   TV,
+      //   Coffee,
+      //   Stationary,
+      // ];
+
       const categoryCount = await db.query(
-        "select onboard #>> '{assetType, value}' as type, count(*) from asset group by onboard #>> '{assetType, value}'"
+        "select ROW_NUMBER () OVER (ORDER BY onboard #>> '{assetType, value}')  - 1 as rowindex, onboard #>> '{assetType, value}' as type, count(*) from asset group by onboard #>> '{assetType, value}'"
       );
-      const Computer = categoryCount.rows.filter(
-        (row) => row.type === "Computer"
-      )[0]
-        ? Number(
-            categoryCount.rows.filter((row) => row.type === "Computer")[0].count
-          )
-        : 0;
-      const Chair = categoryCount.rows.filter((row) => row.type === "Chair")[0]
-        ? Number(
-            categoryCount.rows.filter((row) => row.type === "Chair")[0].count
-          )
-        : 0;
-      const Table = categoryCount.rows.filter((row) => row.type === "Table")[0]
-        ? Number(
-            categoryCount.rows.filter((row) => row.type === "Table")[0].count
-          )
-        : 0;
-      const TV = categoryCount.rows.filter((row) => row.type === "TV")[0]
-        ? Number(categoryCount.rows.filter((row) => row.type === "TV")[0].count)
-        : 0;
-      const Coffee = categoryCount.rows.filter(
-        (row) => row.type === "Coffee Maker"
-      )[0]
-        ? Number(
-            categoryCount.rows.filter((row) => row.type === "Coffee Maker")[0]
-              .count
-          )
-        : 0;
-      const Stationary = categoryCount.rows.filter(
-        (row) => row.type === "Stationary"
-      )[0]
-        ? Number(
-            categoryCount.rows.filter((row) => row.type === "Stationary")[0]
-              .count
-          )
-        : 0;
-      const finalCategoryCount = [
-        Computer,
-        Chair,
-        Table,
-        TV,
-        Coffee,
-        Stationary,
-      ];
+
+      const finalCategoryCount = categoryCount.rows;
 
       try {
         const periodCount = await db.query(

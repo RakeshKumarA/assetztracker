@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTable from "../components/customcomponents/CustomTable";
 import Paper from "@material-ui/core/Paper";
 import {
@@ -14,10 +14,20 @@ import {
 import Autocomplete from "@material-ui/lab/Autocomplete";
 //MUI Libs
 import { makeStyles } from "@material-ui/core/styles";
-import { searchAsset, viewAssets } from ".././reducers/viewAssetSlice";
+import { searchAsset, searchAssetByEmployeeId, viewAssets } from ".././reducers/viewAssetSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { set_snackbar } from "../reducers/snackSlice";
 import { assignEmployeeToAsset, unAssignAsset } from "../reducers/employeeSlice";
+
+//Split Button
+import * as React from 'react';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 
 const useStyles = makeStyles({
   paperStyle: {
@@ -33,6 +43,8 @@ const useStyles = makeStyles({
     paddingBottom: "2rem",
   },
 });
+
+const options = ['Search by AssetId', 'Search by EmployeeId'];
 
 const ViewAssetScreen = () => {
   const classes = useStyles();
@@ -68,22 +80,6 @@ const ViewAssetScreen = () => {
     dispatch(viewAssets());
   }, [dispatch]);
 
-  const onSearchHandler = () => {
-    if (searchTerm === "") {
-      dispatch(
-        set_snackbar({
-          snackbarOpen: true,
-          snackbarType: "warning",
-          snackbarMessage: "Please Enter AssetId",
-          snackbarSeverity: "warning",
-        })
-      );
-    } else {
-      dispatch(searchAsset(searchTerm));
-      setSearchTerm("");
-    }
-  };
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -92,8 +88,6 @@ const ViewAssetScreen = () => {
     setSearchTerm("");
     dispatch(viewAssets());
   };
-
-
 
   const handleClickOpen = (selected) => {
     setSelectedAsset(selected);
@@ -133,6 +127,59 @@ const ViewAssetScreen = () => {
     setSelectedEmployee(values.id);
   };
 
+//Split Button
+const [openb, setOpenb] = React.useState(false);
+  const anchorRef = React.useRef(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+
+
+  const onSearchHandler = () => {
+    if (searchTerm === "" && selectedIndex===0) {
+      dispatch(
+        set_snackbar({
+          snackbarOpen: true,
+          snackbarType: "warning",
+          snackbarMessage: "Please Enter AssetId",
+          snackbarSeverity: "warning",
+        })
+      );
+    }else if (searchTerm === "" && selectedIndex===1) {
+      dispatch(
+        set_snackbar({
+          snackbarOpen: true,
+          snackbarType: "warning",
+          snackbarMessage: "Please Enter EmployeeId",
+          snackbarSeverity: "warning",
+        })
+      );
+    }else if(selectedIndex===0){
+      dispatch(searchAsset(searchTerm));
+      setSearchTerm("");
+    }
+     else {
+      dispatch(searchAssetByEmployeeId(searchTerm));
+      setSearchTerm("");
+    }
+  };
+  
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setOpenb(false);
+  };
+
+  const handleToggle = () => {
+    setOpenb((prevOpen) => !prevOpen);
+  };
+
+  const handleCloseb = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpenb(false);
+  };
+
+
   return (
     <>
       <Paper className={classes.paperStyle}>
@@ -143,25 +190,73 @@ const ViewAssetScreen = () => {
             </Typography>
           </Grid>
           <Grid item container className={classes.searchContainer} spacing={2}>
-            <Grid item xs={6}>
+            {selectedIndex===0 ? <Grid item xs={6}>
               <TextField
-                label="Search By Asset ID"
+                label="Enter AssetId"
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 fullWidth={true}
                 size={"small"}
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={onSearchHandler}
-              >
-                Search
-              </Button>
+            </Grid> : <Grid item xs={6}>
+              <TextField
+                label="Enter EmployeeId"
+                variant="outlined"
+                color="primary"
+                fullWidth={true}
+                size={"small"}
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </Grid>}
+            <Grid item style={{zIndex:"1"}}>
+      <ButtonGroup variant="contained" color="secondary" ref={anchorRef} aria-label="split button">
+        <Button onClick={onSearchHandler}>{options[selectedIndex]}</Button>
+        <Button
+          size="small"
+          aria-controls={openb ? "split-button-menu" : undefined}
+          aria-expanded={openb ? "true" : undefined}
+          aria-haspopup="menu"
+          onClick={handleToggle}
+        >
+          <ArrowDropDownIcon />
+        </Button>
+      </ButtonGroup>
+      <Popper
+        open={openb}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleCloseb}>
+                <MenuList id="split-button-menu">
+                  {options.map((option, index) => (
+                    <MenuItem
+                      key={option}
+                      selected={index === selectedIndex}
+                      onClick={(event) => handleMenuItemClick(event, index)}
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
             </Grid>
             <Grid item>
               <Button

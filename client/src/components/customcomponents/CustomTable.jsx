@@ -197,7 +197,6 @@ const EnhancedTableToolbar = ({
   const dispatch = useDispatch();
   const numSelected = Selected.length;
   const history = useHistory();
-  const { loading } = useSelector((state) => state.editAsset);
 
   const handleDownloadClick = (Selected) => {
     dispatch(downloadAssets(Selected));
@@ -249,7 +248,6 @@ const EnhancedTableToolbar = ({
         },
       })
     );
-    // !loading && history.push("/addasset");
   };
   const cloneClick = () => {
     dispatch(asset_operation("Clone"));

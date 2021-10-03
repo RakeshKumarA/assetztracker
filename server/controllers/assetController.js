@@ -118,7 +118,7 @@ const searchAsset = async (req, res) => {
 
   try {
     const searchedAsset = await db.query(
-      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetId' ->> 'value' =$1",
+      "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.empid) and a2.onboard -> 'assetId' ->> 'value' =$1",
       [assetId]
     );
 
@@ -131,6 +131,33 @@ const searchAsset = async (req, res) => {
     res.json({ status: 500, message: error.message });
   }
 };
+
+// @desc        Search Asset By Employee Id
+// @route     POST /api/assets/searchAssetByEmployeeId
+// @access     Public
+const searchAssetByEmployeeId = async (req, res) => {
+  const { empid } = req.body;
+
+  try {
+    const E_id = await db.query(
+      "SELECT id from employee where empid=$1",
+      [empid]
+    );
+    const searchedAssets = await db.query(
+      "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.empid) and a2.empid=$1",
+      [E_id.rows[0].id]
+    );
+
+    res.json({
+      status: 200,
+      noOfAssets: searchedAssets.rowCount,
+      asset: searchedAssets.rows,
+    });
+  } catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
 
 // @desc		Get Asset
 // @route 	Get /api/assets/getAsset
@@ -301,5 +328,6 @@ module.exports = {
   getAssetType: getAssetType,
   getAssetLocation: getAssetLocation,
   getAssetAudit: getAssetAudit,
-  getAssetById: getAssetById
+  getAssetById: getAssetById,
+  searchAssetByEmployeeId: searchAssetByEmployeeId
 };

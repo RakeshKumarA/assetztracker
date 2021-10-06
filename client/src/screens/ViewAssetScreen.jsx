@@ -14,7 +14,7 @@ import {
 import Autocomplete from "@material-ui/lab/Autocomplete";
 //MUI Libs
 import { makeStyles } from "@material-ui/core/styles";
-import { searchAsset,searchAssetByEmployeeId, viewAssets } from ".././reducers/viewAssetSlice";
+import { searchAsset,searchAssetByEmployeeName, viewAssets } from ".././reducers/viewAssetSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { set_snackbar } from "../reducers/snackSlice";
 import { assignEmployeeToAsset, unAssignAsset } from "../reducers/employeeSlice";
@@ -26,7 +26,7 @@ import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
-const options = ['Search By AssetId', 'Search By EmployeeId'];
+const options = ['Search By Asset Id', 'Search By Employee Name'];
 
 const useStyles = makeStyles({
   paperStyle: {
@@ -130,7 +130,7 @@ const ViewAssetScreen = () => {
 
   const [openb, setOpenb] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
@@ -165,7 +165,7 @@ const ViewAssetScreen = () => {
         set_snackbar({
           snackbarOpen: true,
           snackbarType: "warning",
-          snackbarMessage: "Please Enter Employee Id",
+          snackbarMessage: "Please Enter Employee Name",
           snackbarSeverity: "warning",
         })
       );
@@ -175,7 +175,7 @@ const ViewAssetScreen = () => {
       setSearchTerm("");
     }
      else {
-      dispatch(searchAssetByEmployeeId(searchTerm));
+      dispatch(searchAssetByEmployeeName(searchTerm));
       setSearchTerm("");
     }
   };
@@ -203,7 +203,7 @@ const ViewAssetScreen = () => {
               />
             </Grid> : <Grid item xs={6}>
               <TextField
-                label="Enter EmployeeId"
+                label="Enter EmployeeName"
                 variant="outlined"
                 color="primary"
                 fullWidth={true}
@@ -260,15 +260,6 @@ const ViewAssetScreen = () => {
         )}
       </Popper>
     </Grid>
-            {/* <Grid item>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={onSearchHandler}
-              >
-                Search
-              </Button>
-            </Grid> */}
             <Grid item>
               <Button
                 variant="contained"

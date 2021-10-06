@@ -99,7 +99,7 @@ const addBulkAsset = async (req, res) => {
 const viewAssets = async (req, res) => {
   try {
     const results = await db.query(
-      "SELECT a2.*, u2.name, e2.empname  FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id)"
+      "SELECT a2.*, u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id)"
     );
     res.status(200).json({
       status: 200,
@@ -115,37 +115,47 @@ const viewAssets = async (req, res) => {
 // @access 	Public
 const searchAsset = async (req, res) => {
   const { assetId } = req.body;
-
+  const searchedAssetId = await db.query(
+    "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetId' ->> 'value' =$1",
+    [assetId]
+  );
   try {
-    const searchedAsset = await db.query(
-      "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.empid) and a2.onboard -> 'assetId' ->> 'value' =$1",
-      [assetId]
-    );
-
-    res.json({
-      status: 200,
-      noOfAssets: searchedAsset.rowCount,
-      asset: searchedAsset.rows,
-    });
+    if(searchedAssetId.rows[0].assetstatus=="Inventory"){
+      const searchedAsset = await db.query(
+        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetId' ->> 'value' =$1",
+        [assetId]
+      );
+      res.json({
+        status: 200,
+        noOfAssets: searchedAsset.rowCount,
+        asset: searchedAsset.rows,
+      });
+    }
+    else{
+      const searchedAsset = await db.query(
+        "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.id) and a2.onboard -> 'assetId' ->> 'value' =$1",
+        [assetId]
+      );
+      res.json({
+        status: 200,
+        noOfAssets: searchedAsset.rowCount,
+        asset: searchedAsset.rows,
+      });
+    }  
   } catch (error) {
     res.json({ status: 500, message: error.message });
   }
 };
 
-// @desc        Search Asset By Employee Id
-// @route     POST /api/assets/searchAssetByEmployeeId
+// @desc        Search Asset By Employee Name
+// @route     POST /api/assets/searchAssetByEmployeeName
 // @access     Public
-const searchAssetByEmployeeId = async (req, res) => {
-  const { empid } = req.body;
-
+const searchAssetByEmployeeName = async (req, res) => {
+  const { empname } = req.body;
   try {
-    const E_id = await db.query(
-      "SELECT id from employee where empid=$1",
-      [empid]
-    );
     const searchedAssets = await db.query(
-      "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.empid) and a2.empid=$1",
-      [E_id.rows[0].id]
+      "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.id) and e2.empname=$1",
+      [empname]
     );
 
     res.json({
@@ -329,5 +339,5 @@ module.exports = {
   getAssetLocation: getAssetLocation,
   getAssetAudit: getAssetAudit,
   getAssetById: getAssetById,
-  searchAssetByEmployeeId: searchAssetByEmployeeId
+  searchAssetByEmployeeName: searchAssetByEmployeeName
 };

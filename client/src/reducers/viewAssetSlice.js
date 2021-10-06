@@ -131,7 +131,7 @@ export const searchAsset = (assetId) => async (dispatch, getState) => {
     );
   }
 };
-export const searchAssetByEmployeeId  = (empid) => async (dispatch, getState) => {
+export const searchAssetByEmployeeName  = (empname) => async (dispatch, getState) => {
   try {
     dispatch(view_assets_request());
     const {
@@ -144,8 +144,8 @@ export const searchAssetByEmployeeId  = (empid) => async (dispatch, getState) =>
       },
     };
     const { data } = await axios.post(
-      "/api/assets/searchAssetByEmployeeId",
-      { empid },
+      "/api/assets/searchAssetByEmployeeName",
+      { empname },
       config
     );
     console.log(data)

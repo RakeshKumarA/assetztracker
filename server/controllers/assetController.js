@@ -115,34 +115,18 @@ const viewAssets = async (req, res) => {
 // @access 	Public
 const searchAsset = async (req, res) => {
   const { assetId } = req.body;
-  const searchedAssetId = await db.query(
-    "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetId' ->> 'value' =$1",
-    [assetId]
-  );
   try {
-    if(searchedAssetId.rows[0].assetstatus=="Inventory"){
-      const searchedAsset = await db.query(
-        "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetId' ->> 'value' =$1",
-        [assetId]
-      );
+    const searchedAssetId = await db.query("select a.*, e.empname from asset a left join employee e on a.empid = e.id where a.assetid =$1",
+    [assetId]
+    );
+    console.log(searchedAssetId)
       res.json({
         status: 200,
-        noOfAssets: searchedAsset.rowCount,
-        asset: searchedAsset.rows,
+        noOfAssets: searchedAssetId.rowCount,
+        asset: searchedAssetId.rows,
       });
     }
-    else{
-      const searchedAsset = await db.query(
-        "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.id) and a2.onboard -> 'assetId' ->> 'value' =$1",
-        [assetId]
-      );
-      res.json({
-        status: 200,
-        noOfAssets: searchedAsset.rowCount,
-        asset: searchedAsset.rows,
-      });
-    }  
-  } catch (error) {
+ catch (error) {
     res.json({ status: 500, message: error.message });
   }
 };

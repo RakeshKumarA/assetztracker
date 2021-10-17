@@ -99,7 +99,7 @@ const addBulkAsset = async (req, res) => {
 const viewAssets = async (req, res) => {
   try {
     const results = await db.query(
-      "SELECT a2.*, u2.name, e2.empname  FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id)"
+      "SELECT a2.*, u2.name, e2.empname FROM asset a2 LEFT OUTER JOIN users u2 ON (a2.userid=u2.userid) LEFT OUTER JOIN employee e2 ON (a2.empid=e2.id)"
     );
     res.status(200).json({
       status: 200,
@@ -115,22 +115,43 @@ const viewAssets = async (req, res) => {
 // @access 	Public
 const searchAsset = async (req, res) => {
   const { assetId } = req.body;
-
   try {
-    const searchedAsset = await db.query(
-      "SELECT a2.*,u2.name FROM asset a2, users u2 where (a2.userid=u2.userid) and a2.onboard -> 'assetId' ->> 'value' =$1",
-      [assetId]
+    const searchedAssetId = await db.query("select a.*, e.empname from asset a left join employee e on a.empid = e.id where a.assetid =$1",
+    [assetId]
+    );
+    console.log(searchedAssetId)
+      res.json({
+        status: 200,
+        noOfAssets: searchedAssetId.rowCount,
+        asset: searchedAssetId.rows,
+      });
+    }
+ catch (error) {
+    res.json({ status: 500, message: error.message });
+  }
+};
+
+// @desc        Search Asset By Employee Name
+// @route     POST /api/assets/searchAssetByEmployeeName
+// @access     Public
+const searchAssetByEmployeeName = async (req, res) => {
+  const { empname } = req.body;
+  try {
+    const searchedAssets = await db.query(
+      "SELECT a2.*,u2.name,e2.empname FROM asset a2, users u2,employee e2 where (a2.userid=u2.userid) and (a2.empid=e2.id) and e2.empname=$1",
+      [empname]
     );
 
     res.json({
       status: 200,
-      noOfAssets: searchedAsset.rowCount,
-      asset: searchedAsset.rows,
+      noOfAssets: searchedAssets.rowCount,
+      asset: searchedAssets.rows,
     });
   } catch (error) {
     res.json({ status: 500, message: error.message });
   }
 };
+
 
 // @desc		Get Asset
 // @route 	Get /api/assets/getAsset
@@ -301,5 +322,6 @@ module.exports = {
   getAssetType: getAssetType,
   getAssetLocation: getAssetLocation,
   getAssetAudit: getAssetAudit,
-  getAssetById: getAssetById
+  getAssetById: getAssetById,
+  searchAssetByEmployeeName: searchAssetByEmployeeName
 };

@@ -14,5 +14,7 @@ router.route("/assetlocation").get(protect, controller.getAssetLocation);
 router.route("/assetaudit/:id").get(protect, controller.getAssetAudit);
 router.route("/asset/:id").get(protect, controller.getAssetById);
 router.route("/editAsset").post(protect, controller.editAsset);
+router.route("/searchAssetByEmployeeName").post(protect, controller.searchAssetByEmployeeName);
+
 
 module.exports = router;

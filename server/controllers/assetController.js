@@ -50,7 +50,7 @@ const editAsset = async (req, res) => {
         JSON.stringify(software),
         JSON.stringify(hardware),
         depreciation,
-        assetid
+        assetid,
       ]
     );
     res.status(200).json({
@@ -116,17 +116,16 @@ const viewAssets = async (req, res) => {
 const searchAsset = async (req, res) => {
   const { assetId } = req.body;
   try {
-    const searchedAssetId = await db.query("select a.*, e.empname from asset a left join employee e on a.empid = e.id where a.assetid =$1",
-    [assetId]
+    const searchedAssetId = await db.query(
+      "select a.*, e.empname from asset a left join employee e on a.empid = e.id where a.assetid =$1",
+      [assetId]
     );
-    console.log(searchedAssetId)
-      res.json({
-        status: 200,
-        noOfAssets: searchedAssetId.rowCount,
-        asset: searchedAssetId.rows,
-      });
-    }
- catch (error) {
+    res.json({
+      status: 200,
+      noOfAssets: searchedAssetId.rowCount,
+      asset: searchedAssetId.rows,
+    });
+  } catch (error) {
     res.json({ status: 500, message: error.message });
   }
 };
@@ -152,19 +151,16 @@ const searchAssetByEmployeeName = async (req, res) => {
   }
 };
 
-
 // @desc		Get Asset
 // @route 	Get /api/assets/getAsset
 // @access 	Public
 const getAssetById = async (req, res) => {
-
   const id = req.params.id;
-  
+
   try {
-    const getAsset = await db.query(
-      "SELECT * from asset where id =$1",
-      [id]
-    );
+    const getAsset = await db.query("SELECT * from asset where assetid =$1", [
+      id,
+    ]);
     res.json({
       status: 200,
       assetbyid: getAsset.rows,
@@ -211,7 +207,6 @@ const downlAsset = async (req, res) => {
   }
 };
 
-
 // @desc		Download Asset Audit
 // @route 	POST /api/assets/downlAssetAudit
 // @access 	Public
@@ -224,7 +219,6 @@ const downlAssetAudit = async (req, res) => {
       "select a.*, e.empname, u.name from assettransaction a left join employee e on a.empid = e.id left join users u on a.userid = u.userid where a.assetid = ANY($1::int[]) order by a.assetid, a.transactionid",
       [id]
     );
-    
 
     res.json({
       status: 200,
@@ -279,9 +273,7 @@ const getAssetType = async (req, res) => {
 // @access 	Private
 const getAssetLocation = async (req, res) => {
   try {
-    const results = await db.query(
-      "SELECT * FROM location"
-    );
+    const results = await db.query("SELECT * FROM location");
     res.status(200).json({
       status: 200,
       location: results.rows,
@@ -323,5 +315,5 @@ module.exports = {
   getAssetLocation: getAssetLocation,
   getAssetAudit: getAssetAudit,
   getAssetById: getAssetById,
-  searchAssetByEmployeeName: searchAssetByEmployeeName
+  searchAssetByEmployeeName: searchAssetByEmployeeName,
 };

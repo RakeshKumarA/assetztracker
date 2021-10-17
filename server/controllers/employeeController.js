@@ -123,7 +123,7 @@ const unAssignEmp = async (req, res) => {
   const { userid } = req.user;
   try {
     const unAssignEmployee = await db.query(
-     `update asset set onboard = jsonb_set(onboard::jsonb, '{assetStatus}', '{"lable":"Asset Status","value":"Inventory"}'),assetstatus = $1, empid = $2, userid = $3, returnreason = $4, returnmethod = $5  where id = $6 returning *`,["Inventory", null, userid, reason, method, assetid]);
+      `update asset set onboard = jsonb_set(onboard::jsonb, '{assetStatus}', '{"lable":"Asset Status","value":"Inventory"}'),assetstatus = $1, empid = $2, userid = $3, returnreason = $4, returnmethod = $5  where id = $6 returning *`,["Inventory", null, userid, reason, method, assetid]);
     res.json({
       status: 200,
       assetunassigned: unAssignEmployee.rows,

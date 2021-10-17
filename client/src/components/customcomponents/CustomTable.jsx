@@ -665,7 +665,7 @@ const CustomTable = ({
           </Toolbar>
         </AppBar>
         <Timeline align="alternate" style={{ paddingTop: "5rem" }}>
-          {assetaudit.map((asset) => (
+          {assetaudit.map((asset, index, { length }) => (
             <TimelineItem key={asset.transactionid}>
               <TimelineSeparator>
                 {asset.empid ? (
@@ -673,8 +673,7 @@ const CustomTable = ({
                 ) : (
                   <TimelineDot />
                 )}
-
-                <TimelineConnector />
+                {index + 1 === length ? null : <TimelineConnector />}
               </TimelineSeparator>
               {asset.empid ? (
                 <TimelineContent>

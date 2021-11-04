@@ -36,7 +36,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { useHistory } from "react-router-dom";
 import { format } from "date-fns/esm";
 import { set_snackbar } from "../../reducers/snackSlice";
-import { getAssetById } from "../../reducers/viewAssetSlice";
 
 const useStyles = makeStyles({
   container: {
@@ -65,7 +64,6 @@ const DepreciationForm = () => {
   const { hardware } = useSelector((state) => state.hardware);
   const { assetOperation } = useSelector((state) => state.assetOperation);
   const { editassetid } = useSelector((state) => state.editAsset);
-  const { assets } = useSelector((state) => state.viewAsset);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -135,11 +133,43 @@ const DepreciationForm = () => {
   };
 
   const handleSubmitAsset = () => {
-    switch (assetOperation) {
-      case "Add":
-        if (onboard.assetId.value !== "") {
-          // Check if Asset id duplicate.
-          // axios.get(`/api/assets/asset/${onboard.assetId.value}`);
+    switch(assetOperation) {
+      case 'Add':
+          if (onboard.assetId.value !== '') {
+            dispatch(addAsset(onboard, software, hardware, depreciation));
+            handleClose();
+            history.push("/dashboard");
+            break;
+          } else {
+            dispatch(
+              set_snackbar({
+                snackbarOpen: true,
+                snackbarType: "error",
+                snackbarMessage: 'Asset Id Missing',
+                snackbarSeverity: "error",
+              })
+            );
+          }
+        break;
+      case 'Edit':
+        if (onboard.assetId.value !== '') {
+          dispatch(editAsset(editassetid, onboard, software, hardware, depreciation));
+          handleClose();
+          history.push("/dashboard");
+          break;
+        } else {
+          dispatch(
+            set_snackbar({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: 'Asset Id Missing',
+              snackbarSeverity: "error",
+            })
+          );
+        }
+      break;
+      case 'Clone':
+        if (onboard.assetId.value !== '') {
           dispatch(addAsset(onboard, software, hardware, depreciation));
           handleClose();
           history.push("/dashboard");
@@ -149,52 +179,14 @@ const DepreciationForm = () => {
             set_snackbar({
               snackbarOpen: true,
               snackbarType: "error",
-              snackbarMessage: "Asset Id Missing",
+              snackbarMessage: 'Asset Id Missing',
               snackbarSeverity: "error",
             })
           );
         }
-        break;
-      case "Edit":
-        if (onboard.assetId.value !== "") {
-          dispatch(
-            editAsset(editassetid, onboard, software, hardware, depreciation)
-          );
-          handleClose();
-          history.push("/dashboard");
-          break;
-        } else {
-          dispatch(
-            set_snackbar({
-              snackbarOpen: true,
-              snackbarType: "error",
-              snackbarMessage: "Asset Id Missing",
-              snackbarSeverity: "error",
-            })
-          );
-        }
-        break;
-      case "Clone":
-        if (onboard.assetId.value !== "") {
-          // Check if Asset id duplicate.
-          // axios.get(`/api/assets/asset/${onboard.assetId.value}`);
-          dispatch(addAsset(onboard, software, hardware, depreciation));
-          handleClose();
-          history.push("/dashboard");
-          break;
-        } else {
-          dispatch(
-            set_snackbar({
-              snackbarOpen: true,
-              snackbarType: "error",
-              snackbarMessage: "Asset Id Missing",
-              snackbarSeverity: "error",
-            })
-          );
-        }
-        break;
+      break;
       default:
-        console.log("None");
+        console.log('None')
     }
   };
 
@@ -230,12 +222,7 @@ const DepreciationForm = () => {
             };
             dispatch(depreciation_update(valuetobeuploaded));
             resetForm(depreciation);
-
-            dispatch(getAssetById(onboard.assetId.value)).then((res) => {
-              if (assets.length === 0) {
-                handleClickOpen();
-              }
-            });
+            handleClickOpen();
           }}
         >
           {({ submitForm }) => (

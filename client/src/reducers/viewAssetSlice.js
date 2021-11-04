@@ -131,8 +131,7 @@ export const searchAsset = (assetId) => async (dispatch, getState) => {
     );
   }
 };
-
-export const getAssetById = (assetId) => async (dispatch, getState) => {
+export const searchAssetByEmployeeName  = (empname) => async (dispatch, getState) => {
   try {
     dispatch(view_assets_request());
     const {
@@ -144,19 +143,24 @@ export const getAssetById = (assetId) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`/api/assets/asset/${assetId}`, config);
+    const { data } = await axios.post(
+      "/api/assets/searchAssetByEmployeeName",
+      { empname },
+      config
+    );
+    console.log(data)
     if (data.status === 200) {
-      if (data.assetbyid.length > 0) {
+      if (data.noOfAssets === 0) {
         dispatch(
           set_snackbar({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: "Asset ID already present",
+            snackbarMessage: "Asset Not Found",
             snackbarSeverity: "error",
           })
         );
       }
-      dispatch(view_assets_success(data.assetbyid));
+      dispatch(view_assets_success(data.asset));
     } else {
       dispatch(view_assets_failure(data.message));
       dispatch(
@@ -180,60 +184,5 @@ export const getAssetById = (assetId) => async (dispatch, getState) => {
     );
   }
 };
-
-export const searchAssetByEmployeeName =
-  (empname) => async (dispatch, getState) => {
-    try {
-      dispatch(view_assets_request());
-      const {
-        user: { userInfo },
-      } = getState();
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-      const { data } = await axios.post(
-        "/api/assets/searchAssetByEmployeeName",
-        { empname },
-        config
-      );
-      console.log(data);
-      if (data.status === 200) {
-        if (data.noOfAssets === 0) {
-          dispatch(
-            set_snackbar({
-              snackbarOpen: true,
-              snackbarType: "error",
-              snackbarMessage: "Asset Not Found",
-              snackbarSeverity: "error",
-            })
-          );
-        }
-        dispatch(view_assets_success(data.asset));
-      } else {
-        dispatch(view_assets_failure(data.message));
-        dispatch(
-          set_snackbar({
-            snackbarOpen: true,
-            snackbarType: "error",
-            snackbarMessage: "Asset Not Found",
-            snackbarSeverity: "error",
-          })
-        );
-      }
-    } catch (error) {
-      dispatch(view_assets_failure(error.message));
-      dispatch(
-        set_snackbar({
-          snackbarOpen: true,
-          snackbarType: "error",
-          snackbarMessage: error.message,
-          snackbarSeverity: "error",
-        })
-      );
-    }
-  };
 
 export default viewAssetSlice.reducer;
